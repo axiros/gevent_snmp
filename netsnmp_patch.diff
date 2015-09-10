@@ -1,0 +1,54 @@
+--- snmplib/snmp_client.c	2009-10-09 14:38:55.000000000 +0200
++++ snmplib/snmp_client.c	2015-09-07 16:57:19.891850689 +0200
+@@ -1063,9 +1063,40 @@
+     return snmp_synch_response_cb(ss, pdu, response, snmp_synch_input);
+ }
+ 
++
++static int default_select(
++        void* ctx,
++        int nfds,
++        fd_set *readfds,
++        fd_set *writefds,
++        fd_set *exceptfds,
++        struct timeval *timeout)
++{
++    return select(nfds, readfds, writefds, exceptfds, timeout);
++}
++
++
++int
++snmp_sess_synch_response(void *sessp, netsnmp_pdu *pdu, netsnmp_pdu **response)
++{
++    return snmp_sess_synch_response_with_select(sessp, pdu, response, default_select, NULL);
++}
++
++typedef int (*select_func)(
++        void* ctx,
++        int nfds,
++        fd_set *readfds,
++        fd_set *writefds,
++        fd_set *exceptfds,
++        struct timeval *timeout);
++
+ int
+-snmp_sess_synch_response(void *sessp,
+-                         netsnmp_pdu *pdu, netsnmp_pdu **response)
++snmp_sess_synch_response_with_select(
++    void *sessp,
++    netsnmp_pdu *pdu,
++    netsnmp_pdu **response,
++    select_func call_select,
++    void* select_ctx)
+ {
+     netsnmp_session *ss;
+     struct synch_state lstate, *state;
+@@ -1099,7 +1130,7 @@
+         snmp_sess_select_info(sessp, &numfds, &fdset, tvp, &block);
+         if (block == 1)
+             tvp = NULL;         /* block without timeout */
+-        count = select(numfds, &fdset, 0, 0, tvp);
++        count = call_select(select_ctx, numfds, &fdset, 0, 0, tvp);
+         if (count > 0) {
+             snmp_sess_read(sessp, &fdset);
+         } else
