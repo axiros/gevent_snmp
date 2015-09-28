@@ -18,7 +18,7 @@ mod1 = Extension(
 )
 
 setup(
-    name='async_snmp_session',
+    name='gevent_snmp',
     version='0.1',
     ext_modules=cythonize([mod1])
 )
