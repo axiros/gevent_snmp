@@ -89,6 +89,7 @@ cdef extern from *:
         u_char* community
         size_t community_len
         int s_snmp_errno
+        unsigned long flags
 
     void snmp_sess_init(netsnmp_session*)
     void* snmp_sess_open(netsnmp_session*)
@@ -234,6 +235,7 @@ cdef class AsyncSession(object):
         sess_cfg.peername = <bytes?>(self.args['peername'])
         sess_cfg.retries = self.args['retries']
         sess_cfg.timeout = self.args['timeout'] * 1000000
+        sess_cfg.flags |= 0x100000
 
         if self.args['version'] == '1':
             sess_cfg.version = SNMP_VERSION_1
