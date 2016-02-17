@@ -2,6 +2,7 @@ cimport cython
 from cython.operator cimport dereference as deref
 from libc.stdlib cimport free as libc_free
 from posix.time cimport timeval
+from libc.stdint cimport uint64_t
 
 import gevent
 from gevent.socket import wait_read as gevent_wait_read
@@ -214,8 +215,12 @@ cdef class AsyncSession(object):
     # If my_select raises an excpetion, keep the latest here.
     cdef object error_in_my_select
 
+    # Counts how many SNMP interactions/packets were done on this session.
+    cdef uint64_t query_count
+
     def __cinit__(self, args):
         self.sp = NULL
+        self.query_count = 0
 
     def __dealloc__(self):
         if self.sp != NULL:
@@ -224,6 +229,12 @@ cdef class AsyncSession(object):
     def __init__(self, args):
         self.args = args
         self.error_in_my_select = None
+
+    # Read only access to snmp_interactions
+    property snmp_query_count:
+
+        def __get__(self):
+            return self.query_count
 
     def open_session(self):
         cdef netsnmp_session sess_cfg
@@ -341,6 +352,7 @@ cdef class AsyncSession(object):
         cdef netsnmp_pdu* response
         self.error_in_my_select = None
 
+        self.query_count += 1
         cdef int rc = snmp_sess_synch_response_with_select(
             self.sp,
             req,
