@@ -14,7 +14,8 @@ else:
 mod1 = Extension(
     'async_session',
     sources,
-    libraries=['netsnmp']
+    libraries=['netsnmp'],
+    extra_compile_args=['-O3']
 )
 
 setup(
