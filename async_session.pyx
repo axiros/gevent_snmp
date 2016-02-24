@@ -8,6 +8,7 @@ import gevent
 from gevent.socket import wait_read as gevent_wait_read
 from gevent.socket import timeout as TimeoutError
 
+ctypedef unsigned int u_int
 ctypedef unsigned char u_char
 ctypedef unsigned long oid
 
@@ -78,6 +79,27 @@ cdef extern from *:
     cdef enum:
         SNMP_VERSION_1
         SNMP_VERSION_2c
+        SNMP_VERSION_3
+
+    # V3 related defines.
+    cdef enum:
+        SNMP_SEC_LEVEL_NOAUTH
+        SNMP_SEC_LEVEL_AUTHNOPRIV
+        SNMP_SEC_LEVEL_AUTHPRIV
+        SNMP_SEC_MODEL_USM
+        SNMP_FLAGS_DONT_PROBE
+
+    # V3 related constats.
+    cdef oid* usmHMACMD5AuthProtocol
+    cdef size_t USM_AUTH_PROTO_MD5_LEN
+    cdef oid* usmHMACSHA1AuthProtocol
+    cdef size_t USM_AUTH_PROTO_SHA_LEN
+    cdef oid* usmDESPrivProtocol
+    cdef size_t USM_PRIV_PROTO_DES_LEN
+    cdef oid* usmAESPrivProtocol
+    cdef size_t USM_PRIV_PROTO_AES_LEN
+    cdef size_t USM_AUTH_KU_LEN
+    cdef size_t USM_PRIV_KU_LEN
 
     cdef struct netsnmp_transport_s:
         int sock
@@ -92,6 +114,51 @@ cdef extern from *:
         int s_snmp_errno
         unsigned long flags
 
+        # v3 security options
+        int securityModel
+        int securityLevel
+        char* securityName
+        size_t securityNameLen
+
+        oid* securityAuthProto
+        size_t securityAuthProtoLen
+        oid* securityPrivProto
+        size_t securityPrivProtoLen
+
+        u_char* securityAuthKey
+        size_t securityAuthKeyLen
+        u_char* securityPrivKey
+        size_t securityPrivKeyLen
+
+        u_char* securityEngineID
+        size_t securityEngineIDLen
+
+        u_char* contextEngineID
+        size_t contextEngineIDLen
+
+
+    # v3 functions -- start
+    cdef int SNMPERR_SUCCESS
+
+    int generate_Ku(
+        # hashtype
+        const oid *,
+        # hashtype_len
+        u_int,
+        # password
+        u_char*,
+        # password len
+        size_t,
+        # KU
+        u_char*,
+        # KU len
+        size_t*)
+
+    u_int binary_to_hex(u_char*, size_t, char**)
+    int hex_to_binary2(u_char*, size_t, char**)
+
+    # v3 functions -- end
+
     void snmp_sess_init(netsnmp_session*)
     void* snmp_sess_open(netsnmp_session*)
     void snmp_error(netsnmp_session*, int*, int*, char**)
@@ -99,15 +166,33 @@ cdef extern from *:
     # Works on the session pointer returned by snmp_sess_open
     int snmp_sess_synch_response(void*, netsnmp_pdu*, netsnmp_pdu**)
     int snmp_sess_synch_response_with_select(
-        void *sessp,
+        void* sessp,
         netsnmp_pdu *pdu,
         netsnmp_pdu **response,
         select_func,
         void* ctx)
 
+    # 0: error
+    # 1: ok
+    int snmpv3_engineID_probe_with_select(
+        void* sessp,
+        netsnmp_session* in_session,
+        select_func,
+        void* ctx)
+
     netsnmp_transport_s* snmp_sess_transport(void*)
+    netsnmp_session* snmp_sess_session(void*)
     void snmp_sess_error(void*, int*, int*, char**)
     int snmp_sess_close(void*)
+
+    void init_snmp(char*)
+
+
+# SNMP version 3 works only if this method is called once.
+# Otherwise you get 'no such security service available' errors.
+def init_snmplib():
+    init_snmp('async_session')
+
 
 @cython.internal
 cdef class EndOfMib(object):
@@ -232,17 +317,42 @@ cdef class AsyncSession(object):
 
     # Read only access to snmp_interactions
     property snmp_query_count:
-
         def __get__(self):
             return self.query_count
+
+    # Returns the securityEngineID as hex.
+    # Returns None if the id is not present.
+    property security_engine_id:
+        def __get__(self):
+            if self.sp == NULL:
+                return None
+
+            if snmp_sess_session(self.sp).securityEngineIDLen == 0:
+                return None
+
+            return binary_to_hex_pystring(
+                snmp_sess_session(self.sp).securityEngineID,
+                snmp_sess_session(self.sp).securityEngineIDLen)
+
+    # Returns the contextEngineID as hex.
+    # Returns None if the id is not present.
+    property context_engine_id:
+        def __get__(self):
+            if self.sp == NULL:
+                return None
+
+            if snmp_sess_session(self.sp).contextEngineIDLen == 0:
+                return None
+
+            return binary_to_hex_pystring(
+                snmp_sess_session(self.sp).contextEngineID,
+                snmp_sess_session(self.sp).contextEngineIDLen)
 
     def open_session(self):
         cdef netsnmp_session sess_cfg
 
         snmp_sess_init(cython.address(sess_cfg))
 
-        sess_cfg.community = <bytes?>(self.args['community'])
-        sess_cfg.community_len = len(self.args['community'])
         sess_cfg.peername = <bytes?>(self.args['peername'])
         sess_cfg.retries = self.args['retries']
         sess_cfg.timeout = self.args['timeout'] * 1000000
@@ -250,14 +360,142 @@ cdef class AsyncSession(object):
 
         if self.args['version'] == '1':
             sess_cfg.version = SNMP_VERSION_1
+            self._set_community(cython.address(sess_cfg))
+
         elif self.args['version'] == '2c':
             sess_cfg.version = SNMP_VERSION_2c
+            self._set_community(cython.address(sess_cfg))
+
+        elif self.args['version'] == '3':
+            sess_cfg.version = SNMP_VERSION_3
+            self._set_version_three_auth(cython.address(sess_cfg))
+
         else:
             raise Exception("Unkown snmp version: %s" % self.args['version'])
+
+        # snmpV3 needs an engineID to work.
+        # Typically this engineID is not known => seperate 'probe' query needed
+        # Per default the netsnmp library does this 'probe' on its own.
+        # Unfortunately this implicit probe by the netsnmp library happens
+        # *synchronous*, => A single probe in one session could block the WHOLE
+        # gevent event-loop.
+        # The following code avoids the implicit synchronous probe, instead we
+        # do a ASYNChronous probe ourself.
+
+        # Forbid probing in snmp_sess_open (has no effect on v1 or v2c).
+        sess_cfg.flags |= SNMP_FLAGS_DONT_PROBE
 
         self.sp = snmp_sess_open(cython.address(sess_cfg))
         if self.sp == NULL:
             raise error_from_session("Can not open", cython.address(sess_cfg))
+
+        if sess_cfg.version == SNMP_VERSION_3 and sess_cfg.securityEngineIDLen == 0:
+            # engine_id is not known, probe it.
+            self._do_snmpv3_engine_id_probe(cython.address(sess_cfg))
+
+    cdef _set_community(self, netsnmp_session* sess_cfg):
+        sess_cfg.community = <bytes?>(self.args['community'])
+        sess_cfg.community_len = len(self.args['community'])
+
+    cdef _set_version_three_auth(self, netsnmp_session* sess_cfg):
+        cdef int res = 0
+        # For V3 the USM model is used.
+        sess_cfg.securityModel = SNMP_SEC_MODEL_USM
+
+        # Configure one of the three types of security supported.
+        security_level = self.args['security_level']
+        if security_level == 'noAuthNoPriv':
+            sess_cfg.securityLevel = SNMP_SEC_LEVEL_NOAUTH
+        elif security_level == 'authNoPriv':
+            sess_cfg.securityLevel = SNMP_SEC_LEVEL_AUTHNOPRIV
+        elif security_level == 'authPriv':
+            sess_cfg.securityLevel = SNMP_SEC_LEVEL_AUTHPRIV
+        else:
+            raise Exception("Unknown security_level: %s" % security_level)
+
+        # Username is mandatory.
+        sess_cfg.securityName = <bytes?>(self.args['security_name'])
+        sess_cfg.securityNameLen = len(self.args['security_name'])
+
+        # If auth is used, the protocol must be given.
+        if security_level == 'authNoPriv' or security_level == 'authPriv':
+            auth_proto = self.args['auth_proto']
+            if auth_proto == 'MD5':
+                sess_cfg.securityAuthProto = usmHMACMD5AuthProtocol
+                sess_cfg.securityAuthProtoLen = USM_AUTH_PROTO_MD5_LEN
+            elif auth_proto == 'SHA':
+                sess_cfg.securityAuthProto = usmHMACSHA1AuthProtocol
+                sess_cfg.securityAuthProtoLen = USM_AUTH_PROTO_SHA_LEN
+            else:
+                raise Exception("Unknown auth protocol: %s" % auth_proto)
+
+            sess_cfg.securityAuthKeyLen = USM_AUTH_KU_LEN
+            res = generate_Ku(
+                    sess_cfg.securityAuthProto,
+                    sess_cfg.securityAuthProtoLen,
+                    <bytes?>(self.args['auth_key']),
+                    len(self.args['auth_key']),
+                    sess_cfg.securityAuthKey,
+                    cython.address(sess_cfg.securityAuthKeyLen))
+
+            if res != SNMPERR_SUCCESS:
+                raise Exception("Can't generate KU for auth_key: %i" % res)
+
+        # if priv is used, the protocol must be given.
+        if security_level == 'authPriv':
+            priv_proto = self.args['priv_proto']
+            if priv_proto == 'DES':
+                sess_cfg.securityPrivProto = usmDESPrivProtocol
+                sess_cfg.securityPrivProtoLen = USM_PRIV_PROTO_DES_LEN
+            elif priv_proto == 'AES':
+                sess_cfg.securityPrivProto = usmAESPrivProtocol
+                sess_cfg.securityPrivProtoLen = USM_PRIV_PROTO_AES_LEN
+            else:
+                raise Exception("Unknown priv protocol: %s" % priv_proto)
+
+            sess_cfg.securityPrivKeyLen = USM_PRIV_KU_LEN
+            res = generate_Ku(
+                    sess_cfg.securityAuthProto,
+                    sess_cfg.securityAuthProtoLen,
+                    <bytes?>(self.args['priv_key']),
+                    len(self.args['priv_key']),
+                    sess_cfg.securityPrivKey,
+                    cython.address(sess_cfg.securityPrivKeyLen))
+
+            if res != SNMPERR_SUCCESS:
+                raise Exception("Can't generate KU for priv_key: %i" % res)
+
+        # security_engine_id is assumed as 'hex' format, but binary is needed.
+        if 'security_engine_id' in self.args:
+            bin_val = self.args['security_engine_id'].decode('hex')
+            # Need to store it somewhere, to keep reference to memory.
+            self.args['security_engine_id_binary'] = bin_val
+            sess_cfg.securityEngineID = <bytes?>(bin_val)
+            sess_cfg.securityEngineIDLen = len(bin_val)
+
+        # context_engine_id is assumed as 'hex' format, but binary is needed.
+        if 'context_engine_id' in self.args:
+            bin_val = self.args['context_engine_id'].decode('hex')
+            self.args['context_engine_id_binary'] = bin_val
+            sess_cfg.contextEngineID = <bytes?>(bin_val)
+            sess_cfg.contextEngineIDLen = len(bin_val)
+
+    cdef _do_snmpv3_engine_id_probe(self, netsnmp_session* sess_cfg):
+        cdef int res = 0
+
+        # Ensure that probe is enabled.
+        snmp_sess_session(self.sp).flags &= (~SNMP_FLAGS_DONT_PROBE)
+        res = snmpv3_engineID_probe_with_select(
+            self.sp,
+            sess_cfg,
+            my_select,
+            <void*>(self))
+
+        if res == 0:
+            raise error_from_session("Cannot probe v3 engineID", sess_cfg)
+
+        # Probe was successful, don't do it again.
+        snmp_sess_session(self.sp).flags |= SNMP_FLAGS_DONT_PROBE
 
     ## These are 'higher level' functions.
     def walk(self, root):
@@ -270,7 +508,6 @@ cdef class AsyncSession(object):
             oid = self._handle_walk_result(root, oid, result, final_result)
             if oid is None:
                 return final_result
-
 
     def walk_with_get_bulk(self, root, maxrepetitions=10):
         """Walks a *single* subtree by succesive calling get_bulk.
@@ -435,3 +672,12 @@ cdef class AsyncSession(object):
 
         else:
             return None
+
+
+cdef object binary_to_hex_pystring(u_char* data, size_t data_size):
+    cdef char* output
+    cdef u_int hex_len = binary_to_hex(data, data_size, cython.address(output))
+    try:
+        return output[:hex_len]
+    finally:
+        libc_free(output)
