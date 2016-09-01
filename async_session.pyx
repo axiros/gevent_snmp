@@ -187,6 +187,9 @@ cdef extern from *:
 
     void init_snmp(char*)
 
+    cdef enum:
+        SNMPERR_TIMEOUT
+
 
 # SNMP version 3 works only if this method is called once.
 # Otherwise you get 'no such security service available' errors.
@@ -208,6 +211,9 @@ END_OF_MIB = EndOfMib()
 class SNMPError(Exception):
     pass
 
+class SNMPTimeoutError(SNMPError):
+    pass
+
 
 cdef object error_from_session(msg, netsnmp_session* session):
     cdef int p_errno
@@ -221,7 +227,10 @@ cdef object error_from_session(msg, netsnmp_session* session):
         cython.address(error_str))
 
     try:
-        return SNMPError("%s: %s" % (msg, error_str))
+        if p_snmp_errno == SNMPERR_TIMEOUT:
+            return SNMPTimeoutError("%s: %s" % (msg, error_str))
+        else:
+            return SNMPError("%s: %s" % (msg, error_str))
     finally:
         libc_free(error_str)
 
@@ -238,7 +247,10 @@ cdef object error_from_session_ptr(msg, void* sp):
         cython.address(error_str))
 
     try:
-        return SNMPError("%s: %s" % (msg, error_str))
+        if p_snmp_errno == SNMPERR_TIMEOUT:
+            return SNMPTimeoutError("%s: %s" % (msg, error_str))
+        else:
+            return SNMPError("%s: %s" % (msg, error_str))
     finally:
         libc_free(error_str)
 
