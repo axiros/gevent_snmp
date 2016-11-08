@@ -12,7 +12,10 @@ ctypedef unsigned int u_int
 ctypedef unsigned char u_char
 ctypedef unsigned long oid
 
-ctypedef int (*select_func)(void*, int, void*, void*, void*, timeval*)
+ctypedef int (*select_func)(void*, timeval*)
+cdef struct ax_async_ctx_t:
+    select_func func
+    void* ctx
 
 cdef extern from "<net-snmp/net-snmp-config.h>":
     pass
@@ -136,6 +139,8 @@ cdef extern from *:
         u_char* contextEngineID
         size_t contextEngineIDLen
 
+        ax_async_ctx_t* myvoid
+
 
     # v3 functions -- start
     cdef int SNMPERR_SUCCESS
@@ -165,20 +170,10 @@ cdef extern from *:
 
     # Works on the session pointer returned by snmp_sess_open
     int snmp_sess_synch_response(void*, netsnmp_pdu*, netsnmp_pdu**)
-    int snmp_sess_synch_response_with_select(
-        void* sessp,
-        netsnmp_pdu *pdu,
-        netsnmp_pdu **response,
-        select_func,
-        void* ctx)
 
     # 0: error
     # 1: ok
-    int snmpv3_engineID_probe_with_select(
-        void* sessp,
-        netsnmp_session* in_session,
-        select_func,
-        void* ctx)
+    int snmpv3_engineID_probe(void*, netsnmp_session*)
 
     netsnmp_transport_s* snmp_sess_transport(void*)
     netsnmp_session* snmp_sess_session(void*)
@@ -255,13 +250,7 @@ cdef object error_from_session_ptr(msg, void* sp):
         libc_free(error_str)
 
 
-cdef int my_select(
-    void* ctx,
-    int fdnum,
-    void* readfds,
-    void* writefds,
-    void* errorfds,
-    timeval* timeout):
+cdef int my_select(void* ctx, timeval* timeout):
 
     # Error handling:
     # If there is an exception in gevent_wait_read I CAN NOT just 'return -1'.
@@ -315,6 +304,8 @@ cdef class AsyncSession(object):
     # Counts how many SNMP interactions/packets were done on this session.
     cdef uint64_t query_count
 
+    cdef ax_async_ctx_t ax_async_ctx
+
     def __cinit__(self, args):
         self.sp = NULL
         self.query_count = 0
@@ -326,6 +317,9 @@ cdef class AsyncSession(object):
     def __init__(self, args):
         self.args = args
         self.error_in_my_select = None
+
+        self.ax_async_ctx.func = my_select
+        self.ax_async_ctx.ctx = <void*>(self)
 
     # Read only access to snmp_interactions
     property snmp_query_count:
@@ -368,7 +362,12 @@ cdef class AsyncSession(object):
         sess_cfg.peername = <bytes?>(self.args['peername'])
         sess_cfg.retries = self.args['retries']
         sess_cfg.timeout = self.args['timeout'] * 1000000
+
+        # Ignores the fd_set within the snmp-api.
         sess_cfg.flags |= 0x100000
+
+        # Uses the 'async select' from session->myvoid.
+        sess_cfg.flags |= 0x200000
 
         if self.args['version'] == '1':
             sess_cfg.version = SNMP_VERSION_1
@@ -400,6 +399,8 @@ cdef class AsyncSession(object):
         self.sp = snmp_sess_open(cython.address(sess_cfg))
         if self.sp == NULL:
             raise error_from_session("Can not open", cython.address(sess_cfg))
+
+        snmp_sess_session(self.sp).myvoid = cython.address(self.ax_async_ctx)
 
         if sess_cfg.version == SNMP_VERSION_3 and sess_cfg.securityEngineIDLen == 0:
             # engine_id is not known, probe it.
@@ -497,11 +498,7 @@ cdef class AsyncSession(object):
 
         # Ensure that probe is enabled.
         snmp_sess_session(self.sp).flags &= (~SNMP_FLAGS_DONT_PROBE)
-        res = snmpv3_engineID_probe_with_select(
-            self.sp,
-            sess_cfg,
-            my_select,
-            <void*>(self))
+        res = snmpv3_engineID_probe(self.sp, sess_cfg)
 
         if res == 0:
             raise error_from_session("Cannot probe v3 engineID", sess_cfg)
@@ -602,12 +599,10 @@ cdef class AsyncSession(object):
         self.error_in_my_select = None
 
         self.query_count += 1
-        cdef int rc = snmp_sess_synch_response_with_select(
+        cdef int rc = snmp_sess_synch_response(
             self.sp,
             req,
-            cython.address(response),
-            my_select,
-            <void*>self)
+            cython.address(response))
 
         if rc == 0:
             try:

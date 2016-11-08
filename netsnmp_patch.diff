@@ -1,8 +1,8 @@
 diff --git a/src/include/net-snmp/library/snmp_api.h b/src/include/net-snmp/library/snmp_api.h
-index cb61ef7..01b2a39 100644
+index 6f658d5..e907512 100644
 --- a/src/include/net-snmp/library/snmp_api.h
 +++ b/src/include/net-snmp/library/snmp_api.h
-@@ -397,6 +397,34 @@ typedef struct request_list {
+@@ -160,6 +160,35 @@ typedef struct request_list {
  
  #define SNMP_DETAIL_SIZE        512
  
@@ -33,189 +33,83 @@ index cb61ef7..01b2a39 100644
 + * 1024 sockets. So when we upgrade to jessi, lets have a look again.
 + */
 +
++#define SNMP_FLAGS_AX_ASYNC_SELECT 0x200000   /* Indicates that myvoid has an async select. */
 +#define SNMP_FLAGS_AX_IGNORE_FDSET 0x100000   /* See the lengthy comment above. */
+ #define SNMP_FLAGS_UDP_BROADCAST   0x800
  #define SNMP_FLAGS_RESP_CALLBACK   0x400      /* Additional callback on response */
  #define SNMP_FLAGS_USER_CREATED    0x200      /* USM user has been created */
- #define SNMP_FLAGS_DONT_PROBE      0x100      /* don't probe for an engineID */
-@@ -893,6 +921,18 @@ struct variable_list {
-     void            snmp_sess_transport_set(void *,
- 					    struct netsnmp_transport_s *);
- 
-+    /* Axiros extensions. -- Start */
-+
-+    typedef int (*ax_select_func)(
-+        void* ctx,
-+        int nfds,
-+        fd_set *readfds,
-+        fd_set *writefds,
-+        fd_set *exceptfds,
-+        struct timeval *timeout);
-+
-+    /* Axiros extensions. -- Stop */
-+
-     /*
-      * EXPERIMENTAL API EXTENSIONS ------------------------------------------ 
-      * 
-diff --git a/src/include/net-snmp/library/snmp_client.h b/src/include/net-snmp/library/snmp_client.h
-index 85c0aba..19ebddb 100644
---- a/src/include/net-snmp/library/snmp_client.h
-+++ b/src/include/net-snmp/library/snmp_client.h
-@@ -98,6 +98,14 @@ extern          "C" {
-     int             snmp_sess_synch_response(void *, netsnmp_pdu *,
-                                              netsnmp_pdu **);
- 
-+    /* Axiros extension for async. */
-+    int             snmp_sess_synch_response_with_select(
-+                        void *,
-+                        netsnmp_pdu *,
-+                        netsnmp_pdu **,
-+                        ax_select_func,
-+                        void*);
-+
- void              netsnmp_query_set_default_session(netsnmp_session *);
- netsnmp_session * netsnmp_query_get_default_session( void );
- int netsnmp_query_get(     netsnmp_variable_list *, netsnmp_session *);
 diff --git a/src/snmplib/snmp_api.c b/src/snmplib/snmp_api.c
-index d265915..1b599c4 100644
+index 1823e0c..32e8739 100644
 --- a/src/snmplib/snmp_api.c
 +++ b/src/snmplib/snmp_api.c
-@@ -344,7 +344,7 @@ static int      snmp_detail_f = 0;
- int             snmp_build(u_char ** pkt, size_t * pkt_len,
-                            size_t * offset, netsnmp_session * pss,
-                            netsnmp_pdu *pdu);
--static int      snmp_parse(void *, netsnmp_session *, netsnmp_pdu *,
-+int      snmp_parse(void *, netsnmp_session *, netsnmp_pdu *,
-                            u_char *, size_t);
- 
- static void     snmpv3_calc_msg_flags(int, int, u_char *);
-@@ -1256,6 +1256,16 @@ snmp_sess_copy(netsnmp_session * pss)
-     return psl;
- }
- 
-+static int default_select(
-+        void* ctx,
-+        int nfds,
-+        fd_set *readfds,
-+        fd_set *writefds,
-+        fd_set *exceptfds,
-+        struct timeval *timeout)
-+{
-+    return select(nfds, readfds, writefds, exceptfds, timeout);
-+}
- 
- /**
-  * probe for peer engineID
-@@ -1276,6 +1286,16 @@ int
- snmpv3_engineID_probe(struct session_list *slp,
-                       netsnmp_session * in_session)
- {
-+    return snmpv3_engineID_probe_with_select(slp, in_session, default_select, NULL);
-+}
-+
-+int
-+snmpv3_engineID_probe_with_select(
-+    struct session_list *slp,
-+    netsnmp_session * in_session,
-+    ax_select_func call_select,
-+    void* select_ctx)
-+{
-     netsnmp_pdu    *pdu = NULL, *response = NULL;
-     netsnmp_session *session;
-     unsigned int    i;
-@@ -1304,7 +1324,7 @@ snmpv3_engineID_probe(struct session_list *slp,
-             }
-             DEBUGMSGTL(("snmp_api", "probing for engineID...\n"));
-             session->flags |= SNMP_FLAGS_DONT_PROBE; /* prevent recursion */
--            status = snmp_sess_synch_response(slp, pdu, &response);
-+            status = snmp_sess_synch_response_with_select(slp, pdu, &response, call_select, select_ctx);
- 
-             if ((response == NULL) && (status == STAT_SUCCESS)) {
-                 status = STAT_ERROR;
-@@ -4238,7 +4258,7 @@ _snmp_parse(void *sessp,
-     return result;
- }
- 
--static int
-+int
- snmp_parse(void *sessp,
-            netsnmp_session * pss,
-            netsnmp_pdu *pdu, u_char * data, size_t length)
-@@ -5431,11 +5451,13 @@ _sess_read(void *sessp, fd_set * fdset)
+@@ -5508,12 +5508,14 @@ _sess_read(void *sessp, netsnmp_large_fd_set * fdset)
          return 0; 
      }
  
--    if (!fdset || !(FD_ISSET(transport->sock, fdset))) {
+-    if (!fdset || !(NETSNMP_LARGE_FD_ISSET(transport->sock, fdset))) {
 -        DEBUGMSGTL(("sess_read", "not reading %d (fdset %p set %d)\n",
 -                    transport->sock, fdset,
--                    fdset ? FD_ISSET(transport->sock, fdset) : -9));
+-                    fdset ? NETSNMP_LARGE_FD_ISSET(transport->sock, fdset)
+-		    : -9));
 -        return 0;
 +    if (!(sp->flags & SNMP_FLAGS_AX_IGNORE_FDSET)) {
-+        if (!fdset || !(FD_ISSET(transport->sock, fdset))) {
++        if (!fdset || !(NETSNMP_LARGE_FD_ISSET(transport->sock, fdset))) {
 +            DEBUGMSGTL(("sess_read", "not reading %d (fdset %p set %d)\n",
 +                        transport->sock, fdset,
-+                        fdset ? FD_ISSET(transport->sock, fdset) : -9));
++                        fdset ? NETSNMP_LARGE_FD_ISSET(transport->sock, fdset)
++                : -9));
 +            return 0;
 +        }
      }
  
      sp->s_snmp_errno = 0;
-@@ -5890,7 +5912,10 @@ snmp_sess_select_info(void *sessp,
+@@ -6048,7 +6050,10 @@ snmp_sess_select_info2_flags(void *sessp, int *numfds,
              *numfds = (slp->transport->sock + 1);
          }
  
--        FD_SET(slp->transport->sock, fdset);
+-        NETSNMP_LARGE_FD_SET(slp->transport->sock, fdset);
 +        if (!((slp->session != NULL) & (slp->session->flags & SNMP_FLAGS_AX_IGNORE_FDSET))) {
-+            FD_SET(slp->transport->sock, fdset);
++            NETSNMP_LARGE_FD_SET(slp->transport->sock, fdset);
 +        }
 +
          if (slp->internal != NULL && slp->internal->requests) {
              /*
               * Found another session with outstanding requests.  
 diff --git a/src/snmplib/snmp_client.c b/src/snmplib/snmp_client.c
-index 5f45f1d..65385da 100644
+index c1aa9c4..d7a6261 100644
 --- a/src/snmplib/snmp_client.c
 +++ b/src/snmplib/snmp_client.c
-@@ -1063,9 +1063,32 @@ snmp_synch_response(netsnmp_session * ss,
+@@ -1111,6 +1111,17 @@ snmp_synch_response(netsnmp_session * ss,
      return snmp_synch_response_cb(ss, pdu, response, snmp_synch_input);
  }
  
++typedef int (*ax_select_func) (void* ctx, struct timeval* timeout);
 +
-+static int default_select(
-+        void* ctx,
-+        int nfds,
-+        fd_set *readfds,
-+        fd_set *writefds,
-+        fd_set *exceptfds,
-+        struct timeval *timeout)
-+{
-+    return select(nfds, readfds, writefds, exceptfds, timeout);
-+}
++typedef struct {
++    ax_select_func func;
++    void* ctx;
++} ax_async_ctx_t;
++
++#define GET_AX_ASYNC_FUNC(ss) (((ax_async_ctx_t*)(ss->myvoid))->func)
++#define GET_AX_ASYNC_CTX(ss) (((ax_async_ctx_t*)(ss->myvoid))->ctx)
 +
 +
  int
--snmp_sess_synch_response(void *sessp,
--                         netsnmp_pdu *pdu, netsnmp_pdu **response)
-+snmp_sess_synch_response(void *sessp, netsnmp_pdu *pdu, netsnmp_pdu **response)
-+{
-+    return snmp_sess_synch_response_with_select(sessp, pdu, response, default_select, NULL);
-+}
-+
-+int
-+snmp_sess_synch_response_with_select(
-+    void *sessp,
-+    netsnmp_pdu *pdu,
-+    netsnmp_pdu **response,
-+    ax_select_func call_select,
-+    void* select_ctx)
- {
-     netsnmp_session *ss;
-     struct synch_state lstate, *state;
-@@ -1099,7 +1122,7 @@ snmp_sess_synch_response(void *sessp,
-         snmp_sess_select_info(sessp, &numfds, &fdset, tvp, &block);
+ snmp_sess_synch_response(void *sessp,
+                          netsnmp_pdu *pdu, netsnmp_pdu **response)
+@@ -1152,7 +1163,14 @@ snmp_sess_synch_response(void *sessp,
+                                     NETSNMP_SELECT_NOALARMS);
          if (block == 1)
              tvp = NULL;         /* block without timeout */
--        count = select(numfds, &fdset, 0, 0, tvp);
-+        count = call_select(select_ctx, numfds, &fdset, 0, 0, tvp);
+-        count = select(numfds, &fdset, NULL, NULL, tvp);
++
++        if ((ss->myvoid != NULL) && (ss->flags & SNMP_FLAGS_AX_ASYNC_SELECT)) {
++            count = GET_AX_ASYNC_FUNC(ss)(GET_AX_ASYNC_CTX(ss), tvp);
++        }
++        else {
++            count = select(numfds, &fdset, NULL, NULL, tvp);
++        }
++
          if (count > 0) {
              snmp_sess_read(sessp, &fdset);
          } else
