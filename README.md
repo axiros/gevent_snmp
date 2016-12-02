@@ -10,8 +10,8 @@ Main characteristics as bullet point list:
 * It uses the libnetsnmp.so directly via cython (Cython>=0.21 is required).
 * It requires a patched libnetsnmp.so. See implementation notes.
 * Uses the "high level" API of libnetsnmp => Easily use the features provided by libnetsnmp.
-* Tested with gevent 0.13.8
-* Tested with libnetsnmp 5.4.X
+* Tested with gevent 1.1
+* Tested with libnetsnmp 5.7.X
 
 ## Quick Usage Guide
 
