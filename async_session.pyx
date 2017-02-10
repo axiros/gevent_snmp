@@ -179,11 +179,13 @@ cdef extern from *:
     netsnmp_session* snmp_sess_session(void*)
     void snmp_sess_error(void*, int*, int*, char**)
     int snmp_sess_close(void*)
+    const char* snmp_errstring(int)
 
     void init_snmp(char*)
 
     cdef enum:
         STAT_SUCCESS
+        SNMP_ERR_NOERROR
         SNMPERR_TIMEOUT
 
 
@@ -628,6 +630,10 @@ cdef class AsyncSession(object):
     cdef object parse_response(self, netsnmp_pdu* response):
         cdef netsnmp_variable_list* entry = NULL
         cdef dict parsed = {}
+
+        if not (response.errstat == SNMP_ERR_NOERROR):
+            msg = "Error in response: %s"
+            raise SNMPError(msg % snmp_errstring(response.errstat))
 
         entry = response.variables
         while (entry != NULL):
