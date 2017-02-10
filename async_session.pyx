@@ -27,6 +27,7 @@ cdef extern from *:
         SNMP_MSG_GET
         SNMP_MSG_GETNEXT
         SNMP_MSG_GETBULK
+        SNMP_MSG_SET
 
         MAX_OID_LEN
 
@@ -73,6 +74,7 @@ cdef extern from *:
 
     netsnmp_pdu* snmp_pdu_create(int)
     void snmp_add_null_var(netsnmp_pdu*, const oid*, size_t)
+    int snmp_add_var(netsnmp_pdu*, const oid*, size_t, char, const char*)
     void snmp_free_pdu(netsnmp_pdu*)
 
     ## Session interface ##
@@ -216,6 +218,31 @@ class SNMPError(Exception):
 
 class SNMPTimeoutError(SNMPError):
     pass
+
+# These are the type specifications allowed by 'snmp_add_var'
+# 'snmp_add_var' reads all the values as a *string* and parses them.
+# shortcout, long name, (C type, ASN type)
+# 'i'  'INTEGER' (long, ASN_INTEGER)
+# 'u'  'Unsigned32' (unsigned long, ASN_UNSIGNED)
+# '3'  'UInteger32' (unsigned long, ASN_UINTEGER)
+# 'c'  'Counter32'  (unsigned long, ASN_COUNTER)
+# 'C'  'Counter64'  (struct, ASN_COUNTER64)
+# 't'  'TimeTicks'  (unsigned long, ASN_TIMETICKS)
+# 'a'  'IpAddress'  (struct,  ASN_IPADDRESS) => Ip as string is parsed
+# 'o'  'Object'     (oid, ASN_OBJECT_ID)
+# 's'  'Octet str'  (char*, ASN_OCTET_STR)
+# 'd'  'decimal'    (..., ASN_OCTET_STR) => decimal number is parsed
+# 'x'  'hex'        (..., ASN_OCTET_STR) => hex string is parsed
+# 'n'  'null'       (..., ASN_NULL)
+# 'b'  'Bits'       (..., ASN_OCTET_STR)
+# 'U'               (struct, ASN_OPAQUE_U64
+# 'I'               (struct, ASN_OPAQUE_I64
+# 'F'               (float, ASN_OPAQUE_FLOAT)
+# 'D'               (double, ASN_OPAQUE_DOUBLE)
+
+
+VALID_VALUE_TYPES = set('iu3cCtaosdxnbUIFD')
+VALUE_TYPE_TO_INT = {key: ord(key) for key in VALID_VALUE_TYPES}
 
 
 cdef object error_from_session(msg, netsnmp_session* session):
@@ -586,6 +613,18 @@ cdef class AsyncSession(object):
             self._add_oid(req, py_oid)
         return self._do_snmp(req)
 
+    def set_oids(self, oids):
+        cdef netsnmp_pdu* req = snmp_pdu_create(SNMP_MSG_SET)
+
+        try:
+            for py_oid, (value, value_type) in oids.iteritems():
+                self._add_oid_set(req, py_oid, value, value_type)
+        except Exception:
+            snmp_free_pdu(req)
+            raise
+        else:
+            return self._do_snmp(req)
+
     ## This is private API for the 'low level' calls.
     cdef _is_in_subtree(self, root, oid):
         if len(oid) < len(root):
@@ -631,6 +670,22 @@ cdef class AsyncSession(object):
             param[index] = value
 
         snmp_add_null_var(req, param, param_size)
+
+    cdef object _add_oid_set(self, netsnmp_pdu* req, py_oid, val, val_type):
+        cdef char c_val_type
+        cdef oid param[MAX_OID_LEN]
+        cdef size_t param_size = len(py_oid)
+        for index, value, in enumerate(py_oid):
+            param[index] = value
+
+        if not val_type in VALUE_TYPE_TO_INT:
+            raise Exception("Unknown value type '%s'" % val_type)
+
+        c_val_type = VALUE_TYPE_TO_INT[val_type]
+
+        if snmp_add_var(req, param, param_size, c_val_type, val) != 0:
+            msg = "Cannot set oid(%s) with val(%) and type(%s)"
+            raise Exception(msg % (py_oid, val, val_type))
 
     cdef object parse_response(self, netsnmp_pdu* response):
         cdef netsnmp_variable_list* entry = NULL
