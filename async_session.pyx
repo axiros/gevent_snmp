@@ -188,6 +188,7 @@ cdef extern from *:
     void init_snmp(char*)
 
     cdef enum:
+        STAT_SUCCESS
         SNMPERR_TIMEOUT
 
 
@@ -609,7 +610,7 @@ cdef class AsyncSession(object):
             my_select,
             <void*>self)
 
-        if rc == 0:
+        if rc == STAT_SUCCESS:
             try:
                 return self.parse_response(response)
             finally:
