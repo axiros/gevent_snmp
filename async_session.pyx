@@ -183,6 +183,7 @@ cdef extern from *:
     void init_snmp(char*)
 
     cdef enum:
+        STAT_SUCCESS
         SNMPERR_TIMEOUT
 
 
@@ -604,7 +605,7 @@ cdef class AsyncSession(object):
             req,
             cython.address(response))
 
-        if rc == 0:
+        if rc == STAT_SUCCESS:
             try:
                 return self.parse_response(response)
             finally:
