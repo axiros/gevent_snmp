@@ -127,6 +127,19 @@ to_set = {
 result = session.set_oids(to_set)
 ```
 
+### Clone
+Use this call to clone an existing session.
+* *Input:* Config options for the new session. Options not mentioned here are
+    cloned from the existing session. The overriding options must be given as
+    keyword arguments.
+* *Output:* Contextmanager which delivers the cloned session.
+    For this clone `open_session` has been already called.
+
+Example:
+```python
+with sess.clone_session(community='private') as priv_sess:
+    print priv_sess.set_oids(oids)
+```
 
 ## Implementation Notes
 

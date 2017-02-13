@@ -539,6 +539,9 @@ cdef class AsyncSession(object):
         # Probe was successful, don't do it again.
         snmp_sess_session(self.sp).flags |= SNMP_FLAGS_DONT_PROBE
 
+    def clone_session(self, **override_args):
+        return CloneSession(self, override_args)
+
     ## These are 'higher level' functions.
     def walk(self, root):
         """Walks a tree by succesive calling get_next."""
@@ -755,3 +758,26 @@ cdef object binary_to_hex_pystring(u_char* data, size_t data_size):
         return output[:hex_len]
     finally:
         libc_free(output)
+
+
+@cython.final
+@cython.internal
+cdef class CloneSession(object):
+    cdef object args
+    cdef object session
+
+    def __cinit__(self, AsyncSession other_session, args):
+        new_args = other_session.args.copy()
+        new_args.update(args)
+
+        self.args = new_args
+        self.session = None
+
+    def __enter__(self):
+        self.session = AsyncSession(self.args)
+        self.session.open_session()
+        return self.session
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        # Close is triggered via garbage collector.
+        self.session = None
