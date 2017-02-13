@@ -665,6 +665,7 @@ typedef unsigned long __pyx_t_13async_session_oid;
 /*--- Type declarations ---*/
 struct __pyx_obj_13async_session_EndOfMib;
 struct __pyx_obj_13async_session_AsyncSession;
+struct __pyx_obj_13async_session_CloneSession;
 struct __pyx_t_13async_session_ax_async_ctx_t;
 
 /* "async_session.pyx":15
@@ -688,7 +689,7 @@ struct __pyx_t_13async_session_ax_async_ctx_t {
   void *ctx;
 };
 
-/* "async_session.pyx":201
+/* "async_session.pyx":202
  * 
  * @cython.internal
  * cdef class EndOfMib(object):             # <<<<<<<<<<<<<<
@@ -700,7 +701,7 @@ struct __pyx_obj_13async_session_EndOfMib {
 };
 
 
-/* "async_session.pyx":324
+/* "async_session.pyx":325
  * 
  * @cython.final
  * cdef class AsyncSession(object):             # <<<<<<<<<<<<<<
@@ -718,6 +719,28 @@ struct __pyx_obj_13async_session_AsyncSession {
 };
 
 
+/* "async_session.pyx":763
+ * @cython.final
+ * @cython.internal
+ * cdef class CloneSession(object):             # <<<<<<<<<<<<<<
+ *     cdef object args
+ *     cdef object session
+ */
+struct __pyx_obj_13async_session_CloneSession {
+  PyObject_HEAD
+  PyObject *args;
+  PyObject *session;
+};
+
+
+
+/* "async_session.pyx":325
+ * 
+ * @cython.final
+ * cdef class AsyncSession(object):             # <<<<<<<<<<<<<<
+ *     # Need to keep a reference to the used strings like community and peername.
+ *     cdef object args
+ */
 
 struct __pyx_vtabstruct_13async_session_AsyncSession {
   PyObject *(*_set_community)(struct __pyx_obj_13async_session_AsyncSession *, netsnmp_session *);
@@ -963,6 +986,9 @@ static CYTHON_INLINE int __Pyx_PySequence_ContainsTF(PyObject* item, PyObject* s
     return unlikely(result < 0) ? result : (result == (eq == Py_EQ));
 }
 
+/* KeywordStringCheck.proto */
+static CYTHON_INLINE int __Pyx_CheckKeywordStrings(PyObject *kwdict, const char* function_name, int kw_allowed);
+
 /* PyObjectCallNoArg.proto */
 #if CYTHON_COMPILING_IN_CPYTHON
 static CYTHON_INLINE PyObject* __Pyx_PyObject_CallNoArg(PyObject *func);
@@ -1081,6 +1107,10 @@ static CYTHON_INLINE Py_UCS4 __Pyx_PyUnicode_AsPy_UCS4(PyObject*);
 #endif
 static long __Pyx__PyObject_Ord(PyObject* c);
 
+/* ArgTypeTest.proto */
+static CYTHON_INLINE int __Pyx_ArgTypeTest(PyObject *obj, PyTypeObject *type, int none_allowed,
+    const char *name, int exact);
+
 /* SetVTable.proto */
 static int __Pyx_SetVtable(PyObject *dict, void *vtable);
 
@@ -1179,6 +1209,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession_parse_var(CYTHON_UNUSED 
 /* Module declarations from 'async_session' */
 static PyTypeObject *__pyx_ptype_13async_session_EndOfMib = 0;
 static PyTypeObject *__pyx_ptype_13async_session_AsyncSession = 0;
+static PyTypeObject *__pyx_ptype_13async_session_CloneSession = 0;
 static PyObject *__pyx_f_13async_session_error_from_session(PyObject *, netsnmp_session *); /*proto*/
 static PyObject *__pyx_f_13async_session_error_from_session_ptr(PyObject *, void *); /*proto*/
 static int __pyx_f_13async_session_my_select(void *, struct timeval *); /*proto*/
@@ -1201,6 +1232,7 @@ static const char __pyx_k_doc[] = "__doc__";
 static const char __pyx_k_hex[] = "hex";
 static const char __pyx_k_s_s[] = "%s: %s";
 static const char __pyx_k_args[] = "args";
+static const char __pyx_k_copy[] = "copy";
 static const char __pyx_k_join[] = "join";
 static const char __pyx_k_main[] = "__main__";
 static const char __pyx_k_oids[] = "oids";
@@ -1213,12 +1245,14 @@ static const char __pyx_k_decode[] = "decode";
 static const char __pyx_k_gevent[] = "gevent";
 static const char __pyx_k_import[] = "__import__";
 static const char __pyx_k_module[] = "__module__";
+static const char __pyx_k_update[] = "update";
 static const char __pyx_k_prepare[] = "__prepare__";
 static const char __pyx_k_retries[] = "retries";
 static const char __pyx_k_timeout[] = "timeout";
 static const char __pyx_k_version[] = "version";
 static const char __pyx_k_authPriv[] = "authPriv";
 static const char __pyx_k_auth_key[] = "auth_key";
+static const char __pyx_k_exc_type[] = "exc_type";
 static const char __pyx_k_get_bulk[] = "get_bulk";
 static const char __pyx_k_get_next[] = "get_next";
 static const char __pyx_k_peername[] = "peername";
@@ -1227,8 +1261,10 @@ static const char __pyx_k_qualname[] = "__qualname__";
 static const char __pyx_k_SNMPError[] = "SNMPError";
 static const char __pyx_k_community[] = "community";
 static const char __pyx_k_enumerate[] = "enumerate";
+static const char __pyx_k_exc_value[] = "exc_value";
 static const char __pyx_k_iteritems[] = "iteritems";
 static const char __pyx_k_metaclass[] = "__metaclass__";
+static const char __pyx_k_traceback[] = "traceback";
 static const char __pyx_k_wait_read[] = "wait_read";
 static const char __pyx_k_END_OF_MIB[] = "<END_OF_MIB>";
 static const char __pyx_k_authNoPriv[] = "authNoPriv";
@@ -1241,8 +1277,10 @@ static const char __pyx_k_TimeoutError[] = "TimeoutError";
 static const char __pyx_k_init_snmplib[] = "init_snmplib";
 static const char __pyx_k_noAuthNoPriv[] = "noAuthNoPriv";
 static const char __pyx_k_nonrepeaters[] = "nonrepeaters";
+static const char __pyx_k_open_session[] = "open_session";
 static const char __pyx_k_async_session[] = "async_session";
 static const char __pyx_k_gevent_socket[] = "gevent.socket";
+static const char __pyx_k_other_session[] = "other_session";
 static const char __pyx_k_security_name[] = "security_name";
 static const char __pyx_k_Error_in_query[] = "Error in query";
 static const char __pyx_k_maxrepetitions[] = "maxrepetitions";
@@ -1265,10 +1303,10 @@ static const char __pyx_k_Cannot_probe_v3_engineID[] = "Cannot probe v3 engineID
 static const char __pyx_k_Unknown_security_level_s[] = "Unknown security_level: %s";
 static const char __pyx_k_context_engine_id_binary[] = "context_engine_id_binary";
 static const char __pyx_k_security_engine_id_binary[] = "security_engine_id_binary";
+static const char __pyx_k_Cannot_set_oid_s_with_val_s_and[] = "Cannot set oid(%s) with val(%s) and type(%s): %s";
 static const char __pyx_k_opt_axtract_ext_src_gevent_snmp[] = "/opt/axtract/ext_src/gevent_snmp/async_session.pyx";
 static const char __pyx_k_Can_t_generate_KU_for_auth_key_i[] = "Can't generate KU for auth_key: %i";
 static const char __pyx_k_Can_t_generate_KU_for_priv_key_i[] = "Can't generate KU for priv_key: %i";
-static const char __pyx_k_Cannot_set_oid_s_with_val_and_ty[] = "Cannot set oid(%s) with val(%) and type(%s)";
 static PyObject *__pyx_kp_s_1;
 static PyObject *__pyx_kp_s_2c;
 static PyObject *__pyx_kp_s_3;
@@ -1277,7 +1315,7 @@ static PyObject *__pyx_kp_s_Can_not_open;
 static PyObject *__pyx_kp_s_Can_t_generate_KU_for_auth_key_i;
 static PyObject *__pyx_kp_s_Can_t_generate_KU_for_priv_key_i;
 static PyObject *__pyx_kp_s_Cannot_probe_v3_engineID;
-static PyObject *__pyx_kp_s_Cannot_set_oid_s_with_val_and_ty;
+static PyObject *__pyx_kp_s_Cannot_set_oid_s_with_val_s_and;
 static PyObject *__pyx_n_s_DES;
 static PyObject *__pyx_kp_s_END_OF_MIB;
 static PyObject *__pyx_n_s_END_OF_MIB_2;
@@ -1307,9 +1345,12 @@ static PyObject *__pyx_n_s_auth_proto;
 static PyObject *__pyx_n_s_community;
 static PyObject *__pyx_n_s_context_engine_id;
 static PyObject *__pyx_n_s_context_engine_id_binary;
+static PyObject *__pyx_n_s_copy;
 static PyObject *__pyx_n_s_decode;
 static PyObject *__pyx_n_s_doc;
 static PyObject *__pyx_n_s_enumerate;
+static PyObject *__pyx_n_s_exc_type;
+static PyObject *__pyx_n_s_exc_value;
 static PyObject *__pyx_n_s_get_bulk;
 static PyObject *__pyx_n_s_get_next;
 static PyObject *__pyx_n_s_gevent;
@@ -1329,7 +1370,9 @@ static PyObject *__pyx_n_s_module;
 static PyObject *__pyx_n_s_noAuthNoPriv;
 static PyObject *__pyx_n_s_nonrepeaters;
 static PyObject *__pyx_n_s_oids;
+static PyObject *__pyx_n_s_open_session;
 static PyObject *__pyx_kp_s_opt_axtract_ext_src_gevent_snmp;
+static PyObject *__pyx_n_s_other_session;
 static PyObject *__pyx_n_s_peername;
 static PyObject *__pyx_n_s_prepare;
 static PyObject *__pyx_n_s_priv_key;
@@ -1347,6 +1390,8 @@ static PyObject *__pyx_n_s_security_name;
 static PyObject *__pyx_n_s_sleep;
 static PyObject *__pyx_n_s_test;
 static PyObject *__pyx_n_s_timeout;
+static PyObject *__pyx_n_s_traceback;
+static PyObject *__pyx_n_s_update;
 static PyObject *__pyx_n_s_version;
 static PyObject *__pyx_n_s_wait_read;
 static PyObject *__pyx_pf_13async_session_init_snmplib(CYTHON_UNUSED PyObject *__pyx_self); /* proto */
@@ -1359,14 +1404,19 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_16snmp_query_count___ge
 static PyObject *__pyx_pf_13async_session_12AsyncSession_18security_engine_id___get__(struct __pyx_obj_13async_session_AsyncSession *__pyx_v_self); /* proto */
 static PyObject *__pyx_pf_13async_session_12AsyncSession_17context_engine_id___get__(struct __pyx_obj_13async_session_AsyncSession *__pyx_v_self); /* proto */
 static PyObject *__pyx_pf_13async_session_12AsyncSession_6open_session(struct __pyx_obj_13async_session_AsyncSession *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_13async_session_12AsyncSession_8walk(struct __pyx_obj_13async_session_AsyncSession *__pyx_v_self, PyObject *__pyx_v_root); /* proto */
-static PyObject *__pyx_pf_13async_session_12AsyncSession_10walk_with_get_bulk(struct __pyx_obj_13async_session_AsyncSession *__pyx_v_self, PyObject *__pyx_v_root, PyObject *__pyx_v_maxrepetitions); /* proto */
-static PyObject *__pyx_pf_13async_session_12AsyncSession_12get(struct __pyx_obj_13async_session_AsyncSession *__pyx_v_self, PyObject *__pyx_v_oids); /* proto */
-static PyObject *__pyx_pf_13async_session_12AsyncSession_14get_next(struct __pyx_obj_13async_session_AsyncSession *__pyx_v_self, PyObject *__pyx_v_py_oid); /* proto */
-static PyObject *__pyx_pf_13async_session_12AsyncSession_16get_bulk(struct __pyx_obj_13async_session_AsyncSession *__pyx_v_self, PyObject *__pyx_v_oids, PyObject *__pyx_v_nonrepeaters, PyObject *__pyx_v_maxrepetitions); /* proto */
-static PyObject *__pyx_pf_13async_session_12AsyncSession_18set_oids(struct __pyx_obj_13async_session_AsyncSession *__pyx_v_self, PyObject *__pyx_v_oids); /* proto */
+static PyObject *__pyx_pf_13async_session_12AsyncSession_8clone_session(struct __pyx_obj_13async_session_AsyncSession *__pyx_v_self, PyObject *__pyx_v_override_args); /* proto */
+static PyObject *__pyx_pf_13async_session_12AsyncSession_10walk(struct __pyx_obj_13async_session_AsyncSession *__pyx_v_self, PyObject *__pyx_v_root); /* proto */
+static PyObject *__pyx_pf_13async_session_12AsyncSession_12walk_with_get_bulk(struct __pyx_obj_13async_session_AsyncSession *__pyx_v_self, PyObject *__pyx_v_root, PyObject *__pyx_v_maxrepetitions); /* proto */
+static PyObject *__pyx_pf_13async_session_12AsyncSession_14get(struct __pyx_obj_13async_session_AsyncSession *__pyx_v_self, PyObject *__pyx_v_oids); /* proto */
+static PyObject *__pyx_pf_13async_session_12AsyncSession_16get_next(struct __pyx_obj_13async_session_AsyncSession *__pyx_v_self, PyObject *__pyx_v_py_oid); /* proto */
+static PyObject *__pyx_pf_13async_session_12AsyncSession_18get_bulk(struct __pyx_obj_13async_session_AsyncSession *__pyx_v_self, PyObject *__pyx_v_oids, PyObject *__pyx_v_nonrepeaters, PyObject *__pyx_v_maxrepetitions); /* proto */
+static PyObject *__pyx_pf_13async_session_12AsyncSession_20set_oids(struct __pyx_obj_13async_session_AsyncSession *__pyx_v_self, PyObject *__pyx_v_oids); /* proto */
+static int __pyx_pf_13async_session_12CloneSession___cinit__(struct __pyx_obj_13async_session_CloneSession *__pyx_v_self, struct __pyx_obj_13async_session_AsyncSession *__pyx_v_other_session, PyObject *__pyx_v_args); /* proto */
+static PyObject *__pyx_pf_13async_session_12CloneSession_2__enter__(struct __pyx_obj_13async_session_CloneSession *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_13async_session_12CloneSession_4__exit__(struct __pyx_obj_13async_session_CloneSession *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v_exc_type, CYTHON_UNUSED PyObject *__pyx_v_exc_value, CYTHON_UNUSED PyObject *__pyx_v_traceback); /* proto */
 static PyObject *__pyx_tp_new_13async_session_EndOfMib(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
 static PyObject *__pyx_tp_new_13async_session_AsyncSession(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
+static PyObject *__pyx_tp_new_13async_session_CloneSession(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
 static PyObject *__pyx_int_0;
 static PyObject *__pyx_int_1;
 static PyObject *__pyx_int_10;
@@ -1377,7 +1427,7 @@ static PyObject *__pyx_tuple__2;
 static PyObject *__pyx_tuple__3;
 static PyObject *__pyx_codeobj__5;
 
-/* "async_session.pyx":196
+/* "async_session.pyx":197
  * # SNMP version 3 works only if this method is called once.
  * # Otherwise you get 'no such security service available' errors.
  * def init_snmplib():             # <<<<<<<<<<<<<<
@@ -1404,7 +1454,7 @@ static PyObject *__pyx_pf_13async_session_init_snmplib(CYTHON_UNUSED PyObject *_
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("init_snmplib", 0);
 
-  /* "async_session.pyx":197
+  /* "async_session.pyx":198
  * # Otherwise you get 'no such security service available' errors.
  * def init_snmplib():
  *     init_snmp('async_session')             # <<<<<<<<<<<<<<
@@ -1413,7 +1463,7 @@ static PyObject *__pyx_pf_13async_session_init_snmplib(CYTHON_UNUSED PyObject *_
  */
   init_snmp(((char *)"async_session"));
 
-  /* "async_session.pyx":196
+  /* "async_session.pyx":197
  * # SNMP version 3 works only if this method is called once.
  * # Otherwise you get 'no such security service available' errors.
  * def init_snmplib():             # <<<<<<<<<<<<<<
@@ -1428,7 +1478,7 @@ static PyObject *__pyx_pf_13async_session_init_snmplib(CYTHON_UNUSED PyObject *_
   return __pyx_r;
 }
 
-/* "async_session.pyx":202
+/* "async_session.pyx":203
  * @cython.internal
  * cdef class EndOfMib(object):
  *     def __str__(self):             # <<<<<<<<<<<<<<
@@ -1454,7 +1504,7 @@ static PyObject *__pyx_pf_13async_session_8EndOfMib___str__(CYTHON_UNUSED struct
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__str__", 0);
 
-  /* "async_session.pyx":203
+  /* "async_session.pyx":204
  * cdef class EndOfMib(object):
  *     def __str__(self):
  *         return "<END_OF_MIB>"             # <<<<<<<<<<<<<<
@@ -1466,7 +1516,7 @@ static PyObject *__pyx_pf_13async_session_8EndOfMib___str__(CYTHON_UNUSED struct
   __pyx_r = __pyx_kp_s_END_OF_MIB;
   goto __pyx_L0;
 
-  /* "async_session.pyx":202
+  /* "async_session.pyx":203
  * @cython.internal
  * cdef class EndOfMib(object):
  *     def __str__(self):             # <<<<<<<<<<<<<<
@@ -1481,7 +1531,7 @@ static PyObject *__pyx_pf_13async_session_8EndOfMib___str__(CYTHON_UNUSED struct
   return __pyx_r;
 }
 
-/* "async_session.pyx":205
+/* "async_session.pyx":206
  *         return "<END_OF_MIB>"
  * 
  *     def __repr__(self):             # <<<<<<<<<<<<<<
@@ -1509,7 +1559,7 @@ static PyObject *__pyx_pf_13async_session_8EndOfMib_2__repr__(struct __pyx_obj_1
   PyObject *__pyx_t_2 = NULL;
   __Pyx_RefNannySetupContext("__repr__", 0);
 
-  /* "async_session.pyx":206
+  /* "async_session.pyx":207
  * 
  *     def __repr__(self):
  *         return str(self)             # <<<<<<<<<<<<<<
@@ -1517,19 +1567,19 @@ static PyObject *__pyx_pf_13async_session_8EndOfMib_2__repr__(struct __pyx_obj_1
  * 
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyTuple_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 206, __pyx_L1_error)
+  __pyx_t_1 = PyTuple_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 207, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_INCREF(((PyObject *)__pyx_v_self));
   __Pyx_GIVEREF(((PyObject *)__pyx_v_self));
   PyTuple_SET_ITEM(__pyx_t_1, 0, ((PyObject *)__pyx_v_self));
-  __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)(&PyString_Type)), __pyx_t_1, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 206, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)(&PyString_Type)), __pyx_t_1, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 207, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_r = __pyx_t_2;
   __pyx_t_2 = 0;
   goto __pyx_L0;
 
-  /* "async_session.pyx":205
+  /* "async_session.pyx":206
  *         return "<END_OF_MIB>"
  * 
  *     def __repr__(self):             # <<<<<<<<<<<<<<
@@ -1549,7 +1599,7 @@ static PyObject *__pyx_pf_13async_session_8EndOfMib_2__repr__(struct __pyx_obj_1
   return __pyx_r;
 }
 
-/* "async_session.pyx":243
+/* "async_session.pyx":244
  * 
  * 
  * cdef object error_from_session(msg, netsnmp_session* session):             # <<<<<<<<<<<<<<
@@ -1580,7 +1630,7 @@ static PyObject *__pyx_f_13async_session_error_from_session(PyObject *__pyx_v_ms
   PyObject *__pyx_t_15 = NULL;
   __Pyx_RefNannySetupContext("error_from_session", 0);
 
-  /* "async_session.pyx":248
+  /* "async_session.pyx":249
  *     cdef char* error_str
  * 
  *     snmp_error(             # <<<<<<<<<<<<<<
@@ -1589,7 +1639,7 @@ static PyObject *__pyx_f_13async_session_error_from_session(PyObject *__pyx_v_ms
  */
   snmp_error(__pyx_v_session, (&__pyx_v_p_errno), (&__pyx_v_p_snmp_errno), (&__pyx_v_error_str));
 
-  /* "async_session.pyx":254
+  /* "async_session.pyx":255
  *         cython.address(error_str))
  * 
  *     try:             # <<<<<<<<<<<<<<
@@ -1598,7 +1648,7 @@ static PyObject *__pyx_f_13async_session_error_from_session(PyObject *__pyx_v_ms
  */
   /*try:*/ {
 
-    /* "async_session.pyx":255
+    /* "async_session.pyx":256
  * 
  *     try:
  *         if p_snmp_errno == SNMPERR_TIMEOUT:             # <<<<<<<<<<<<<<
@@ -1608,7 +1658,7 @@ static PyObject *__pyx_f_13async_session_error_from_session(PyObject *__pyx_v_ms
     __pyx_t_1 = ((__pyx_v_p_snmp_errno == SNMPERR_TIMEOUT) != 0);
     if (__pyx_t_1) {
 
-      /* "async_session.pyx":256
+      /* "async_session.pyx":257
  *     try:
  *         if p_snmp_errno == SNMPERR_TIMEOUT:
  *             return SNMPTimeoutError("%s: %s" % (msg, error_str))             # <<<<<<<<<<<<<<
@@ -1616,11 +1666,11 @@ static PyObject *__pyx_f_13async_session_error_from_session(PyObject *__pyx_v_ms
  *             return SNMPError("%s: %s" % (msg, error_str))
  */
       __Pyx_XDECREF(__pyx_r);
-      __pyx_t_3 = __Pyx_GetModuleGlobalName(__pyx_n_s_SNMPTimeoutError); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 256, __pyx_L4_error)
+      __pyx_t_3 = __Pyx_GetModuleGlobalName(__pyx_n_s_SNMPTimeoutError); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 257, __pyx_L4_error)
       __Pyx_GOTREF(__pyx_t_3);
-      __pyx_t_4 = __Pyx_PyBytes_FromString(__pyx_v_error_str); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 256, __pyx_L4_error)
+      __pyx_t_4 = __Pyx_PyBytes_FromString(__pyx_v_error_str); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 257, __pyx_L4_error)
       __Pyx_GOTREF(__pyx_t_4);
-      __pyx_t_5 = PyTuple_New(2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 256, __pyx_L4_error)
+      __pyx_t_5 = PyTuple_New(2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 257, __pyx_L4_error)
       __Pyx_GOTREF(__pyx_t_5);
       __Pyx_INCREF(__pyx_v_msg);
       __Pyx_GIVEREF(__pyx_v_msg);
@@ -1628,7 +1678,7 @@ static PyObject *__pyx_f_13async_session_error_from_session(PyObject *__pyx_v_ms
       __Pyx_GIVEREF(__pyx_t_4);
       PyTuple_SET_ITEM(__pyx_t_5, 1, __pyx_t_4);
       __pyx_t_4 = 0;
-      __pyx_t_4 = __Pyx_PyString_Format(__pyx_kp_s_s_s, __pyx_t_5); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 256, __pyx_L4_error)
+      __pyx_t_4 = __Pyx_PyString_Format(__pyx_kp_s_s_s, __pyx_t_5); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 257, __pyx_L4_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
       __pyx_t_5 = NULL;
@@ -1642,14 +1692,14 @@ static PyObject *__pyx_f_13async_session_error_from_session(PyObject *__pyx_v_ms
         }
       }
       if (!__pyx_t_5) {
-        __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 256, __pyx_L4_error)
+        __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 257, __pyx_L4_error)
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
         __Pyx_GOTREF(__pyx_t_2);
       } else {
         #if CYTHON_FAST_PYCALL
         if (PyFunction_Check(__pyx_t_3)) {
           PyObject *__pyx_temp[2] = {__pyx_t_5, __pyx_t_4};
-          __pyx_t_2 = __Pyx_PyFunction_FastCall(__pyx_t_3, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 256, __pyx_L4_error)
+          __pyx_t_2 = __Pyx_PyFunction_FastCall(__pyx_t_3, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 257, __pyx_L4_error)
           __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
           __Pyx_GOTREF(__pyx_t_2);
           __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
@@ -1658,20 +1708,20 @@ static PyObject *__pyx_f_13async_session_error_from_session(PyObject *__pyx_v_ms
         #if CYTHON_FAST_PYCCALL
         if (__Pyx_PyFastCFunction_Check(__pyx_t_3)) {
           PyObject *__pyx_temp[2] = {__pyx_t_5, __pyx_t_4};
-          __pyx_t_2 = __Pyx_PyCFunction_FastCall(__pyx_t_3, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 256, __pyx_L4_error)
+          __pyx_t_2 = __Pyx_PyCFunction_FastCall(__pyx_t_3, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 257, __pyx_L4_error)
           __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
           __Pyx_GOTREF(__pyx_t_2);
           __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
         } else
         #endif
         {
-          __pyx_t_6 = PyTuple_New(1+1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 256, __pyx_L4_error)
+          __pyx_t_6 = PyTuple_New(1+1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 257, __pyx_L4_error)
           __Pyx_GOTREF(__pyx_t_6);
           __Pyx_GIVEREF(__pyx_t_5); PyTuple_SET_ITEM(__pyx_t_6, 0, __pyx_t_5); __pyx_t_5 = NULL;
           __Pyx_GIVEREF(__pyx_t_4);
           PyTuple_SET_ITEM(__pyx_t_6, 0+1, __pyx_t_4);
           __pyx_t_4 = 0;
-          __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_6, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 256, __pyx_L4_error)
+          __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_6, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 257, __pyx_L4_error)
           __Pyx_GOTREF(__pyx_t_2);
           __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
         }
@@ -1681,7 +1731,7 @@ static PyObject *__pyx_f_13async_session_error_from_session(PyObject *__pyx_v_ms
       __pyx_t_2 = 0;
       goto __pyx_L3_return;
 
-      /* "async_session.pyx":255
+      /* "async_session.pyx":256
  * 
  *     try:
  *         if p_snmp_errno == SNMPERR_TIMEOUT:             # <<<<<<<<<<<<<<
@@ -1690,7 +1740,7 @@ static PyObject *__pyx_f_13async_session_error_from_session(PyObject *__pyx_v_ms
  */
     }
 
-    /* "async_session.pyx":258
+    /* "async_session.pyx":259
  *             return SNMPTimeoutError("%s: %s" % (msg, error_str))
  *         else:
  *             return SNMPError("%s: %s" % (msg, error_str))             # <<<<<<<<<<<<<<
@@ -1699,11 +1749,11 @@ static PyObject *__pyx_f_13async_session_error_from_session(PyObject *__pyx_v_ms
  */
     /*else*/ {
       __Pyx_XDECREF(__pyx_r);
-      __pyx_t_3 = __Pyx_GetModuleGlobalName(__pyx_n_s_SNMPError); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 258, __pyx_L4_error)
+      __pyx_t_3 = __Pyx_GetModuleGlobalName(__pyx_n_s_SNMPError); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 259, __pyx_L4_error)
       __Pyx_GOTREF(__pyx_t_3);
-      __pyx_t_6 = __Pyx_PyBytes_FromString(__pyx_v_error_str); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 258, __pyx_L4_error)
+      __pyx_t_6 = __Pyx_PyBytes_FromString(__pyx_v_error_str); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 259, __pyx_L4_error)
       __Pyx_GOTREF(__pyx_t_6);
-      __pyx_t_4 = PyTuple_New(2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 258, __pyx_L4_error)
+      __pyx_t_4 = PyTuple_New(2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 259, __pyx_L4_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_INCREF(__pyx_v_msg);
       __Pyx_GIVEREF(__pyx_v_msg);
@@ -1711,7 +1761,7 @@ static PyObject *__pyx_f_13async_session_error_from_session(PyObject *__pyx_v_ms
       __Pyx_GIVEREF(__pyx_t_6);
       PyTuple_SET_ITEM(__pyx_t_4, 1, __pyx_t_6);
       __pyx_t_6 = 0;
-      __pyx_t_6 = __Pyx_PyString_Format(__pyx_kp_s_s_s, __pyx_t_4); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 258, __pyx_L4_error)
+      __pyx_t_6 = __Pyx_PyString_Format(__pyx_kp_s_s_s, __pyx_t_4); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 259, __pyx_L4_error)
       __Pyx_GOTREF(__pyx_t_6);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       __pyx_t_4 = NULL;
@@ -1725,14 +1775,14 @@ static PyObject *__pyx_f_13async_session_error_from_session(PyObject *__pyx_v_ms
         }
       }
       if (!__pyx_t_4) {
-        __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_6); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 258, __pyx_L4_error)
+        __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_6); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 259, __pyx_L4_error)
         __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
         __Pyx_GOTREF(__pyx_t_2);
       } else {
         #if CYTHON_FAST_PYCALL
         if (PyFunction_Check(__pyx_t_3)) {
           PyObject *__pyx_temp[2] = {__pyx_t_4, __pyx_t_6};
-          __pyx_t_2 = __Pyx_PyFunction_FastCall(__pyx_t_3, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 258, __pyx_L4_error)
+          __pyx_t_2 = __Pyx_PyFunction_FastCall(__pyx_t_3, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 259, __pyx_L4_error)
           __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
           __Pyx_GOTREF(__pyx_t_2);
           __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
@@ -1741,20 +1791,20 @@ static PyObject *__pyx_f_13async_session_error_from_session(PyObject *__pyx_v_ms
         #if CYTHON_FAST_PYCCALL
         if (__Pyx_PyFastCFunction_Check(__pyx_t_3)) {
           PyObject *__pyx_temp[2] = {__pyx_t_4, __pyx_t_6};
-          __pyx_t_2 = __Pyx_PyCFunction_FastCall(__pyx_t_3, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 258, __pyx_L4_error)
+          __pyx_t_2 = __Pyx_PyCFunction_FastCall(__pyx_t_3, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 259, __pyx_L4_error)
           __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
           __Pyx_GOTREF(__pyx_t_2);
           __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
         } else
         #endif
         {
-          __pyx_t_5 = PyTuple_New(1+1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 258, __pyx_L4_error)
+          __pyx_t_5 = PyTuple_New(1+1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 259, __pyx_L4_error)
           __Pyx_GOTREF(__pyx_t_5);
           __Pyx_GIVEREF(__pyx_t_4); PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_4); __pyx_t_4 = NULL;
           __Pyx_GIVEREF(__pyx_t_6);
           PyTuple_SET_ITEM(__pyx_t_5, 0+1, __pyx_t_6);
           __pyx_t_6 = 0;
-          __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_5, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 258, __pyx_L4_error)
+          __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_5, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 259, __pyx_L4_error)
           __Pyx_GOTREF(__pyx_t_2);
           __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
         }
@@ -1766,7 +1816,7 @@ static PyObject *__pyx_f_13async_session_error_from_session(PyObject *__pyx_v_ms
     }
   }
 
-  /* "async_session.pyx":260
+  /* "async_session.pyx":261
  *             return SNMPError("%s: %s" % (msg, error_str))
  *     finally:
  *         libc_free(error_str)             # <<<<<<<<<<<<<<
@@ -1821,7 +1871,7 @@ static PyObject *__pyx_f_13async_session_error_from_session(PyObject *__pyx_v_ms
     }
   }
 
-  /* "async_session.pyx":243
+  /* "async_session.pyx":244
  * 
  * 
  * cdef object error_from_session(msg, netsnmp_session* session):             # <<<<<<<<<<<<<<
@@ -1844,7 +1894,7 @@ static PyObject *__pyx_f_13async_session_error_from_session(PyObject *__pyx_v_ms
   return __pyx_r;
 }
 
-/* "async_session.pyx":263
+/* "async_session.pyx":264
  * 
  * 
  * cdef object error_from_session_ptr(msg, void* sp):             # <<<<<<<<<<<<<<
@@ -1875,7 +1925,7 @@ static PyObject *__pyx_f_13async_session_error_from_session_ptr(PyObject *__pyx_
   PyObject *__pyx_t_15 = NULL;
   __Pyx_RefNannySetupContext("error_from_session_ptr", 0);
 
-  /* "async_session.pyx":268
+  /* "async_session.pyx":269
  *     cdef char* error_str
  * 
  *     snmp_sess_error(             # <<<<<<<<<<<<<<
@@ -1884,7 +1934,7 @@ static PyObject *__pyx_f_13async_session_error_from_session_ptr(PyObject *__pyx_
  */
   snmp_sess_error(__pyx_v_sp, (&__pyx_v_p_errno), (&__pyx_v_p_snmp_errno), (&__pyx_v_error_str));
 
-  /* "async_session.pyx":274
+  /* "async_session.pyx":275
  *         cython.address(error_str))
  * 
  *     try:             # <<<<<<<<<<<<<<
@@ -1893,7 +1943,7 @@ static PyObject *__pyx_f_13async_session_error_from_session_ptr(PyObject *__pyx_
  */
   /*try:*/ {
 
-    /* "async_session.pyx":275
+    /* "async_session.pyx":276
  * 
  *     try:
  *         if p_snmp_errno == SNMPERR_TIMEOUT:             # <<<<<<<<<<<<<<
@@ -1903,7 +1953,7 @@ static PyObject *__pyx_f_13async_session_error_from_session_ptr(PyObject *__pyx_
     __pyx_t_1 = ((__pyx_v_p_snmp_errno == SNMPERR_TIMEOUT) != 0);
     if (__pyx_t_1) {
 
-      /* "async_session.pyx":276
+      /* "async_session.pyx":277
  *     try:
  *         if p_snmp_errno == SNMPERR_TIMEOUT:
  *             return SNMPTimeoutError("%s: %s" % (msg, error_str))             # <<<<<<<<<<<<<<
@@ -1911,11 +1961,11 @@ static PyObject *__pyx_f_13async_session_error_from_session_ptr(PyObject *__pyx_
  *             return SNMPError("%s: %s" % (msg, error_str))
  */
       __Pyx_XDECREF(__pyx_r);
-      __pyx_t_3 = __Pyx_GetModuleGlobalName(__pyx_n_s_SNMPTimeoutError); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 276, __pyx_L4_error)
+      __pyx_t_3 = __Pyx_GetModuleGlobalName(__pyx_n_s_SNMPTimeoutError); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 277, __pyx_L4_error)
       __Pyx_GOTREF(__pyx_t_3);
-      __pyx_t_4 = __Pyx_PyBytes_FromString(__pyx_v_error_str); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 276, __pyx_L4_error)
+      __pyx_t_4 = __Pyx_PyBytes_FromString(__pyx_v_error_str); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 277, __pyx_L4_error)
       __Pyx_GOTREF(__pyx_t_4);
-      __pyx_t_5 = PyTuple_New(2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 276, __pyx_L4_error)
+      __pyx_t_5 = PyTuple_New(2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 277, __pyx_L4_error)
       __Pyx_GOTREF(__pyx_t_5);
       __Pyx_INCREF(__pyx_v_msg);
       __Pyx_GIVEREF(__pyx_v_msg);
@@ -1923,7 +1973,7 @@ static PyObject *__pyx_f_13async_session_error_from_session_ptr(PyObject *__pyx_
       __Pyx_GIVEREF(__pyx_t_4);
       PyTuple_SET_ITEM(__pyx_t_5, 1, __pyx_t_4);
       __pyx_t_4 = 0;
-      __pyx_t_4 = __Pyx_PyString_Format(__pyx_kp_s_s_s, __pyx_t_5); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 276, __pyx_L4_error)
+      __pyx_t_4 = __Pyx_PyString_Format(__pyx_kp_s_s_s, __pyx_t_5); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 277, __pyx_L4_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
       __pyx_t_5 = NULL;
@@ -1937,14 +1987,14 @@ static PyObject *__pyx_f_13async_session_error_from_session_ptr(PyObject *__pyx_
         }
       }
       if (!__pyx_t_5) {
-        __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 276, __pyx_L4_error)
+        __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 277, __pyx_L4_error)
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
         __Pyx_GOTREF(__pyx_t_2);
       } else {
         #if CYTHON_FAST_PYCALL
         if (PyFunction_Check(__pyx_t_3)) {
           PyObject *__pyx_temp[2] = {__pyx_t_5, __pyx_t_4};
-          __pyx_t_2 = __Pyx_PyFunction_FastCall(__pyx_t_3, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 276, __pyx_L4_error)
+          __pyx_t_2 = __Pyx_PyFunction_FastCall(__pyx_t_3, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 277, __pyx_L4_error)
           __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
           __Pyx_GOTREF(__pyx_t_2);
           __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
@@ -1953,20 +2003,20 @@ static PyObject *__pyx_f_13async_session_error_from_session_ptr(PyObject *__pyx_
         #if CYTHON_FAST_PYCCALL
         if (__Pyx_PyFastCFunction_Check(__pyx_t_3)) {
           PyObject *__pyx_temp[2] = {__pyx_t_5, __pyx_t_4};
-          __pyx_t_2 = __Pyx_PyCFunction_FastCall(__pyx_t_3, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 276, __pyx_L4_error)
+          __pyx_t_2 = __Pyx_PyCFunction_FastCall(__pyx_t_3, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 277, __pyx_L4_error)
           __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
           __Pyx_GOTREF(__pyx_t_2);
           __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
         } else
         #endif
         {
-          __pyx_t_6 = PyTuple_New(1+1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 276, __pyx_L4_error)
+          __pyx_t_6 = PyTuple_New(1+1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 277, __pyx_L4_error)
           __Pyx_GOTREF(__pyx_t_6);
           __Pyx_GIVEREF(__pyx_t_5); PyTuple_SET_ITEM(__pyx_t_6, 0, __pyx_t_5); __pyx_t_5 = NULL;
           __Pyx_GIVEREF(__pyx_t_4);
           PyTuple_SET_ITEM(__pyx_t_6, 0+1, __pyx_t_4);
           __pyx_t_4 = 0;
-          __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_6, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 276, __pyx_L4_error)
+          __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_6, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 277, __pyx_L4_error)
           __Pyx_GOTREF(__pyx_t_2);
           __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
         }
@@ -1976,7 +2026,7 @@ static PyObject *__pyx_f_13async_session_error_from_session_ptr(PyObject *__pyx_
       __pyx_t_2 = 0;
       goto __pyx_L3_return;
 
-      /* "async_session.pyx":275
+      /* "async_session.pyx":276
  * 
  *     try:
  *         if p_snmp_errno == SNMPERR_TIMEOUT:             # <<<<<<<<<<<<<<
@@ -1985,7 +2035,7 @@ static PyObject *__pyx_f_13async_session_error_from_session_ptr(PyObject *__pyx_
  */
     }
 
-    /* "async_session.pyx":278
+    /* "async_session.pyx":279
  *             return SNMPTimeoutError("%s: %s" % (msg, error_str))
  *         else:
  *             return SNMPError("%s: %s" % (msg, error_str))             # <<<<<<<<<<<<<<
@@ -1994,11 +2044,11 @@ static PyObject *__pyx_f_13async_session_error_from_session_ptr(PyObject *__pyx_
  */
     /*else*/ {
       __Pyx_XDECREF(__pyx_r);
-      __pyx_t_3 = __Pyx_GetModuleGlobalName(__pyx_n_s_SNMPError); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 278, __pyx_L4_error)
+      __pyx_t_3 = __Pyx_GetModuleGlobalName(__pyx_n_s_SNMPError); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 279, __pyx_L4_error)
       __Pyx_GOTREF(__pyx_t_3);
-      __pyx_t_6 = __Pyx_PyBytes_FromString(__pyx_v_error_str); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 278, __pyx_L4_error)
+      __pyx_t_6 = __Pyx_PyBytes_FromString(__pyx_v_error_str); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 279, __pyx_L4_error)
       __Pyx_GOTREF(__pyx_t_6);
-      __pyx_t_4 = PyTuple_New(2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 278, __pyx_L4_error)
+      __pyx_t_4 = PyTuple_New(2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 279, __pyx_L4_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_INCREF(__pyx_v_msg);
       __Pyx_GIVEREF(__pyx_v_msg);
@@ -2006,7 +2056,7 @@ static PyObject *__pyx_f_13async_session_error_from_session_ptr(PyObject *__pyx_
       __Pyx_GIVEREF(__pyx_t_6);
       PyTuple_SET_ITEM(__pyx_t_4, 1, __pyx_t_6);
       __pyx_t_6 = 0;
-      __pyx_t_6 = __Pyx_PyString_Format(__pyx_kp_s_s_s, __pyx_t_4); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 278, __pyx_L4_error)
+      __pyx_t_6 = __Pyx_PyString_Format(__pyx_kp_s_s_s, __pyx_t_4); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 279, __pyx_L4_error)
       __Pyx_GOTREF(__pyx_t_6);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       __pyx_t_4 = NULL;
@@ -2020,14 +2070,14 @@ static PyObject *__pyx_f_13async_session_error_from_session_ptr(PyObject *__pyx_
         }
       }
       if (!__pyx_t_4) {
-        __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_6); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 278, __pyx_L4_error)
+        __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_6); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 279, __pyx_L4_error)
         __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
         __Pyx_GOTREF(__pyx_t_2);
       } else {
         #if CYTHON_FAST_PYCALL
         if (PyFunction_Check(__pyx_t_3)) {
           PyObject *__pyx_temp[2] = {__pyx_t_4, __pyx_t_6};
-          __pyx_t_2 = __Pyx_PyFunction_FastCall(__pyx_t_3, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 278, __pyx_L4_error)
+          __pyx_t_2 = __Pyx_PyFunction_FastCall(__pyx_t_3, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 279, __pyx_L4_error)
           __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
           __Pyx_GOTREF(__pyx_t_2);
           __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
@@ -2036,20 +2086,20 @@ static PyObject *__pyx_f_13async_session_error_from_session_ptr(PyObject *__pyx_
         #if CYTHON_FAST_PYCCALL
         if (__Pyx_PyFastCFunction_Check(__pyx_t_3)) {
           PyObject *__pyx_temp[2] = {__pyx_t_4, __pyx_t_6};
-          __pyx_t_2 = __Pyx_PyCFunction_FastCall(__pyx_t_3, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 278, __pyx_L4_error)
+          __pyx_t_2 = __Pyx_PyCFunction_FastCall(__pyx_t_3, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 279, __pyx_L4_error)
           __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
           __Pyx_GOTREF(__pyx_t_2);
           __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
         } else
         #endif
         {
-          __pyx_t_5 = PyTuple_New(1+1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 278, __pyx_L4_error)
+          __pyx_t_5 = PyTuple_New(1+1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 279, __pyx_L4_error)
           __Pyx_GOTREF(__pyx_t_5);
           __Pyx_GIVEREF(__pyx_t_4); PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_4); __pyx_t_4 = NULL;
           __Pyx_GIVEREF(__pyx_t_6);
           PyTuple_SET_ITEM(__pyx_t_5, 0+1, __pyx_t_6);
           __pyx_t_6 = 0;
-          __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_5, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 278, __pyx_L4_error)
+          __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_5, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 279, __pyx_L4_error)
           __Pyx_GOTREF(__pyx_t_2);
           __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
         }
@@ -2061,7 +2111,7 @@ static PyObject *__pyx_f_13async_session_error_from_session_ptr(PyObject *__pyx_
     }
   }
 
-  /* "async_session.pyx":280
+  /* "async_session.pyx":281
  *             return SNMPError("%s: %s" % (msg, error_str))
  *     finally:
  *         libc_free(error_str)             # <<<<<<<<<<<<<<
@@ -2116,7 +2166,7 @@ static PyObject *__pyx_f_13async_session_error_from_session_ptr(PyObject *__pyx_
     }
   }
 
-  /* "async_session.pyx":263
+  /* "async_session.pyx":264
  * 
  * 
  * cdef object error_from_session_ptr(msg, void* sp):             # <<<<<<<<<<<<<<
@@ -2139,7 +2189,7 @@ static PyObject *__pyx_f_13async_session_error_from_session_ptr(PyObject *__pyx_
   return __pyx_r;
 }
 
-/* "async_session.pyx":283
+/* "async_session.pyx":284
  * 
  * 
  * cdef int my_select(void* ctx, timeval* timeout):             # <<<<<<<<<<<<<<
@@ -2168,7 +2218,7 @@ static int __pyx_f_13async_session_my_select(void *__pyx_v_ctx, struct timeval *
   PyObject *__pyx_t_12 = NULL;
   __Pyx_RefNannySetupContext("my_select", 0);
 
-  /* "async_session.pyx":297
+  /* "async_session.pyx":298
  *     # happend in 'gevent_wait_read' => The collection will fail.
  * 
  *     cdef AsyncSession async_session = <AsyncSession>(ctx)             # <<<<<<<<<<<<<<
@@ -2180,7 +2230,7 @@ static int __pyx_f_13async_session_my_select(void *__pyx_v_ctx, struct timeval *
   __pyx_v_async_session = ((struct __pyx_obj_13async_session_AsyncSession *)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "async_session.pyx":298
+  /* "async_session.pyx":299
  * 
  *     cdef AsyncSession async_session = <AsyncSession>(ctx)
  *     cdef int sock = snmp_sess_transport(async_session.sp).sock             # <<<<<<<<<<<<<<
@@ -2190,7 +2240,7 @@ static int __pyx_f_13async_session_my_select(void *__pyx_v_ctx, struct timeval *
   __pyx_t_2 = snmp_sess_transport(__pyx_v_async_session->sp)->sock;
   __pyx_v_sock = __pyx_t_2;
 
-  /* "async_session.pyx":299
+  /* "async_session.pyx":300
  *     cdef AsyncSession async_session = <AsyncSession>(ctx)
  *     cdef int sock = snmp_sess_transport(async_session.sp).sock
  *     py_timeout = timeout.tv_sec + (<double>(timeout.tv_usec) / 10**6)             # <<<<<<<<<<<<<<
@@ -2199,7 +2249,7 @@ static int __pyx_f_13async_session_my_select(void *__pyx_v_ctx, struct timeval *
  */
   __pyx_v_py_timeout = (__pyx_v_timeout->tv_sec + (((double)__pyx_v_timeout->tv_usec) / 1000000.0));
 
-  /* "async_session.pyx":304
+  /* "async_session.pyx":305
  *     # Return 0, which means timeout has happend
  *     # Need to sleep, otherwise netsnmp calls select in a busy loop
  *     if async_session.error_in_my_select is not None:             # <<<<<<<<<<<<<<
@@ -2210,7 +2260,7 @@ static int __pyx_f_13async_session_my_select(void *__pyx_v_ctx, struct timeval *
   __pyx_t_4 = (__pyx_t_3 != 0);
   if (__pyx_t_4) {
 
-    /* "async_session.pyx":305
+    /* "async_session.pyx":306
  *     # Need to sleep, otherwise netsnmp calls select in a busy loop
  *     if async_session.error_in_my_select is not None:
  *         try:             # <<<<<<<<<<<<<<
@@ -2226,19 +2276,19 @@ static int __pyx_f_13async_session_my_select(void *__pyx_v_ctx, struct timeval *
       __Pyx_XGOTREF(__pyx_t_7);
       /*try:*/ {
 
-        /* "async_session.pyx":306
+        /* "async_session.pyx":307
  *     if async_session.error_in_my_select is not None:
  *         try:
  *             gevent.sleep(py_timeout)             # <<<<<<<<<<<<<<
  *         except Exception:
  *             pass
  */
-        __pyx_t_8 = __Pyx_GetModuleGlobalName(__pyx_n_s_gevent); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 306, __pyx_L4_error)
+        __pyx_t_8 = __Pyx_GetModuleGlobalName(__pyx_n_s_gevent); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 307, __pyx_L4_error)
         __Pyx_GOTREF(__pyx_t_8);
-        __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_8, __pyx_n_s_sleep); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 306, __pyx_L4_error)
+        __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_8, __pyx_n_s_sleep); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 307, __pyx_L4_error)
         __Pyx_GOTREF(__pyx_t_9);
         __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-        __pyx_t_8 = PyFloat_FromDouble(__pyx_v_py_timeout); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 306, __pyx_L4_error)
+        __pyx_t_8 = PyFloat_FromDouble(__pyx_v_py_timeout); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 307, __pyx_L4_error)
         __Pyx_GOTREF(__pyx_t_8);
         __pyx_t_10 = NULL;
         if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_9))) {
@@ -2251,14 +2301,14 @@ static int __pyx_f_13async_session_my_select(void *__pyx_v_ctx, struct timeval *
           }
         }
         if (!__pyx_t_10) {
-          __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_9, __pyx_t_8); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 306, __pyx_L4_error)
+          __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_9, __pyx_t_8); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 307, __pyx_L4_error)
           __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
           __Pyx_GOTREF(__pyx_t_1);
         } else {
           #if CYTHON_FAST_PYCALL
           if (PyFunction_Check(__pyx_t_9)) {
             PyObject *__pyx_temp[2] = {__pyx_t_10, __pyx_t_8};
-            __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_9, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 306, __pyx_L4_error)
+            __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_9, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 307, __pyx_L4_error)
             __Pyx_XDECREF(__pyx_t_10); __pyx_t_10 = 0;
             __Pyx_GOTREF(__pyx_t_1);
             __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
@@ -2267,20 +2317,20 @@ static int __pyx_f_13async_session_my_select(void *__pyx_v_ctx, struct timeval *
           #if CYTHON_FAST_PYCCALL
           if (__Pyx_PyFastCFunction_Check(__pyx_t_9)) {
             PyObject *__pyx_temp[2] = {__pyx_t_10, __pyx_t_8};
-            __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_9, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 306, __pyx_L4_error)
+            __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_9, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 307, __pyx_L4_error)
             __Pyx_XDECREF(__pyx_t_10); __pyx_t_10 = 0;
             __Pyx_GOTREF(__pyx_t_1);
             __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
           } else
           #endif
           {
-            __pyx_t_11 = PyTuple_New(1+1); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 306, __pyx_L4_error)
+            __pyx_t_11 = PyTuple_New(1+1); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 307, __pyx_L4_error)
             __Pyx_GOTREF(__pyx_t_11);
             __Pyx_GIVEREF(__pyx_t_10); PyTuple_SET_ITEM(__pyx_t_11, 0, __pyx_t_10); __pyx_t_10 = NULL;
             __Pyx_GIVEREF(__pyx_t_8);
             PyTuple_SET_ITEM(__pyx_t_11, 0+1, __pyx_t_8);
             __pyx_t_8 = 0;
-            __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_9, __pyx_t_11, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 306, __pyx_L4_error)
+            __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_9, __pyx_t_11, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 307, __pyx_L4_error)
             __Pyx_GOTREF(__pyx_t_1);
             __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
           }
@@ -2288,7 +2338,7 @@ static int __pyx_f_13async_session_my_select(void *__pyx_v_ctx, struct timeval *
         __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
         __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-        /* "async_session.pyx":305
+        /* "async_session.pyx":306
  *     # Need to sleep, otherwise netsnmp calls select in a busy loop
  *     if async_session.error_in_my_select is not None:
  *         try:             # <<<<<<<<<<<<<<
@@ -2308,7 +2358,7 @@ static int __pyx_f_13async_session_my_select(void *__pyx_v_ctx, struct timeval *
       __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
       __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-      /* "async_session.pyx":307
+      /* "async_session.pyx":308
  *         try:
  *             gevent.sleep(py_timeout)
  *         except Exception:             # <<<<<<<<<<<<<<
@@ -2323,7 +2373,7 @@ static int __pyx_f_13async_session_my_select(void *__pyx_v_ctx, struct timeval *
       goto __pyx_L6_except_error;
       __pyx_L6_except_error:;
 
-      /* "async_session.pyx":305
+      /* "async_session.pyx":306
  *     # Need to sleep, otherwise netsnmp calls select in a busy loop
  *     if async_session.error_in_my_select is not None:
  *         try:             # <<<<<<<<<<<<<<
@@ -2345,7 +2395,7 @@ static int __pyx_f_13async_session_my_select(void *__pyx_v_ctx, struct timeval *
       __pyx_L11_try_end:;
     }
 
-    /* "async_session.pyx":309
+    /* "async_session.pyx":310
  *         except Exception:
  *             pass
  *         return 0             # <<<<<<<<<<<<<<
@@ -2355,7 +2405,7 @@ static int __pyx_f_13async_session_my_select(void *__pyx_v_ctx, struct timeval *
     __pyx_r = 0;
     goto __pyx_L0;
 
-    /* "async_session.pyx":304
+    /* "async_session.pyx":305
  *     # Return 0, which means timeout has happend
  *     # Need to sleep, otherwise netsnmp calls select in a busy loop
  *     if async_session.error_in_my_select is not None:             # <<<<<<<<<<<<<<
@@ -2364,7 +2414,7 @@ static int __pyx_f_13async_session_my_select(void *__pyx_v_ctx, struct timeval *
  */
   }
 
-  /* "async_session.pyx":311
+  /* "async_session.pyx":312
  *         return 0
  * 
  *     try:             # <<<<<<<<<<<<<<
@@ -2380,18 +2430,18 @@ static int __pyx_f_13async_session_my_select(void *__pyx_v_ctx, struct timeval *
     __Pyx_XGOTREF(__pyx_t_5);
     /*try:*/ {
 
-      /* "async_session.pyx":312
+      /* "async_session.pyx":313
  * 
  *     try:
  *         gevent_wait_read(sock, py_timeout)             # <<<<<<<<<<<<<<
  *     except TimeoutError:
  *         return 0
  */
-      __pyx_t_9 = __Pyx_GetModuleGlobalName(__pyx_n_s_gevent_wait_read); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 312, __pyx_L12_error)
+      __pyx_t_9 = __Pyx_GetModuleGlobalName(__pyx_n_s_gevent_wait_read); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 313, __pyx_L12_error)
       __Pyx_GOTREF(__pyx_t_9);
-      __pyx_t_11 = __Pyx_PyInt_From_int(__pyx_v_sock); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 312, __pyx_L12_error)
+      __pyx_t_11 = __Pyx_PyInt_From_int(__pyx_v_sock); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 313, __pyx_L12_error)
       __Pyx_GOTREF(__pyx_t_11);
-      __pyx_t_8 = PyFloat_FromDouble(__pyx_v_py_timeout); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 312, __pyx_L12_error)
+      __pyx_t_8 = PyFloat_FromDouble(__pyx_v_py_timeout); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 313, __pyx_L12_error)
       __Pyx_GOTREF(__pyx_t_8);
       __pyx_t_10 = NULL;
       __pyx_t_2 = 0;
@@ -2408,7 +2458,7 @@ static int __pyx_f_13async_session_my_select(void *__pyx_v_ctx, struct timeval *
       #if CYTHON_FAST_PYCALL
       if (PyFunction_Check(__pyx_t_9)) {
         PyObject *__pyx_temp[3] = {__pyx_t_10, __pyx_t_11, __pyx_t_8};
-        __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_9, __pyx_temp+1-__pyx_t_2, 2+__pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 312, __pyx_L12_error)
+        __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_9, __pyx_temp+1-__pyx_t_2, 2+__pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 313, __pyx_L12_error)
         __Pyx_XDECREF(__pyx_t_10); __pyx_t_10 = 0;
         __Pyx_GOTREF(__pyx_t_1);
         __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
@@ -2418,7 +2468,7 @@ static int __pyx_f_13async_session_my_select(void *__pyx_v_ctx, struct timeval *
       #if CYTHON_FAST_PYCCALL
       if (__Pyx_PyFastCFunction_Check(__pyx_t_9)) {
         PyObject *__pyx_temp[3] = {__pyx_t_10, __pyx_t_11, __pyx_t_8};
-        __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_9, __pyx_temp+1-__pyx_t_2, 2+__pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 312, __pyx_L12_error)
+        __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_9, __pyx_temp+1-__pyx_t_2, 2+__pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 313, __pyx_L12_error)
         __Pyx_XDECREF(__pyx_t_10); __pyx_t_10 = 0;
         __Pyx_GOTREF(__pyx_t_1);
         __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
@@ -2426,7 +2476,7 @@ static int __pyx_f_13async_session_my_select(void *__pyx_v_ctx, struct timeval *
       } else
       #endif
       {
-        __pyx_t_12 = PyTuple_New(2+__pyx_t_2); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 312, __pyx_L12_error)
+        __pyx_t_12 = PyTuple_New(2+__pyx_t_2); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 313, __pyx_L12_error)
         __Pyx_GOTREF(__pyx_t_12);
         if (__pyx_t_10) {
           __Pyx_GIVEREF(__pyx_t_10); PyTuple_SET_ITEM(__pyx_t_12, 0, __pyx_t_10); __pyx_t_10 = NULL;
@@ -2437,14 +2487,14 @@ static int __pyx_f_13async_session_my_select(void *__pyx_v_ctx, struct timeval *
         PyTuple_SET_ITEM(__pyx_t_12, 1+__pyx_t_2, __pyx_t_8);
         __pyx_t_11 = 0;
         __pyx_t_8 = 0;
-        __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_9, __pyx_t_12, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 312, __pyx_L12_error)
+        __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_9, __pyx_t_12, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 313, __pyx_L12_error)
         __Pyx_GOTREF(__pyx_t_1);
         __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
       }
       __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-      /* "async_session.pyx":311
+      /* "async_session.pyx":312
  *         return 0
  * 
  *     try:             # <<<<<<<<<<<<<<
@@ -2453,7 +2503,7 @@ static int __pyx_f_13async_session_my_select(void *__pyx_v_ctx, struct timeval *
  */
     }
 
-    /* "async_session.pyx":320
+    /* "async_session.pyx":321
  *         return 0
  *     else:
  *         return 1             # <<<<<<<<<<<<<<
@@ -2473,25 +2523,25 @@ static int __pyx_f_13async_session_my_select(void *__pyx_v_ctx, struct timeval *
     __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
     __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-    /* "async_session.pyx":313
+    /* "async_session.pyx":314
  *     try:
  *         gevent_wait_read(sock, py_timeout)
  *     except TimeoutError:             # <<<<<<<<<<<<<<
  *         return 0
  *     except Exception as error:
  */
-    __pyx_t_1 = __Pyx_GetModuleGlobalName(__pyx_n_s_TimeoutError); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 313, __pyx_L14_except_error)
+    __pyx_t_1 = __Pyx_GetModuleGlobalName(__pyx_n_s_TimeoutError); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 314, __pyx_L14_except_error)
     __Pyx_GOTREF(__pyx_t_1);
     __pyx_t_2 = __Pyx_PyErr_ExceptionMatches(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     if (__pyx_t_2) {
       __Pyx_AddTraceback("async_session.my_select", __pyx_clineno, __pyx_lineno, __pyx_filename);
-      if (__Pyx_GetException(&__pyx_t_1, &__pyx_t_9, &__pyx_t_12) < 0) __PYX_ERR(0, 313, __pyx_L14_except_error)
+      if (__Pyx_GetException(&__pyx_t_1, &__pyx_t_9, &__pyx_t_12) < 0) __PYX_ERR(0, 314, __pyx_L14_except_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_GOTREF(__pyx_t_9);
       __Pyx_GOTREF(__pyx_t_12);
 
-      /* "async_session.pyx":314
+      /* "async_session.pyx":315
  *         gevent_wait_read(sock, py_timeout)
  *     except TimeoutError:
  *         return 0             # <<<<<<<<<<<<<<
@@ -2505,7 +2555,7 @@ static int __pyx_f_13async_session_my_select(void *__pyx_v_ctx, struct timeval *
       goto __pyx_L15_except_return;
     }
 
-    /* "async_session.pyx":315
+    /* "async_session.pyx":316
  *     except TimeoutError:
  *         return 0
  *     except Exception as error:             # <<<<<<<<<<<<<<
@@ -2515,14 +2565,14 @@ static int __pyx_f_13async_session_my_select(void *__pyx_v_ctx, struct timeval *
     __pyx_t_2 = __Pyx_PyErr_ExceptionMatches(((PyObject *)(&((PyTypeObject*)PyExc_Exception)[0])));
     if (__pyx_t_2) {
       __Pyx_AddTraceback("async_session.my_select", __pyx_clineno, __pyx_lineno, __pyx_filename);
-      if (__Pyx_GetException(&__pyx_t_12, &__pyx_t_9, &__pyx_t_1) < 0) __PYX_ERR(0, 315, __pyx_L14_except_error)
+      if (__Pyx_GetException(&__pyx_t_12, &__pyx_t_9, &__pyx_t_1) < 0) __PYX_ERR(0, 316, __pyx_L14_except_error)
       __Pyx_GOTREF(__pyx_t_12);
       __Pyx_GOTREF(__pyx_t_9);
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_INCREF(__pyx_t_9);
       __pyx_v_error = __pyx_t_9;
 
-      /* "async_session.pyx":317
+      /* "async_session.pyx":318
  *     except Exception as error:
  *         # As said above, tell netsnmp a timeout happend, but keep the error.
  *         async_session.error_in_my_select = error             # <<<<<<<<<<<<<<
@@ -2535,7 +2585,7 @@ static int __pyx_f_13async_session_my_select(void *__pyx_v_ctx, struct timeval *
       __Pyx_DECREF(__pyx_v_async_session->error_in_my_select);
       __pyx_v_async_session->error_in_my_select = __pyx_v_error;
 
-      /* "async_session.pyx":318
+      /* "async_session.pyx":319
  *         # As said above, tell netsnmp a timeout happend, but keep the error.
  *         async_session.error_in_my_select = error
  *         return 0             # <<<<<<<<<<<<<<
@@ -2551,7 +2601,7 @@ static int __pyx_f_13async_session_my_select(void *__pyx_v_ctx, struct timeval *
     goto __pyx_L14_except_error;
     __pyx_L14_except_error:;
 
-    /* "async_session.pyx":311
+    /* "async_session.pyx":312
  *         return 0
  * 
  *     try:             # <<<<<<<<<<<<<<
@@ -2573,7 +2623,7 @@ static int __pyx_f_13async_session_my_select(void *__pyx_v_ctx, struct timeval *
     goto __pyx_L0;
   }
 
-  /* "async_session.pyx":283
+  /* "async_session.pyx":284
  * 
  * 
  * cdef int my_select(void* ctx, timeval* timeout):             # <<<<<<<<<<<<<<
@@ -2598,7 +2648,7 @@ static int __pyx_f_13async_session_my_select(void *__pyx_v_ctx, struct timeval *
   return __pyx_r;
 }
 
-/* "async_session.pyx":339
+/* "async_session.pyx":340
  *     cdef ax_async_ctx_t ax_async_ctx
  * 
  *     def __cinit__(self, args):             # <<<<<<<<<<<<<<
@@ -2631,7 +2681,7 @@ static int __pyx_pw_13async_session_12AsyncSession_1__cinit__(PyObject *__pyx_v_
         else goto __pyx_L5_argtuple_error;
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__cinit__") < 0)) __PYX_ERR(0, 339, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__cinit__") < 0)) __PYX_ERR(0, 340, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 1) {
       goto __pyx_L5_argtuple_error;
@@ -2642,7 +2692,7 @@ static int __pyx_pw_13async_session_12AsyncSession_1__cinit__(PyObject *__pyx_v_
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 1, 1, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 339, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 1, 1, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 340, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("async_session.AsyncSession.__cinit__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -2660,7 +2710,7 @@ static int __pyx_pf_13async_session_12AsyncSession___cinit__(struct __pyx_obj_13
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__cinit__", 0);
 
-  /* "async_session.pyx":340
+  /* "async_session.pyx":341
  * 
  *     def __cinit__(self, args):
  *         self.sp = NULL             # <<<<<<<<<<<<<<
@@ -2669,7 +2719,7 @@ static int __pyx_pf_13async_session_12AsyncSession___cinit__(struct __pyx_obj_13
  */
   __pyx_v_self->sp = NULL;
 
-  /* "async_session.pyx":341
+  /* "async_session.pyx":342
  *     def __cinit__(self, args):
  *         self.sp = NULL
  *         self.query_count = 0             # <<<<<<<<<<<<<<
@@ -2678,7 +2728,7 @@ static int __pyx_pf_13async_session_12AsyncSession___cinit__(struct __pyx_obj_13
  */
   __pyx_v_self->query_count = 0;
 
-  /* "async_session.pyx":339
+  /* "async_session.pyx":340
  *     cdef ax_async_ctx_t ax_async_ctx
  * 
  *     def __cinit__(self, args):             # <<<<<<<<<<<<<<
@@ -2692,7 +2742,7 @@ static int __pyx_pf_13async_session_12AsyncSession___cinit__(struct __pyx_obj_13
   return __pyx_r;
 }
 
-/* "async_session.pyx":343
+/* "async_session.pyx":344
  *         self.query_count = 0
  * 
  *     def __dealloc__(self):             # <<<<<<<<<<<<<<
@@ -2716,7 +2766,7 @@ static void __pyx_pf_13async_session_12AsyncSession_2__dealloc__(struct __pyx_ob
   int __pyx_t_1;
   __Pyx_RefNannySetupContext("__dealloc__", 0);
 
-  /* "async_session.pyx":344
+  /* "async_session.pyx":345
  * 
  *     def __dealloc__(self):
  *         if self.sp != NULL:             # <<<<<<<<<<<<<<
@@ -2726,7 +2776,7 @@ static void __pyx_pf_13async_session_12AsyncSession_2__dealloc__(struct __pyx_ob
   __pyx_t_1 = ((__pyx_v_self->sp != NULL) != 0);
   if (__pyx_t_1) {
 
-    /* "async_session.pyx":345
+    /* "async_session.pyx":346
  *     def __dealloc__(self):
  *         if self.sp != NULL:
  *             snmp_sess_close(self.sp)             # <<<<<<<<<<<<<<
@@ -2735,7 +2785,7 @@ static void __pyx_pf_13async_session_12AsyncSession_2__dealloc__(struct __pyx_ob
  */
     snmp_sess_close(__pyx_v_self->sp);
 
-    /* "async_session.pyx":344
+    /* "async_session.pyx":345
  * 
  *     def __dealloc__(self):
  *         if self.sp != NULL:             # <<<<<<<<<<<<<<
@@ -2744,7 +2794,7 @@ static void __pyx_pf_13async_session_12AsyncSession_2__dealloc__(struct __pyx_ob
  */
   }
 
-  /* "async_session.pyx":343
+  /* "async_session.pyx":344
  *         self.query_count = 0
  * 
  *     def __dealloc__(self):             # <<<<<<<<<<<<<<
@@ -2756,7 +2806,7 @@ static void __pyx_pf_13async_session_12AsyncSession_2__dealloc__(struct __pyx_ob
   __Pyx_RefNannyFinishContext();
 }
 
-/* "async_session.pyx":347
+/* "async_session.pyx":348
  *             snmp_sess_close(self.sp)
  * 
  *     def __init__(self, args):             # <<<<<<<<<<<<<<
@@ -2789,7 +2839,7 @@ static int __pyx_pw_13async_session_12AsyncSession_5__init__(PyObject *__pyx_v_s
         else goto __pyx_L5_argtuple_error;
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__init__") < 0)) __PYX_ERR(0, 347, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__init__") < 0)) __PYX_ERR(0, 348, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 1) {
       goto __pyx_L5_argtuple_error;
@@ -2800,7 +2850,7 @@ static int __pyx_pw_13async_session_12AsyncSession_5__init__(PyObject *__pyx_v_s
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("__init__", 1, 1, 1, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 347, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("__init__", 1, 1, 1, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 348, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("async_session.AsyncSession.__init__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -2818,7 +2868,7 @@ static int __pyx_pf_13async_session_12AsyncSession_4__init__(struct __pyx_obj_13
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__init__", 0);
 
-  /* "async_session.pyx":348
+  /* "async_session.pyx":349
  * 
  *     def __init__(self, args):
  *         self.args = args             # <<<<<<<<<<<<<<
@@ -2831,7 +2881,7 @@ static int __pyx_pf_13async_session_12AsyncSession_4__init__(struct __pyx_obj_13
   __Pyx_DECREF(__pyx_v_self->args);
   __pyx_v_self->args = __pyx_v_args;
 
-  /* "async_session.pyx":349
+  /* "async_session.pyx":350
  *     def __init__(self, args):
  *         self.args = args
  *         self.error_in_my_select = None             # <<<<<<<<<<<<<<
@@ -2844,7 +2894,7 @@ static int __pyx_pf_13async_session_12AsyncSession_4__init__(struct __pyx_obj_13
   __Pyx_DECREF(__pyx_v_self->error_in_my_select);
   __pyx_v_self->error_in_my_select = Py_None;
 
-  /* "async_session.pyx":351
+  /* "async_session.pyx":352
  *         self.error_in_my_select = None
  * 
  *         self.ax_async_ctx.func = my_select             # <<<<<<<<<<<<<<
@@ -2853,7 +2903,7 @@ static int __pyx_pf_13async_session_12AsyncSession_4__init__(struct __pyx_obj_13
  */
   __pyx_v_self->ax_async_ctx.func = __pyx_f_13async_session_my_select;
 
-  /* "async_session.pyx":352
+  /* "async_session.pyx":353
  * 
  *         self.ax_async_ctx.func = my_select
  *         self.ax_async_ctx.ctx = <void*>(self)             # <<<<<<<<<<<<<<
@@ -2862,7 +2912,7 @@ static int __pyx_pf_13async_session_12AsyncSession_4__init__(struct __pyx_obj_13
  */
   __pyx_v_self->ax_async_ctx.ctx = ((void *)__pyx_v_self);
 
-  /* "async_session.pyx":347
+  /* "async_session.pyx":348
  *             snmp_sess_close(self.sp)
  * 
  *     def __init__(self, args):             # <<<<<<<<<<<<<<
@@ -2876,7 +2926,7 @@ static int __pyx_pf_13async_session_12AsyncSession_4__init__(struct __pyx_obj_13
   return __pyx_r;
 }
 
-/* "async_session.pyx":356
+/* "async_session.pyx":357
  *     # Read only access to snmp_interactions
  *     property snmp_query_count:
  *         def __get__(self):             # <<<<<<<<<<<<<<
@@ -2903,7 +2953,7 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_16snmp_query_count___ge
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("__get__", 0);
 
-  /* "async_session.pyx":357
+  /* "async_session.pyx":358
  *     property snmp_query_count:
  *         def __get__(self):
  *             return self.query_count             # <<<<<<<<<<<<<<
@@ -2911,13 +2961,13 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_16snmp_query_count___ge
  *     # Returns the securityEngineID as hex.
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyInt_From_uint64_t(__pyx_v_self->query_count); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 357, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_From_uint64_t(__pyx_v_self->query_count); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 358, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "async_session.pyx":356
+  /* "async_session.pyx":357
  *     # Read only access to snmp_interactions
  *     property snmp_query_count:
  *         def __get__(self):             # <<<<<<<<<<<<<<
@@ -2936,7 +2986,7 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_16snmp_query_count___ge
   return __pyx_r;
 }
 
-/* "async_session.pyx":362
+/* "async_session.pyx":363
  *     # Returns None if the id is not present.
  *     property security_engine_id:
  *         def __get__(self):             # <<<<<<<<<<<<<<
@@ -2964,7 +3014,7 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_18security_engine_id___
   PyObject *__pyx_t_2 = NULL;
   __Pyx_RefNannySetupContext("__get__", 0);
 
-  /* "async_session.pyx":363
+  /* "async_session.pyx":364
  *     property security_engine_id:
  *         def __get__(self):
  *             if self.sp == NULL:             # <<<<<<<<<<<<<<
@@ -2974,7 +3024,7 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_18security_engine_id___
   __pyx_t_1 = ((__pyx_v_self->sp == NULL) != 0);
   if (__pyx_t_1) {
 
-    /* "async_session.pyx":364
+    /* "async_session.pyx":365
  *         def __get__(self):
  *             if self.sp == NULL:
  *                 return None             # <<<<<<<<<<<<<<
@@ -2986,7 +3036,7 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_18security_engine_id___
     __pyx_r = Py_None;
     goto __pyx_L0;
 
-    /* "async_session.pyx":363
+    /* "async_session.pyx":364
  *     property security_engine_id:
  *         def __get__(self):
  *             if self.sp == NULL:             # <<<<<<<<<<<<<<
@@ -2995,7 +3045,7 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_18security_engine_id___
  */
   }
 
-  /* "async_session.pyx":366
+  /* "async_session.pyx":367
  *                 return None
  * 
  *             if snmp_sess_session(self.sp).securityEngineIDLen == 0:             # <<<<<<<<<<<<<<
@@ -3005,7 +3055,7 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_18security_engine_id___
   __pyx_t_1 = ((snmp_sess_session(__pyx_v_self->sp)->securityEngineIDLen == 0) != 0);
   if (__pyx_t_1) {
 
-    /* "async_session.pyx":367
+    /* "async_session.pyx":368
  * 
  *             if snmp_sess_session(self.sp).securityEngineIDLen == 0:
  *                 return None             # <<<<<<<<<<<<<<
@@ -3017,7 +3067,7 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_18security_engine_id___
     __pyx_r = Py_None;
     goto __pyx_L0;
 
-    /* "async_session.pyx":366
+    /* "async_session.pyx":367
  *                 return None
  * 
  *             if snmp_sess_session(self.sp).securityEngineIDLen == 0:             # <<<<<<<<<<<<<<
@@ -3026,7 +3076,7 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_18security_engine_id___
  */
   }
 
-  /* "async_session.pyx":369
+  /* "async_session.pyx":370
  *                 return None
  * 
  *             return binary_to_hex_pystring(             # <<<<<<<<<<<<<<
@@ -3035,20 +3085,20 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_18security_engine_id___
  */
   __Pyx_XDECREF(__pyx_r);
 
-  /* "async_session.pyx":371
+  /* "async_session.pyx":372
  *             return binary_to_hex_pystring(
  *                 snmp_sess_session(self.sp).securityEngineID,
  *                 snmp_sess_session(self.sp).securityEngineIDLen)             # <<<<<<<<<<<<<<
  * 
  *     # Returns the contextEngineID as hex.
  */
-  __pyx_t_2 = __pyx_f_13async_session_binary_to_hex_pystring(snmp_sess_session(__pyx_v_self->sp)->securityEngineID, snmp_sess_session(__pyx_v_self->sp)->securityEngineIDLen); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 369, __pyx_L1_error)
+  __pyx_t_2 = __pyx_f_13async_session_binary_to_hex_pystring(snmp_sess_session(__pyx_v_self->sp)->securityEngineID, snmp_sess_session(__pyx_v_self->sp)->securityEngineIDLen); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 370, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_r = __pyx_t_2;
   __pyx_t_2 = 0;
   goto __pyx_L0;
 
-  /* "async_session.pyx":362
+  /* "async_session.pyx":363
  *     # Returns None if the id is not present.
  *     property security_engine_id:
  *         def __get__(self):             # <<<<<<<<<<<<<<
@@ -3067,7 +3117,7 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_18security_engine_id___
   return __pyx_r;
 }
 
-/* "async_session.pyx":376
+/* "async_session.pyx":377
  *     # Returns None if the id is not present.
  *     property context_engine_id:
  *         def __get__(self):             # <<<<<<<<<<<<<<
@@ -3095,7 +3145,7 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_17context_engine_id___g
   PyObject *__pyx_t_2 = NULL;
   __Pyx_RefNannySetupContext("__get__", 0);
 
-  /* "async_session.pyx":377
+  /* "async_session.pyx":378
  *     property context_engine_id:
  *         def __get__(self):
  *             if self.sp == NULL:             # <<<<<<<<<<<<<<
@@ -3105,7 +3155,7 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_17context_engine_id___g
   __pyx_t_1 = ((__pyx_v_self->sp == NULL) != 0);
   if (__pyx_t_1) {
 
-    /* "async_session.pyx":378
+    /* "async_session.pyx":379
  *         def __get__(self):
  *             if self.sp == NULL:
  *                 return None             # <<<<<<<<<<<<<<
@@ -3117,7 +3167,7 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_17context_engine_id___g
     __pyx_r = Py_None;
     goto __pyx_L0;
 
-    /* "async_session.pyx":377
+    /* "async_session.pyx":378
  *     property context_engine_id:
  *         def __get__(self):
  *             if self.sp == NULL:             # <<<<<<<<<<<<<<
@@ -3126,7 +3176,7 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_17context_engine_id___g
  */
   }
 
-  /* "async_session.pyx":380
+  /* "async_session.pyx":381
  *                 return None
  * 
  *             if snmp_sess_session(self.sp).contextEngineIDLen == 0:             # <<<<<<<<<<<<<<
@@ -3136,7 +3186,7 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_17context_engine_id___g
   __pyx_t_1 = ((snmp_sess_session(__pyx_v_self->sp)->contextEngineIDLen == 0) != 0);
   if (__pyx_t_1) {
 
-    /* "async_session.pyx":381
+    /* "async_session.pyx":382
  * 
  *             if snmp_sess_session(self.sp).contextEngineIDLen == 0:
  *                 return None             # <<<<<<<<<<<<<<
@@ -3148,7 +3198,7 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_17context_engine_id___g
     __pyx_r = Py_None;
     goto __pyx_L0;
 
-    /* "async_session.pyx":380
+    /* "async_session.pyx":381
  *                 return None
  * 
  *             if snmp_sess_session(self.sp).contextEngineIDLen == 0:             # <<<<<<<<<<<<<<
@@ -3157,7 +3207,7 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_17context_engine_id___g
  */
   }
 
-  /* "async_session.pyx":383
+  /* "async_session.pyx":384
  *                 return None
  * 
  *             return binary_to_hex_pystring(             # <<<<<<<<<<<<<<
@@ -3166,20 +3216,20 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_17context_engine_id___g
  */
   __Pyx_XDECREF(__pyx_r);
 
-  /* "async_session.pyx":385
+  /* "async_session.pyx":386
  *             return binary_to_hex_pystring(
  *                 snmp_sess_session(self.sp).contextEngineID,
  *                 snmp_sess_session(self.sp).contextEngineIDLen)             # <<<<<<<<<<<<<<
  * 
  *     def open_session(self):
  */
-  __pyx_t_2 = __pyx_f_13async_session_binary_to_hex_pystring(snmp_sess_session(__pyx_v_self->sp)->contextEngineID, snmp_sess_session(__pyx_v_self->sp)->contextEngineIDLen); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 383, __pyx_L1_error)
+  __pyx_t_2 = __pyx_f_13async_session_binary_to_hex_pystring(snmp_sess_session(__pyx_v_self->sp)->contextEngineID, snmp_sess_session(__pyx_v_self->sp)->contextEngineIDLen); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 384, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_r = __pyx_t_2;
   __pyx_t_2 = 0;
   goto __pyx_L0;
 
-  /* "async_session.pyx":376
+  /* "async_session.pyx":377
  *     # Returns None if the id is not present.
  *     property context_engine_id:
  *         def __get__(self):             # <<<<<<<<<<<<<<
@@ -3198,7 +3248,7 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_17context_engine_id___g
   return __pyx_r;
 }
 
-/* "async_session.pyx":387
+/* "async_session.pyx":388
  *                 snmp_sess_session(self.sp).contextEngineIDLen)
  * 
  *     def open_session(self):             # <<<<<<<<<<<<<<
@@ -3232,7 +3282,7 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_6open_session(struct __
   int __pyx_t_7;
   __Pyx_RefNannySetupContext("open_session", 0);
 
-  /* "async_session.pyx":390
+  /* "async_session.pyx":391
  *         cdef netsnmp_session sess_cfg
  * 
  *         snmp_sess_init(cython.address(sess_cfg))             # <<<<<<<<<<<<<<
@@ -3241,50 +3291,50 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_6open_session(struct __
  */
   snmp_sess_init((&__pyx_v_sess_cfg));
 
-  /* "async_session.pyx":392
+  /* "async_session.pyx":393
  *         snmp_sess_init(cython.address(sess_cfg))
  * 
  *         sess_cfg.peername = <bytes?>(self.args['peername'])             # <<<<<<<<<<<<<<
  *         sess_cfg.retries = self.args['retries']
  *         sess_cfg.timeout = self.args['timeout'] * 1000000
  */
-  __pyx_t_1 = PyObject_GetItem(__pyx_v_self->args, __pyx_n_s_peername); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 392, __pyx_L1_error)
+  __pyx_t_1 = PyObject_GetItem(__pyx_v_self->args, __pyx_n_s_peername); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 393, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (!(likely(PyBytes_CheckExact(__pyx_t_1))||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "bytes", Py_TYPE(__pyx_t_1)->tp_name), 0))) __PYX_ERR(0, 392, __pyx_L1_error)
-  __pyx_t_2 = __Pyx_PyObject_AsString(__pyx_t_1); if (unlikely((!__pyx_t_2) && PyErr_Occurred())) __PYX_ERR(0, 392, __pyx_L1_error)
+  if (!(likely(PyBytes_CheckExact(__pyx_t_1))||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "bytes", Py_TYPE(__pyx_t_1)->tp_name), 0))) __PYX_ERR(0, 393, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_AsString(__pyx_t_1); if (unlikely((!__pyx_t_2) && PyErr_Occurred())) __PYX_ERR(0, 393, __pyx_L1_error)
   __pyx_v_sess_cfg.peername = __pyx_t_2;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "async_session.pyx":393
+  /* "async_session.pyx":394
  * 
  *         sess_cfg.peername = <bytes?>(self.args['peername'])
  *         sess_cfg.retries = self.args['retries']             # <<<<<<<<<<<<<<
  *         sess_cfg.timeout = self.args['timeout'] * 1000000
  * 
  */
-  __pyx_t_1 = PyObject_GetItem(__pyx_v_self->args, __pyx_n_s_retries); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 393, __pyx_L1_error)
+  __pyx_t_1 = PyObject_GetItem(__pyx_v_self->args, __pyx_n_s_retries); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 394, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_3 = __Pyx_PyInt_As_int(__pyx_t_1); if (unlikely((__pyx_t_3 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 393, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyInt_As_int(__pyx_t_1); if (unlikely((__pyx_t_3 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 394, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_sess_cfg.retries = __pyx_t_3;
 
-  /* "async_session.pyx":394
+  /* "async_session.pyx":395
  *         sess_cfg.peername = <bytes?>(self.args['peername'])
  *         sess_cfg.retries = self.args['retries']
  *         sess_cfg.timeout = self.args['timeout'] * 1000000             # <<<<<<<<<<<<<<
  * 
  *         # Ignores the fd_set within the snmp-api.
  */
-  __pyx_t_1 = PyObject_GetItem(__pyx_v_self->args, __pyx_n_s_timeout); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 394, __pyx_L1_error)
+  __pyx_t_1 = PyObject_GetItem(__pyx_v_self->args, __pyx_n_s_timeout); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 395, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_4 = PyNumber_Multiply(__pyx_t_1, __pyx_int_1000000); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 394, __pyx_L1_error)
+  __pyx_t_4 = PyNumber_Multiply(__pyx_t_1, __pyx_int_1000000); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 395, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_5 = __Pyx_PyInt_As_long(__pyx_t_4); if (unlikely((__pyx_t_5 == (long)-1) && PyErr_Occurred())) __PYX_ERR(0, 394, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyInt_As_long(__pyx_t_4); if (unlikely((__pyx_t_5 == (long)-1) && PyErr_Occurred())) __PYX_ERR(0, 395, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_v_sess_cfg.timeout = __pyx_t_5;
 
-  /* "async_session.pyx":397
+  /* "async_session.pyx":398
  * 
  *         # Ignores the fd_set within the snmp-api.
  *         sess_cfg.flags |= 0x100000             # <<<<<<<<<<<<<<
@@ -3293,7 +3343,7 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_6open_session(struct __
  */
   __pyx_v_sess_cfg.flags = (__pyx_v_sess_cfg.flags | 0x100000);
 
-  /* "async_session.pyx":400
+  /* "async_session.pyx":401
  * 
  *         # Uses the 'async select' from session->myvoid.
  *         sess_cfg.flags |= 0x200000             # <<<<<<<<<<<<<<
@@ -3302,20 +3352,20 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_6open_session(struct __
  */
   __pyx_v_sess_cfg.flags = (__pyx_v_sess_cfg.flags | 0x200000);
 
-  /* "async_session.pyx":402
+  /* "async_session.pyx":403
  *         sess_cfg.flags |= 0x200000
  * 
  *         if self.args['version'] == '1':             # <<<<<<<<<<<<<<
  *             sess_cfg.version = SNMP_VERSION_1
  *             self._set_community(cython.address(sess_cfg))
  */
-  __pyx_t_4 = PyObject_GetItem(__pyx_v_self->args, __pyx_n_s_version); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 402, __pyx_L1_error)
+  __pyx_t_4 = PyObject_GetItem(__pyx_v_self->args, __pyx_n_s_version); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 403, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_6 = (__Pyx_PyString_Equals(__pyx_t_4, __pyx_kp_s_1, Py_EQ)); if (unlikely(__pyx_t_6 < 0)) __PYX_ERR(0, 402, __pyx_L1_error)
+  __pyx_t_6 = (__Pyx_PyString_Equals(__pyx_t_4, __pyx_kp_s_1, Py_EQ)); if (unlikely(__pyx_t_6 < 0)) __PYX_ERR(0, 403, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   if (__pyx_t_6) {
 
-    /* "async_session.pyx":403
+    /* "async_session.pyx":404
  * 
  *         if self.args['version'] == '1':
  *             sess_cfg.version = SNMP_VERSION_1             # <<<<<<<<<<<<<<
@@ -3324,18 +3374,18 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_6open_session(struct __
  */
     __pyx_v_sess_cfg.version = SNMP_VERSION_1;
 
-    /* "async_session.pyx":404
+    /* "async_session.pyx":405
  *         if self.args['version'] == '1':
  *             sess_cfg.version = SNMP_VERSION_1
  *             self._set_community(cython.address(sess_cfg))             # <<<<<<<<<<<<<<
  * 
  *         elif self.args['version'] == '2c':
  */
-    __pyx_t_4 = __pyx_f_13async_session_12AsyncSession__set_community(__pyx_v_self, (&__pyx_v_sess_cfg)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 404, __pyx_L1_error)
+    __pyx_t_4 = __pyx_f_13async_session_12AsyncSession__set_community(__pyx_v_self, (&__pyx_v_sess_cfg)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 405, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-    /* "async_session.pyx":402
+    /* "async_session.pyx":403
  *         sess_cfg.flags |= 0x200000
  * 
  *         if self.args['version'] == '1':             # <<<<<<<<<<<<<<
@@ -3345,20 +3395,20 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_6open_session(struct __
     goto __pyx_L3;
   }
 
-  /* "async_session.pyx":406
+  /* "async_session.pyx":407
  *             self._set_community(cython.address(sess_cfg))
  * 
  *         elif self.args['version'] == '2c':             # <<<<<<<<<<<<<<
  *             sess_cfg.version = SNMP_VERSION_2c
  *             self._set_community(cython.address(sess_cfg))
  */
-  __pyx_t_4 = PyObject_GetItem(__pyx_v_self->args, __pyx_n_s_version); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 406, __pyx_L1_error)
+  __pyx_t_4 = PyObject_GetItem(__pyx_v_self->args, __pyx_n_s_version); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 407, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_6 = (__Pyx_PyString_Equals(__pyx_t_4, __pyx_kp_s_2c, Py_EQ)); if (unlikely(__pyx_t_6 < 0)) __PYX_ERR(0, 406, __pyx_L1_error)
+  __pyx_t_6 = (__Pyx_PyString_Equals(__pyx_t_4, __pyx_kp_s_2c, Py_EQ)); if (unlikely(__pyx_t_6 < 0)) __PYX_ERR(0, 407, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   if (__pyx_t_6) {
 
-    /* "async_session.pyx":407
+    /* "async_session.pyx":408
  * 
  *         elif self.args['version'] == '2c':
  *             sess_cfg.version = SNMP_VERSION_2c             # <<<<<<<<<<<<<<
@@ -3367,18 +3417,18 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_6open_session(struct __
  */
     __pyx_v_sess_cfg.version = SNMP_VERSION_2c;
 
-    /* "async_session.pyx":408
+    /* "async_session.pyx":409
  *         elif self.args['version'] == '2c':
  *             sess_cfg.version = SNMP_VERSION_2c
  *             self._set_community(cython.address(sess_cfg))             # <<<<<<<<<<<<<<
  * 
  *         elif self.args['version'] == '3':
  */
-    __pyx_t_4 = __pyx_f_13async_session_12AsyncSession__set_community(__pyx_v_self, (&__pyx_v_sess_cfg)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 408, __pyx_L1_error)
+    __pyx_t_4 = __pyx_f_13async_session_12AsyncSession__set_community(__pyx_v_self, (&__pyx_v_sess_cfg)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 409, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-    /* "async_session.pyx":406
+    /* "async_session.pyx":407
  *             self._set_community(cython.address(sess_cfg))
  * 
  *         elif self.args['version'] == '2c':             # <<<<<<<<<<<<<<
@@ -3388,20 +3438,20 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_6open_session(struct __
     goto __pyx_L3;
   }
 
-  /* "async_session.pyx":410
+  /* "async_session.pyx":411
  *             self._set_community(cython.address(sess_cfg))
  * 
  *         elif self.args['version'] == '3':             # <<<<<<<<<<<<<<
  *             sess_cfg.version = SNMP_VERSION_3
  *             self._set_version_three_auth(cython.address(sess_cfg))
  */
-  __pyx_t_4 = PyObject_GetItem(__pyx_v_self->args, __pyx_n_s_version); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 410, __pyx_L1_error)
+  __pyx_t_4 = PyObject_GetItem(__pyx_v_self->args, __pyx_n_s_version); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 411, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_6 = (__Pyx_PyString_Equals(__pyx_t_4, __pyx_kp_s_3, Py_EQ)); if (unlikely(__pyx_t_6 < 0)) __PYX_ERR(0, 410, __pyx_L1_error)
+  __pyx_t_6 = (__Pyx_PyString_Equals(__pyx_t_4, __pyx_kp_s_3, Py_EQ)); if (unlikely(__pyx_t_6 < 0)) __PYX_ERR(0, 411, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   if (__pyx_t_6) {
 
-    /* "async_session.pyx":411
+    /* "async_session.pyx":412
  * 
  *         elif self.args['version'] == '3':
  *             sess_cfg.version = SNMP_VERSION_3             # <<<<<<<<<<<<<<
@@ -3410,18 +3460,18 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_6open_session(struct __
  */
     __pyx_v_sess_cfg.version = SNMP_VERSION_3;
 
-    /* "async_session.pyx":412
+    /* "async_session.pyx":413
  *         elif self.args['version'] == '3':
  *             sess_cfg.version = SNMP_VERSION_3
  *             self._set_version_three_auth(cython.address(sess_cfg))             # <<<<<<<<<<<<<<
  * 
  *         else:
  */
-    __pyx_t_4 = __pyx_f_13async_session_12AsyncSession__set_version_three_auth(__pyx_v_self, (&__pyx_v_sess_cfg)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 412, __pyx_L1_error)
+    __pyx_t_4 = __pyx_f_13async_session_12AsyncSession__set_version_three_auth(__pyx_v_self, (&__pyx_v_sess_cfg)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 413, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-    /* "async_session.pyx":410
+    /* "async_session.pyx":411
  *             self._set_community(cython.address(sess_cfg))
  * 
  *         elif self.args['version'] == '3':             # <<<<<<<<<<<<<<
@@ -3431,7 +3481,7 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_6open_session(struct __
     goto __pyx_L3;
   }
 
-  /* "async_session.pyx":415
+  /* "async_session.pyx":416
  * 
  *         else:
  *             raise Exception("Unkown snmp version: %s" % self.args['version'])             # <<<<<<<<<<<<<<
@@ -3439,26 +3489,26 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_6open_session(struct __
  *         # snmpV3 needs an engineID to work.
  */
   /*else*/ {
-    __pyx_t_4 = PyObject_GetItem(__pyx_v_self->args, __pyx_n_s_version); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 415, __pyx_L1_error)
+    __pyx_t_4 = PyObject_GetItem(__pyx_v_self->args, __pyx_n_s_version); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 416, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_1 = __Pyx_PyString_Format(__pyx_kp_s_Unkown_snmp_version_s, __pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 415, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyString_Format(__pyx_kp_s_Unkown_snmp_version_s, __pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 416, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __pyx_t_4 = PyTuple_New(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 415, __pyx_L1_error)
+    __pyx_t_4 = PyTuple_New(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 416, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_GIVEREF(__pyx_t_1);
     PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_1);
     __pyx_t_1 = 0;
-    __pyx_t_1 = __Pyx_PyObject_Call(((PyObject *)(&((PyTypeObject*)PyExc_Exception)[0])), __pyx_t_4, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 415, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_Call(((PyObject *)(&((PyTypeObject*)PyExc_Exception)[0])), __pyx_t_4, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 416, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_Raise(__pyx_t_1, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __PYX_ERR(0, 415, __pyx_L1_error)
+    __PYX_ERR(0, 416, __pyx_L1_error)
   }
   __pyx_L3:;
 
-  /* "async_session.pyx":427
+  /* "async_session.pyx":428
  * 
  *         # Forbid probing in snmp_sess_open (has no effect on v1 or v2c).
  *         sess_cfg.flags |= SNMP_FLAGS_DONT_PROBE             # <<<<<<<<<<<<<<
@@ -3467,7 +3517,7 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_6open_session(struct __
  */
   __pyx_v_sess_cfg.flags = (__pyx_v_sess_cfg.flags | SNMP_FLAGS_DONT_PROBE);
 
-  /* "async_session.pyx":429
+  /* "async_session.pyx":430
  *         sess_cfg.flags |= SNMP_FLAGS_DONT_PROBE
  * 
  *         self.sp = snmp_sess_open(cython.address(sess_cfg))             # <<<<<<<<<<<<<<
@@ -3476,7 +3526,7 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_6open_session(struct __
  */
   __pyx_v_self->sp = snmp_sess_open((&__pyx_v_sess_cfg));
 
-  /* "async_session.pyx":430
+  /* "async_session.pyx":431
  * 
  *         self.sp = snmp_sess_open(cython.address(sess_cfg))
  *         if self.sp == NULL:             # <<<<<<<<<<<<<<
@@ -3486,20 +3536,20 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_6open_session(struct __
   __pyx_t_6 = ((__pyx_v_self->sp == NULL) != 0);
   if (__pyx_t_6) {
 
-    /* "async_session.pyx":431
+    /* "async_session.pyx":432
  *         self.sp = snmp_sess_open(cython.address(sess_cfg))
  *         if self.sp == NULL:
  *             raise error_from_session("Can not open", cython.address(sess_cfg))             # <<<<<<<<<<<<<<
  * 
  *         snmp_sess_session(self.sp).myvoid = cython.address(self.ax_async_ctx)
  */
-    __pyx_t_1 = __pyx_f_13async_session_error_from_session(__pyx_kp_s_Can_not_open, (&__pyx_v_sess_cfg)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 431, __pyx_L1_error)
+    __pyx_t_1 = __pyx_f_13async_session_error_from_session(__pyx_kp_s_Can_not_open, (&__pyx_v_sess_cfg)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 432, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_Raise(__pyx_t_1, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __PYX_ERR(0, 431, __pyx_L1_error)
+    __PYX_ERR(0, 432, __pyx_L1_error)
 
-    /* "async_session.pyx":430
+    /* "async_session.pyx":431
  * 
  *         self.sp = snmp_sess_open(cython.address(sess_cfg))
  *         if self.sp == NULL:             # <<<<<<<<<<<<<<
@@ -3508,7 +3558,7 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_6open_session(struct __
  */
   }
 
-  /* "async_session.pyx":433
+  /* "async_session.pyx":434
  *             raise error_from_session("Can not open", cython.address(sess_cfg))
  * 
  *         snmp_sess_session(self.sp).myvoid = cython.address(self.ax_async_ctx)             # <<<<<<<<<<<<<<
@@ -3517,7 +3567,7 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_6open_session(struct __
  */
   snmp_sess_session(__pyx_v_self->sp)->myvoid = (&__pyx_v_self->ax_async_ctx);
 
-  /* "async_session.pyx":435
+  /* "async_session.pyx":436
  *         snmp_sess_session(self.sp).myvoid = cython.address(self.ax_async_ctx)
  * 
  *         if sess_cfg.version == SNMP_VERSION_3 and sess_cfg.securityEngineIDLen == 0:             # <<<<<<<<<<<<<<
@@ -3535,18 +3585,18 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_6open_session(struct __
   __pyx_L6_bool_binop_done:;
   if (__pyx_t_6) {
 
-    /* "async_session.pyx":437
+    /* "async_session.pyx":438
  *         if sess_cfg.version == SNMP_VERSION_3 and sess_cfg.securityEngineIDLen == 0:
  *             # engine_id is not known, probe it.
  *             self._do_snmpv3_engine_id_probe(cython.address(sess_cfg))             # <<<<<<<<<<<<<<
  * 
  *     cdef _set_community(self, netsnmp_session* sess_cfg):
  */
-    __pyx_t_1 = __pyx_f_13async_session_12AsyncSession__do_snmpv3_engine_id_probe(__pyx_v_self, (&__pyx_v_sess_cfg)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 437, __pyx_L1_error)
+    __pyx_t_1 = __pyx_f_13async_session_12AsyncSession__do_snmpv3_engine_id_probe(__pyx_v_self, (&__pyx_v_sess_cfg)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 438, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-    /* "async_session.pyx":435
+    /* "async_session.pyx":436
  *         snmp_sess_session(self.sp).myvoid = cython.address(self.ax_async_ctx)
  * 
  *         if sess_cfg.version == SNMP_VERSION_3 and sess_cfg.securityEngineIDLen == 0:             # <<<<<<<<<<<<<<
@@ -3555,7 +3605,7 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_6open_session(struct __
  */
   }
 
-  /* "async_session.pyx":387
+  /* "async_session.pyx":388
  *                 snmp_sess_session(self.sp).contextEngineIDLen)
  * 
  *     def open_session(self):             # <<<<<<<<<<<<<<
@@ -3577,7 +3627,7 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_6open_session(struct __
   return __pyx_r;
 }
 
-/* "async_session.pyx":439
+/* "async_session.pyx":440
  *             self._do_snmpv3_engine_id_probe(cython.address(sess_cfg))
  * 
  *     cdef _set_community(self, netsnmp_session* sess_cfg):             # <<<<<<<<<<<<<<
@@ -3593,34 +3643,34 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__set_community(struct __
   Py_ssize_t __pyx_t_3;
   __Pyx_RefNannySetupContext("_set_community", 0);
 
-  /* "async_session.pyx":440
+  /* "async_session.pyx":441
  * 
  *     cdef _set_community(self, netsnmp_session* sess_cfg):
  *         sess_cfg.community = <bytes?>(self.args['community'])             # <<<<<<<<<<<<<<
  *         sess_cfg.community_len = len(self.args['community'])
  * 
  */
-  __pyx_t_1 = PyObject_GetItem(__pyx_v_self->args, __pyx_n_s_community); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 440, __pyx_L1_error)
+  __pyx_t_1 = PyObject_GetItem(__pyx_v_self->args, __pyx_n_s_community); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 441, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (!(likely(PyBytes_CheckExact(__pyx_t_1))||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "bytes", Py_TYPE(__pyx_t_1)->tp_name), 0))) __PYX_ERR(0, 440, __pyx_L1_error)
-  __pyx_t_2 = __Pyx_PyObject_AsUString(__pyx_t_1); if (unlikely((!__pyx_t_2) && PyErr_Occurred())) __PYX_ERR(0, 440, __pyx_L1_error)
+  if (!(likely(PyBytes_CheckExact(__pyx_t_1))||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "bytes", Py_TYPE(__pyx_t_1)->tp_name), 0))) __PYX_ERR(0, 441, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_AsUString(__pyx_t_1); if (unlikely((!__pyx_t_2) && PyErr_Occurred())) __PYX_ERR(0, 441, __pyx_L1_error)
   __pyx_v_sess_cfg->community = __pyx_t_2;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "async_session.pyx":441
+  /* "async_session.pyx":442
  *     cdef _set_community(self, netsnmp_session* sess_cfg):
  *         sess_cfg.community = <bytes?>(self.args['community'])
  *         sess_cfg.community_len = len(self.args['community'])             # <<<<<<<<<<<<<<
  * 
  *     cdef _set_version_three_auth(self, netsnmp_session* sess_cfg):
  */
-  __pyx_t_1 = PyObject_GetItem(__pyx_v_self->args, __pyx_n_s_community); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 441, __pyx_L1_error)
+  __pyx_t_1 = PyObject_GetItem(__pyx_v_self->args, __pyx_n_s_community); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 442, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_3 = PyObject_Length(__pyx_t_1); if (unlikely(__pyx_t_3 == -1)) __PYX_ERR(0, 441, __pyx_L1_error)
+  __pyx_t_3 = PyObject_Length(__pyx_t_1); if (unlikely(__pyx_t_3 == -1)) __PYX_ERR(0, 442, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_sess_cfg->community_len = __pyx_t_3;
 
-  /* "async_session.pyx":439
+  /* "async_session.pyx":440
  *             self._do_snmpv3_engine_id_probe(cython.address(sess_cfg))
  * 
  *     cdef _set_community(self, netsnmp_session* sess_cfg):             # <<<<<<<<<<<<<<
@@ -3641,7 +3691,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__set_community(struct __
   return __pyx_r;
 }
 
-/* "async_session.pyx":443
+/* "async_session.pyx":444
  *         sess_cfg.community_len = len(self.args['community'])
  * 
  *     cdef _set_version_three_auth(self, netsnmp_session* sess_cfg):             # <<<<<<<<<<<<<<
@@ -3666,7 +3716,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__set_version_three_auth(
   __pyx_t_13async_session_u_char *__pyx_t_7;
   __Pyx_RefNannySetupContext("_set_version_three_auth", 0);
 
-  /* "async_session.pyx":444
+  /* "async_session.pyx":445
  * 
  *     cdef _set_version_three_auth(self, netsnmp_session* sess_cfg):
  *         cdef int res = 0             # <<<<<<<<<<<<<<
@@ -3675,7 +3725,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__set_version_three_auth(
  */
   __pyx_v_res = 0;
 
-  /* "async_session.pyx":446
+  /* "async_session.pyx":447
  *         cdef int res = 0
  *         # For V3 the USM model is used.
  *         sess_cfg.securityModel = SNMP_SEC_MODEL_USM             # <<<<<<<<<<<<<<
@@ -3684,29 +3734,29 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__set_version_three_auth(
  */
   __pyx_v_sess_cfg->securityModel = SNMP_SEC_MODEL_USM;
 
-  /* "async_session.pyx":449
+  /* "async_session.pyx":450
  * 
  *         # Configure one of the three types of security supported.
  *         security_level = self.args['security_level']             # <<<<<<<<<<<<<<
  *         if security_level == 'noAuthNoPriv':
  *             sess_cfg.securityLevel = SNMP_SEC_LEVEL_NOAUTH
  */
-  __pyx_t_1 = PyObject_GetItem(__pyx_v_self->args, __pyx_n_s_security_level); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 449, __pyx_L1_error)
+  __pyx_t_1 = PyObject_GetItem(__pyx_v_self->args, __pyx_n_s_security_level); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 450, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_security_level = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "async_session.pyx":450
+  /* "async_session.pyx":451
  *         # Configure one of the three types of security supported.
  *         security_level = self.args['security_level']
  *         if security_level == 'noAuthNoPriv':             # <<<<<<<<<<<<<<
  *             sess_cfg.securityLevel = SNMP_SEC_LEVEL_NOAUTH
  *         elif security_level == 'authNoPriv':
  */
-  __pyx_t_2 = (__Pyx_PyString_Equals(__pyx_v_security_level, __pyx_n_s_noAuthNoPriv, Py_EQ)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 450, __pyx_L1_error)
+  __pyx_t_2 = (__Pyx_PyString_Equals(__pyx_v_security_level, __pyx_n_s_noAuthNoPriv, Py_EQ)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 451, __pyx_L1_error)
   if (__pyx_t_2) {
 
-    /* "async_session.pyx":451
+    /* "async_session.pyx":452
  *         security_level = self.args['security_level']
  *         if security_level == 'noAuthNoPriv':
  *             sess_cfg.securityLevel = SNMP_SEC_LEVEL_NOAUTH             # <<<<<<<<<<<<<<
@@ -3715,7 +3765,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__set_version_three_auth(
  */
     __pyx_v_sess_cfg->securityLevel = SNMP_SEC_LEVEL_NOAUTH;
 
-    /* "async_session.pyx":450
+    /* "async_session.pyx":451
  *         # Configure one of the three types of security supported.
  *         security_level = self.args['security_level']
  *         if security_level == 'noAuthNoPriv':             # <<<<<<<<<<<<<<
@@ -3725,17 +3775,17 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__set_version_three_auth(
     goto __pyx_L3;
   }
 
-  /* "async_session.pyx":452
+  /* "async_session.pyx":453
  *         if security_level == 'noAuthNoPriv':
  *             sess_cfg.securityLevel = SNMP_SEC_LEVEL_NOAUTH
  *         elif security_level == 'authNoPriv':             # <<<<<<<<<<<<<<
  *             sess_cfg.securityLevel = SNMP_SEC_LEVEL_AUTHNOPRIV
  *         elif security_level == 'authPriv':
  */
-  __pyx_t_2 = (__Pyx_PyString_Equals(__pyx_v_security_level, __pyx_n_s_authNoPriv, Py_EQ)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 452, __pyx_L1_error)
+  __pyx_t_2 = (__Pyx_PyString_Equals(__pyx_v_security_level, __pyx_n_s_authNoPriv, Py_EQ)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 453, __pyx_L1_error)
   if (__pyx_t_2) {
 
-    /* "async_session.pyx":453
+    /* "async_session.pyx":454
  *             sess_cfg.securityLevel = SNMP_SEC_LEVEL_NOAUTH
  *         elif security_level == 'authNoPriv':
  *             sess_cfg.securityLevel = SNMP_SEC_LEVEL_AUTHNOPRIV             # <<<<<<<<<<<<<<
@@ -3744,7 +3794,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__set_version_three_auth(
  */
     __pyx_v_sess_cfg->securityLevel = SNMP_SEC_LEVEL_AUTHNOPRIV;
 
-    /* "async_session.pyx":452
+    /* "async_session.pyx":453
  *         if security_level == 'noAuthNoPriv':
  *             sess_cfg.securityLevel = SNMP_SEC_LEVEL_NOAUTH
  *         elif security_level == 'authNoPriv':             # <<<<<<<<<<<<<<
@@ -3754,17 +3804,17 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__set_version_three_auth(
     goto __pyx_L3;
   }
 
-  /* "async_session.pyx":454
+  /* "async_session.pyx":455
  *         elif security_level == 'authNoPriv':
  *             sess_cfg.securityLevel = SNMP_SEC_LEVEL_AUTHNOPRIV
  *         elif security_level == 'authPriv':             # <<<<<<<<<<<<<<
  *             sess_cfg.securityLevel = SNMP_SEC_LEVEL_AUTHPRIV
  *         else:
  */
-  __pyx_t_2 = (__Pyx_PyString_Equals(__pyx_v_security_level, __pyx_n_s_authPriv, Py_EQ)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 454, __pyx_L1_error)
+  __pyx_t_2 = (__Pyx_PyString_Equals(__pyx_v_security_level, __pyx_n_s_authPriv, Py_EQ)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 455, __pyx_L1_error)
   if (__pyx_t_2) {
 
-    /* "async_session.pyx":455
+    /* "async_session.pyx":456
  *             sess_cfg.securityLevel = SNMP_SEC_LEVEL_AUTHNOPRIV
  *         elif security_level == 'authPriv':
  *             sess_cfg.securityLevel = SNMP_SEC_LEVEL_AUTHPRIV             # <<<<<<<<<<<<<<
@@ -3773,7 +3823,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__set_version_three_auth(
  */
     __pyx_v_sess_cfg->securityLevel = SNMP_SEC_LEVEL_AUTHPRIV;
 
-    /* "async_session.pyx":454
+    /* "async_session.pyx":455
  *         elif security_level == 'authNoPriv':
  *             sess_cfg.securityLevel = SNMP_SEC_LEVEL_AUTHNOPRIV
  *         elif security_level == 'authPriv':             # <<<<<<<<<<<<<<
@@ -3783,7 +3833,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__set_version_three_auth(
     goto __pyx_L3;
   }
 
-  /* "async_session.pyx":457
+  /* "async_session.pyx":458
  *             sess_cfg.securityLevel = SNMP_SEC_LEVEL_AUTHPRIV
  *         else:
  *             raise Exception("Unknown security_level: %s" % security_level)             # <<<<<<<<<<<<<<
@@ -3791,90 +3841,90 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__set_version_three_auth(
  *         # Username is mandatory.
  */
   /*else*/ {
-    __pyx_t_1 = __Pyx_PyString_Format(__pyx_kp_s_Unknown_security_level_s, __pyx_v_security_level); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 457, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyString_Format(__pyx_kp_s_Unknown_security_level_s, __pyx_v_security_level); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 458, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 457, __pyx_L1_error)
+    __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 458, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_GIVEREF(__pyx_t_1);
     PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_1);
     __pyx_t_1 = 0;
-    __pyx_t_1 = __Pyx_PyObject_Call(((PyObject *)(&((PyTypeObject*)PyExc_Exception)[0])), __pyx_t_3, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 457, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_Call(((PyObject *)(&((PyTypeObject*)PyExc_Exception)[0])), __pyx_t_3, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 458, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_Raise(__pyx_t_1, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __PYX_ERR(0, 457, __pyx_L1_error)
+    __PYX_ERR(0, 458, __pyx_L1_error)
   }
   __pyx_L3:;
 
-  /* "async_session.pyx":460
+  /* "async_session.pyx":461
  * 
  *         # Username is mandatory.
  *         sess_cfg.securityName = <bytes?>(self.args['security_name'])             # <<<<<<<<<<<<<<
  *         sess_cfg.securityNameLen = len(self.args['security_name'])
  * 
  */
-  __pyx_t_1 = PyObject_GetItem(__pyx_v_self->args, __pyx_n_s_security_name); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 460, __pyx_L1_error)
+  __pyx_t_1 = PyObject_GetItem(__pyx_v_self->args, __pyx_n_s_security_name); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 461, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (!(likely(PyBytes_CheckExact(__pyx_t_1))||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "bytes", Py_TYPE(__pyx_t_1)->tp_name), 0))) __PYX_ERR(0, 460, __pyx_L1_error)
-  __pyx_t_4 = __Pyx_PyObject_AsString(__pyx_t_1); if (unlikely((!__pyx_t_4) && PyErr_Occurred())) __PYX_ERR(0, 460, __pyx_L1_error)
+  if (!(likely(PyBytes_CheckExact(__pyx_t_1))||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "bytes", Py_TYPE(__pyx_t_1)->tp_name), 0))) __PYX_ERR(0, 461, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_AsString(__pyx_t_1); if (unlikely((!__pyx_t_4) && PyErr_Occurred())) __PYX_ERR(0, 461, __pyx_L1_error)
   __pyx_v_sess_cfg->securityName = __pyx_t_4;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "async_session.pyx":461
+  /* "async_session.pyx":462
  *         # Username is mandatory.
  *         sess_cfg.securityName = <bytes?>(self.args['security_name'])
  *         sess_cfg.securityNameLen = len(self.args['security_name'])             # <<<<<<<<<<<<<<
  * 
  *         # If auth is used, the protocol must be given.
  */
-  __pyx_t_1 = PyObject_GetItem(__pyx_v_self->args, __pyx_n_s_security_name); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 461, __pyx_L1_error)
+  __pyx_t_1 = PyObject_GetItem(__pyx_v_self->args, __pyx_n_s_security_name); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 462, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_5 = PyObject_Length(__pyx_t_1); if (unlikely(__pyx_t_5 == -1)) __PYX_ERR(0, 461, __pyx_L1_error)
+  __pyx_t_5 = PyObject_Length(__pyx_t_1); if (unlikely(__pyx_t_5 == -1)) __PYX_ERR(0, 462, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_sess_cfg->securityNameLen = __pyx_t_5;
 
-  /* "async_session.pyx":464
+  /* "async_session.pyx":465
  * 
  *         # If auth is used, the protocol must be given.
  *         if security_level == 'authNoPriv' or security_level == 'authPriv':             # <<<<<<<<<<<<<<
  *             auth_proto = self.args['auth_proto']
  *             if auth_proto == 'MD5':
  */
-  __pyx_t_6 = (__Pyx_PyString_Equals(__pyx_v_security_level, __pyx_n_s_authNoPriv, Py_EQ)); if (unlikely(__pyx_t_6 < 0)) __PYX_ERR(0, 464, __pyx_L1_error)
+  __pyx_t_6 = (__Pyx_PyString_Equals(__pyx_v_security_level, __pyx_n_s_authNoPriv, Py_EQ)); if (unlikely(__pyx_t_6 < 0)) __PYX_ERR(0, 465, __pyx_L1_error)
   if (!__pyx_t_6) {
   } else {
     __pyx_t_2 = __pyx_t_6;
     goto __pyx_L5_bool_binop_done;
   }
-  __pyx_t_6 = (__Pyx_PyString_Equals(__pyx_v_security_level, __pyx_n_s_authPriv, Py_EQ)); if (unlikely(__pyx_t_6 < 0)) __PYX_ERR(0, 464, __pyx_L1_error)
+  __pyx_t_6 = (__Pyx_PyString_Equals(__pyx_v_security_level, __pyx_n_s_authPriv, Py_EQ)); if (unlikely(__pyx_t_6 < 0)) __PYX_ERR(0, 465, __pyx_L1_error)
   __pyx_t_2 = __pyx_t_6;
   __pyx_L5_bool_binop_done:;
   if (__pyx_t_2) {
 
-    /* "async_session.pyx":465
+    /* "async_session.pyx":466
  *         # If auth is used, the protocol must be given.
  *         if security_level == 'authNoPriv' or security_level == 'authPriv':
  *             auth_proto = self.args['auth_proto']             # <<<<<<<<<<<<<<
  *             if auth_proto == 'MD5':
  *                 sess_cfg.securityAuthProto = usmHMACMD5AuthProtocol
  */
-    __pyx_t_1 = PyObject_GetItem(__pyx_v_self->args, __pyx_n_s_auth_proto); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 465, __pyx_L1_error)
+    __pyx_t_1 = PyObject_GetItem(__pyx_v_self->args, __pyx_n_s_auth_proto); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 466, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __pyx_v_auth_proto = __pyx_t_1;
     __pyx_t_1 = 0;
 
-    /* "async_session.pyx":466
+    /* "async_session.pyx":467
  *         if security_level == 'authNoPriv' or security_level == 'authPriv':
  *             auth_proto = self.args['auth_proto']
  *             if auth_proto == 'MD5':             # <<<<<<<<<<<<<<
  *                 sess_cfg.securityAuthProto = usmHMACMD5AuthProtocol
  *                 sess_cfg.securityAuthProtoLen = USM_AUTH_PROTO_MD5_LEN
  */
-    __pyx_t_2 = (__Pyx_PyString_Equals(__pyx_v_auth_proto, __pyx_n_s_MD5, Py_EQ)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 466, __pyx_L1_error)
+    __pyx_t_2 = (__Pyx_PyString_Equals(__pyx_v_auth_proto, __pyx_n_s_MD5, Py_EQ)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 467, __pyx_L1_error)
     if (__pyx_t_2) {
 
-      /* "async_session.pyx":467
+      /* "async_session.pyx":468
  *             auth_proto = self.args['auth_proto']
  *             if auth_proto == 'MD5':
  *                 sess_cfg.securityAuthProto = usmHMACMD5AuthProtocol             # <<<<<<<<<<<<<<
@@ -3883,7 +3933,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__set_version_three_auth(
  */
       __pyx_v_sess_cfg->securityAuthProto = usmHMACMD5AuthProtocol;
 
-      /* "async_session.pyx":468
+      /* "async_session.pyx":469
  *             if auth_proto == 'MD5':
  *                 sess_cfg.securityAuthProto = usmHMACMD5AuthProtocol
  *                 sess_cfg.securityAuthProtoLen = USM_AUTH_PROTO_MD5_LEN             # <<<<<<<<<<<<<<
@@ -3892,7 +3942,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__set_version_three_auth(
  */
       __pyx_v_sess_cfg->securityAuthProtoLen = USM_AUTH_PROTO_MD5_LEN;
 
-      /* "async_session.pyx":466
+      /* "async_session.pyx":467
  *         if security_level == 'authNoPriv' or security_level == 'authPriv':
  *             auth_proto = self.args['auth_proto']
  *             if auth_proto == 'MD5':             # <<<<<<<<<<<<<<
@@ -3902,17 +3952,17 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__set_version_three_auth(
       goto __pyx_L7;
     }
 
-    /* "async_session.pyx":469
+    /* "async_session.pyx":470
  *                 sess_cfg.securityAuthProto = usmHMACMD5AuthProtocol
  *                 sess_cfg.securityAuthProtoLen = USM_AUTH_PROTO_MD5_LEN
  *             elif auth_proto == 'SHA':             # <<<<<<<<<<<<<<
  *                 sess_cfg.securityAuthProto = usmHMACSHA1AuthProtocol
  *                 sess_cfg.securityAuthProtoLen = USM_AUTH_PROTO_SHA_LEN
  */
-    __pyx_t_2 = (__Pyx_PyString_Equals(__pyx_v_auth_proto, __pyx_n_s_SHA, Py_EQ)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 469, __pyx_L1_error)
+    __pyx_t_2 = (__Pyx_PyString_Equals(__pyx_v_auth_proto, __pyx_n_s_SHA, Py_EQ)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 470, __pyx_L1_error)
     if (__pyx_t_2) {
 
-      /* "async_session.pyx":470
+      /* "async_session.pyx":471
  *                 sess_cfg.securityAuthProtoLen = USM_AUTH_PROTO_MD5_LEN
  *             elif auth_proto == 'SHA':
  *                 sess_cfg.securityAuthProto = usmHMACSHA1AuthProtocol             # <<<<<<<<<<<<<<
@@ -3921,7 +3971,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__set_version_three_auth(
  */
       __pyx_v_sess_cfg->securityAuthProto = usmHMACSHA1AuthProtocol;
 
-      /* "async_session.pyx":471
+      /* "async_session.pyx":472
  *             elif auth_proto == 'SHA':
  *                 sess_cfg.securityAuthProto = usmHMACSHA1AuthProtocol
  *                 sess_cfg.securityAuthProtoLen = USM_AUTH_PROTO_SHA_LEN             # <<<<<<<<<<<<<<
@@ -3930,7 +3980,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__set_version_three_auth(
  */
       __pyx_v_sess_cfg->securityAuthProtoLen = USM_AUTH_PROTO_SHA_LEN;
 
-      /* "async_session.pyx":469
+      /* "async_session.pyx":470
  *                 sess_cfg.securityAuthProto = usmHMACMD5AuthProtocol
  *                 sess_cfg.securityAuthProtoLen = USM_AUTH_PROTO_MD5_LEN
  *             elif auth_proto == 'SHA':             # <<<<<<<<<<<<<<
@@ -3940,7 +3990,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__set_version_three_auth(
       goto __pyx_L7;
     }
 
-    /* "async_session.pyx":473
+    /* "async_session.pyx":474
  *                 sess_cfg.securityAuthProtoLen = USM_AUTH_PROTO_SHA_LEN
  *             else:
  *                 raise Exception("Unknown auth protocol: %s" % auth_proto)             # <<<<<<<<<<<<<<
@@ -3948,23 +3998,23 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__set_version_three_auth(
  *             sess_cfg.securityAuthKeyLen = USM_AUTH_KU_LEN
  */
     /*else*/ {
-      __pyx_t_1 = __Pyx_PyString_Format(__pyx_kp_s_Unknown_auth_protocol_s, __pyx_v_auth_proto); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 473, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyString_Format(__pyx_kp_s_Unknown_auth_protocol_s, __pyx_v_auth_proto); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 474, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
-      __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 473, __pyx_L1_error)
+      __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 474, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_GIVEREF(__pyx_t_1);
       PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_1);
       __pyx_t_1 = 0;
-      __pyx_t_1 = __Pyx_PyObject_Call(((PyObject *)(&((PyTypeObject*)PyExc_Exception)[0])), __pyx_t_3, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 473, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyObject_Call(((PyObject *)(&((PyTypeObject*)PyExc_Exception)[0])), __pyx_t_3, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 474, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
       __Pyx_Raise(__pyx_t_1, 0, 0, 0);
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-      __PYX_ERR(0, 473, __pyx_L1_error)
+      __PYX_ERR(0, 474, __pyx_L1_error)
     }
     __pyx_L7:;
 
-    /* "async_session.pyx":475
+    /* "async_session.pyx":476
  *                 raise Exception("Unknown auth protocol: %s" % auth_proto)
  * 
  *             sess_cfg.securityAuthKeyLen = USM_AUTH_KU_LEN             # <<<<<<<<<<<<<<
@@ -3973,31 +4023,31 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__set_version_three_auth(
  */
     __pyx_v_sess_cfg->securityAuthKeyLen = USM_AUTH_KU_LEN;
 
-    /* "async_session.pyx":479
+    /* "async_session.pyx":480
  *                     sess_cfg.securityAuthProto,
  *                     sess_cfg.securityAuthProtoLen,
  *                     <bytes?>(self.args['auth_key']),             # <<<<<<<<<<<<<<
  *                     len(self.args['auth_key']),
  *                     sess_cfg.securityAuthKey,
  */
-    __pyx_t_1 = PyObject_GetItem(__pyx_v_self->args, __pyx_n_s_auth_key); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 479, __pyx_L1_error)
+    __pyx_t_1 = PyObject_GetItem(__pyx_v_self->args, __pyx_n_s_auth_key); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 480, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    if (!(likely(PyBytes_CheckExact(__pyx_t_1))||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "bytes", Py_TYPE(__pyx_t_1)->tp_name), 0))) __PYX_ERR(0, 479, __pyx_L1_error)
-    __pyx_t_7 = __Pyx_PyObject_AsUString(__pyx_t_1); if (unlikely((!__pyx_t_7) && PyErr_Occurred())) __PYX_ERR(0, 479, __pyx_L1_error)
+    if (!(likely(PyBytes_CheckExact(__pyx_t_1))||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "bytes", Py_TYPE(__pyx_t_1)->tp_name), 0))) __PYX_ERR(0, 480, __pyx_L1_error)
+    __pyx_t_7 = __Pyx_PyObject_AsUString(__pyx_t_1); if (unlikely((!__pyx_t_7) && PyErr_Occurred())) __PYX_ERR(0, 480, __pyx_L1_error)
 
-    /* "async_session.pyx":480
+    /* "async_session.pyx":481
  *                     sess_cfg.securityAuthProtoLen,
  *                     <bytes?>(self.args['auth_key']),
  *                     len(self.args['auth_key']),             # <<<<<<<<<<<<<<
  *                     sess_cfg.securityAuthKey,
  *                     cython.address(sess_cfg.securityAuthKeyLen))
  */
-    __pyx_t_3 = PyObject_GetItem(__pyx_v_self->args, __pyx_n_s_auth_key); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 480, __pyx_L1_error)
+    __pyx_t_3 = PyObject_GetItem(__pyx_v_self->args, __pyx_n_s_auth_key); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 481, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_5 = PyObject_Length(__pyx_t_3); if (unlikely(__pyx_t_5 == -1)) __PYX_ERR(0, 480, __pyx_L1_error)
+    __pyx_t_5 = PyObject_Length(__pyx_t_3); if (unlikely(__pyx_t_5 == -1)) __PYX_ERR(0, 481, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-    /* "async_session.pyx":476
+    /* "async_session.pyx":477
  * 
  *             sess_cfg.securityAuthKeyLen = USM_AUTH_KU_LEN
  *             res = generate_Ku(             # <<<<<<<<<<<<<<
@@ -4007,7 +4057,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__set_version_three_auth(
     __pyx_v_res = generate_Ku(__pyx_v_sess_cfg->securityAuthProto, __pyx_v_sess_cfg->securityAuthProtoLen, __pyx_t_7, __pyx_t_5, __pyx_v_sess_cfg->securityAuthKey, (&__pyx_v_sess_cfg->securityAuthKeyLen));
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-    /* "async_session.pyx":484
+    /* "async_session.pyx":485
  *                     cython.address(sess_cfg.securityAuthKeyLen))
  * 
  *             if res != SNMPERR_SUCCESS:             # <<<<<<<<<<<<<<
@@ -4017,31 +4067,31 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__set_version_three_auth(
     __pyx_t_2 = ((__pyx_v_res != SNMPERR_SUCCESS) != 0);
     if (__pyx_t_2) {
 
-      /* "async_session.pyx":485
+      /* "async_session.pyx":486
  * 
  *             if res != SNMPERR_SUCCESS:
  *                 raise Exception("Can't generate KU for auth_key: %i" % res)             # <<<<<<<<<<<<<<
  * 
  *         # if priv is used, the protocol must be given.
  */
-      __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_res); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 485, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_res); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 486, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
-      __pyx_t_3 = __Pyx_PyString_Format(__pyx_kp_s_Can_t_generate_KU_for_auth_key_i, __pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 485, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyString_Format(__pyx_kp_s_Can_t_generate_KU_for_auth_key_i, __pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 486, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-      __pyx_t_1 = PyTuple_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 485, __pyx_L1_error)
+      __pyx_t_1 = PyTuple_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 486, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_GIVEREF(__pyx_t_3);
       PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_t_3);
       __pyx_t_3 = 0;
-      __pyx_t_3 = __Pyx_PyObject_Call(((PyObject *)(&((PyTypeObject*)PyExc_Exception)[0])), __pyx_t_1, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 485, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyObject_Call(((PyObject *)(&((PyTypeObject*)PyExc_Exception)[0])), __pyx_t_1, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 486, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
       __Pyx_Raise(__pyx_t_3, 0, 0, 0);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-      __PYX_ERR(0, 485, __pyx_L1_error)
+      __PYX_ERR(0, 486, __pyx_L1_error)
 
-      /* "async_session.pyx":484
+      /* "async_session.pyx":485
  *                     cython.address(sess_cfg.securityAuthKeyLen))
  * 
  *             if res != SNMPERR_SUCCESS:             # <<<<<<<<<<<<<<
@@ -4050,7 +4100,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__set_version_three_auth(
  */
     }
 
-    /* "async_session.pyx":464
+    /* "async_session.pyx":465
  * 
  *         # If auth is used, the protocol must be given.
  *         if security_level == 'authNoPriv' or security_level == 'authPriv':             # <<<<<<<<<<<<<<
@@ -4059,39 +4109,39 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__set_version_three_auth(
  */
   }
 
-  /* "async_session.pyx":488
+  /* "async_session.pyx":489
  * 
  *         # if priv is used, the protocol must be given.
  *         if security_level == 'authPriv':             # <<<<<<<<<<<<<<
  *             priv_proto = self.args['priv_proto']
  *             if priv_proto == 'DES':
  */
-  __pyx_t_2 = (__Pyx_PyString_Equals(__pyx_v_security_level, __pyx_n_s_authPriv, Py_EQ)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 488, __pyx_L1_error)
+  __pyx_t_2 = (__Pyx_PyString_Equals(__pyx_v_security_level, __pyx_n_s_authPriv, Py_EQ)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 489, __pyx_L1_error)
   if (__pyx_t_2) {
 
-    /* "async_session.pyx":489
+    /* "async_session.pyx":490
  *         # if priv is used, the protocol must be given.
  *         if security_level == 'authPriv':
  *             priv_proto = self.args['priv_proto']             # <<<<<<<<<<<<<<
  *             if priv_proto == 'DES':
  *                 sess_cfg.securityPrivProto = usmDESPrivProtocol
  */
-    __pyx_t_3 = PyObject_GetItem(__pyx_v_self->args, __pyx_n_s_priv_proto); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 489, __pyx_L1_error)
+    __pyx_t_3 = PyObject_GetItem(__pyx_v_self->args, __pyx_n_s_priv_proto); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 490, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __pyx_v_priv_proto = __pyx_t_3;
     __pyx_t_3 = 0;
 
-    /* "async_session.pyx":490
+    /* "async_session.pyx":491
  *         if security_level == 'authPriv':
  *             priv_proto = self.args['priv_proto']
  *             if priv_proto == 'DES':             # <<<<<<<<<<<<<<
  *                 sess_cfg.securityPrivProto = usmDESPrivProtocol
  *                 sess_cfg.securityPrivProtoLen = USM_PRIV_PROTO_DES_LEN
  */
-    __pyx_t_2 = (__Pyx_PyString_Equals(__pyx_v_priv_proto, __pyx_n_s_DES, Py_EQ)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 490, __pyx_L1_error)
+    __pyx_t_2 = (__Pyx_PyString_Equals(__pyx_v_priv_proto, __pyx_n_s_DES, Py_EQ)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 491, __pyx_L1_error)
     if (__pyx_t_2) {
 
-      /* "async_session.pyx":491
+      /* "async_session.pyx":492
  *             priv_proto = self.args['priv_proto']
  *             if priv_proto == 'DES':
  *                 sess_cfg.securityPrivProto = usmDESPrivProtocol             # <<<<<<<<<<<<<<
@@ -4100,7 +4150,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__set_version_three_auth(
  */
       __pyx_v_sess_cfg->securityPrivProto = usmDESPrivProtocol;
 
-      /* "async_session.pyx":492
+      /* "async_session.pyx":493
  *             if priv_proto == 'DES':
  *                 sess_cfg.securityPrivProto = usmDESPrivProtocol
  *                 sess_cfg.securityPrivProtoLen = USM_PRIV_PROTO_DES_LEN             # <<<<<<<<<<<<<<
@@ -4109,7 +4159,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__set_version_three_auth(
  */
       __pyx_v_sess_cfg->securityPrivProtoLen = USM_PRIV_PROTO_DES_LEN;
 
-      /* "async_session.pyx":490
+      /* "async_session.pyx":491
  *         if security_level == 'authPriv':
  *             priv_proto = self.args['priv_proto']
  *             if priv_proto == 'DES':             # <<<<<<<<<<<<<<
@@ -4119,17 +4169,17 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__set_version_three_auth(
       goto __pyx_L10;
     }
 
-    /* "async_session.pyx":493
+    /* "async_session.pyx":494
  *                 sess_cfg.securityPrivProto = usmDESPrivProtocol
  *                 sess_cfg.securityPrivProtoLen = USM_PRIV_PROTO_DES_LEN
  *             elif priv_proto == 'AES':             # <<<<<<<<<<<<<<
  *                 sess_cfg.securityPrivProto = usmAESPrivProtocol
  *                 sess_cfg.securityPrivProtoLen = USM_PRIV_PROTO_AES_LEN
  */
-    __pyx_t_2 = (__Pyx_PyString_Equals(__pyx_v_priv_proto, __pyx_n_s_AES, Py_EQ)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 493, __pyx_L1_error)
+    __pyx_t_2 = (__Pyx_PyString_Equals(__pyx_v_priv_proto, __pyx_n_s_AES, Py_EQ)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 494, __pyx_L1_error)
     if (__pyx_t_2) {
 
-      /* "async_session.pyx":494
+      /* "async_session.pyx":495
  *                 sess_cfg.securityPrivProtoLen = USM_PRIV_PROTO_DES_LEN
  *             elif priv_proto == 'AES':
  *                 sess_cfg.securityPrivProto = usmAESPrivProtocol             # <<<<<<<<<<<<<<
@@ -4138,7 +4188,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__set_version_three_auth(
  */
       __pyx_v_sess_cfg->securityPrivProto = usmAESPrivProtocol;
 
-      /* "async_session.pyx":495
+      /* "async_session.pyx":496
  *             elif priv_proto == 'AES':
  *                 sess_cfg.securityPrivProto = usmAESPrivProtocol
  *                 sess_cfg.securityPrivProtoLen = USM_PRIV_PROTO_AES_LEN             # <<<<<<<<<<<<<<
@@ -4147,7 +4197,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__set_version_three_auth(
  */
       __pyx_v_sess_cfg->securityPrivProtoLen = USM_PRIV_PROTO_AES_LEN;
 
-      /* "async_session.pyx":493
+      /* "async_session.pyx":494
  *                 sess_cfg.securityPrivProto = usmDESPrivProtocol
  *                 sess_cfg.securityPrivProtoLen = USM_PRIV_PROTO_DES_LEN
  *             elif priv_proto == 'AES':             # <<<<<<<<<<<<<<
@@ -4157,7 +4207,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__set_version_three_auth(
       goto __pyx_L10;
     }
 
-    /* "async_session.pyx":497
+    /* "async_session.pyx":498
  *                 sess_cfg.securityPrivProtoLen = USM_PRIV_PROTO_AES_LEN
  *             else:
  *                 raise Exception("Unknown priv protocol: %s" % priv_proto)             # <<<<<<<<<<<<<<
@@ -4165,23 +4215,23 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__set_version_three_auth(
  *             sess_cfg.securityPrivKeyLen = USM_PRIV_KU_LEN
  */
     /*else*/ {
-      __pyx_t_3 = __Pyx_PyString_Format(__pyx_kp_s_Unknown_priv_protocol_s, __pyx_v_priv_proto); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 497, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyString_Format(__pyx_kp_s_Unknown_priv_protocol_s, __pyx_v_priv_proto); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 498, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
-      __pyx_t_1 = PyTuple_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 497, __pyx_L1_error)
+      __pyx_t_1 = PyTuple_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 498, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_GIVEREF(__pyx_t_3);
       PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_t_3);
       __pyx_t_3 = 0;
-      __pyx_t_3 = __Pyx_PyObject_Call(((PyObject *)(&((PyTypeObject*)PyExc_Exception)[0])), __pyx_t_1, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 497, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyObject_Call(((PyObject *)(&((PyTypeObject*)PyExc_Exception)[0])), __pyx_t_1, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 498, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
       __Pyx_Raise(__pyx_t_3, 0, 0, 0);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-      __PYX_ERR(0, 497, __pyx_L1_error)
+      __PYX_ERR(0, 498, __pyx_L1_error)
     }
     __pyx_L10:;
 
-    /* "async_session.pyx":499
+    /* "async_session.pyx":500
  *                 raise Exception("Unknown priv protocol: %s" % priv_proto)
  * 
  *             sess_cfg.securityPrivKeyLen = USM_PRIV_KU_LEN             # <<<<<<<<<<<<<<
@@ -4190,31 +4240,31 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__set_version_three_auth(
  */
     __pyx_v_sess_cfg->securityPrivKeyLen = USM_PRIV_KU_LEN;
 
-    /* "async_session.pyx":503
+    /* "async_session.pyx":504
  *                     sess_cfg.securityAuthProto,
  *                     sess_cfg.securityAuthProtoLen,
  *                     <bytes?>(self.args['priv_key']),             # <<<<<<<<<<<<<<
  *                     len(self.args['priv_key']),
  *                     sess_cfg.securityPrivKey,
  */
-    __pyx_t_3 = PyObject_GetItem(__pyx_v_self->args, __pyx_n_s_priv_key); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 503, __pyx_L1_error)
+    __pyx_t_3 = PyObject_GetItem(__pyx_v_self->args, __pyx_n_s_priv_key); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 504, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    if (!(likely(PyBytes_CheckExact(__pyx_t_3))||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "bytes", Py_TYPE(__pyx_t_3)->tp_name), 0))) __PYX_ERR(0, 503, __pyx_L1_error)
-    __pyx_t_7 = __Pyx_PyObject_AsUString(__pyx_t_3); if (unlikely((!__pyx_t_7) && PyErr_Occurred())) __PYX_ERR(0, 503, __pyx_L1_error)
+    if (!(likely(PyBytes_CheckExact(__pyx_t_3))||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "bytes", Py_TYPE(__pyx_t_3)->tp_name), 0))) __PYX_ERR(0, 504, __pyx_L1_error)
+    __pyx_t_7 = __Pyx_PyObject_AsUString(__pyx_t_3); if (unlikely((!__pyx_t_7) && PyErr_Occurred())) __PYX_ERR(0, 504, __pyx_L1_error)
 
-    /* "async_session.pyx":504
+    /* "async_session.pyx":505
  *                     sess_cfg.securityAuthProtoLen,
  *                     <bytes?>(self.args['priv_key']),
  *                     len(self.args['priv_key']),             # <<<<<<<<<<<<<<
  *                     sess_cfg.securityPrivKey,
  *                     cython.address(sess_cfg.securityPrivKeyLen))
  */
-    __pyx_t_1 = PyObject_GetItem(__pyx_v_self->args, __pyx_n_s_priv_key); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 504, __pyx_L1_error)
+    __pyx_t_1 = PyObject_GetItem(__pyx_v_self->args, __pyx_n_s_priv_key); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 505, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_5 = PyObject_Length(__pyx_t_1); if (unlikely(__pyx_t_5 == -1)) __PYX_ERR(0, 504, __pyx_L1_error)
+    __pyx_t_5 = PyObject_Length(__pyx_t_1); if (unlikely(__pyx_t_5 == -1)) __PYX_ERR(0, 505, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-    /* "async_session.pyx":500
+    /* "async_session.pyx":501
  * 
  *             sess_cfg.securityPrivKeyLen = USM_PRIV_KU_LEN
  *             res = generate_Ku(             # <<<<<<<<<<<<<<
@@ -4224,7 +4274,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__set_version_three_auth(
     __pyx_v_res = generate_Ku(__pyx_v_sess_cfg->securityAuthProto, __pyx_v_sess_cfg->securityAuthProtoLen, __pyx_t_7, __pyx_t_5, __pyx_v_sess_cfg->securityPrivKey, (&__pyx_v_sess_cfg->securityPrivKeyLen));
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-    /* "async_session.pyx":508
+    /* "async_session.pyx":509
  *                     cython.address(sess_cfg.securityPrivKeyLen))
  * 
  *             if res != SNMPERR_SUCCESS:             # <<<<<<<<<<<<<<
@@ -4234,31 +4284,31 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__set_version_three_auth(
     __pyx_t_2 = ((__pyx_v_res != SNMPERR_SUCCESS) != 0);
     if (__pyx_t_2) {
 
-      /* "async_session.pyx":509
+      /* "async_session.pyx":510
  * 
  *             if res != SNMPERR_SUCCESS:
  *                 raise Exception("Can't generate KU for priv_key: %i" % res)             # <<<<<<<<<<<<<<
  * 
  *         # security_engine_id is assumed as 'hex' format, but binary is needed.
  */
-      __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_v_res); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 509, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_v_res); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 510, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
-      __pyx_t_1 = __Pyx_PyString_Format(__pyx_kp_s_Can_t_generate_KU_for_priv_key_i, __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 509, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyString_Format(__pyx_kp_s_Can_t_generate_KU_for_priv_key_i, __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 510, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-      __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 509, __pyx_L1_error)
+      __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 510, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_GIVEREF(__pyx_t_1);
       PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_1);
       __pyx_t_1 = 0;
-      __pyx_t_1 = __Pyx_PyObject_Call(((PyObject *)(&((PyTypeObject*)PyExc_Exception)[0])), __pyx_t_3, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 509, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyObject_Call(((PyObject *)(&((PyTypeObject*)PyExc_Exception)[0])), __pyx_t_3, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 510, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
       __Pyx_Raise(__pyx_t_1, 0, 0, 0);
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-      __PYX_ERR(0, 509, __pyx_L1_error)
+      __PYX_ERR(0, 510, __pyx_L1_error)
 
-      /* "async_session.pyx":508
+      /* "async_session.pyx":509
  *                     cython.address(sess_cfg.securityPrivKeyLen))
  * 
  *             if res != SNMPERR_SUCCESS:             # <<<<<<<<<<<<<<
@@ -4267,7 +4317,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__set_version_three_auth(
  */
     }
 
-    /* "async_session.pyx":488
+    /* "async_session.pyx":489
  * 
  *         # if priv is used, the protocol must be given.
  *         if security_level == 'authPriv':             # <<<<<<<<<<<<<<
@@ -4276,66 +4326,66 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__set_version_three_auth(
  */
   }
 
-  /* "async_session.pyx":512
+  /* "async_session.pyx":513
  * 
  *         # security_engine_id is assumed as 'hex' format, but binary is needed.
  *         if 'security_engine_id' in self.args:             # <<<<<<<<<<<<<<
  *             bin_val = self.args['security_engine_id'].decode('hex')
  *             # Need to store it somewhere, to keep reference to memory.
  */
-  __pyx_t_2 = (__Pyx_PySequence_ContainsTF(__pyx_n_s_security_engine_id, __pyx_v_self->args, Py_EQ)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 512, __pyx_L1_error)
+  __pyx_t_2 = (__Pyx_PySequence_ContainsTF(__pyx_n_s_security_engine_id, __pyx_v_self->args, Py_EQ)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 513, __pyx_L1_error)
   __pyx_t_6 = (__pyx_t_2 != 0);
   if (__pyx_t_6) {
 
-    /* "async_session.pyx":513
+    /* "async_session.pyx":514
  *         # security_engine_id is assumed as 'hex' format, but binary is needed.
  *         if 'security_engine_id' in self.args:
  *             bin_val = self.args['security_engine_id'].decode('hex')             # <<<<<<<<<<<<<<
  *             # Need to store it somewhere, to keep reference to memory.
  *             self.args['security_engine_id_binary'] = bin_val
  */
-    __pyx_t_1 = PyObject_GetItem(__pyx_v_self->args, __pyx_n_s_security_engine_id); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 513, __pyx_L1_error)
+    __pyx_t_1 = PyObject_GetItem(__pyx_v_self->args, __pyx_n_s_security_engine_id); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 514, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_decode); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 513, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_decode); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 514, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_tuple_, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 513, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_tuple_, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 514, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __pyx_v_bin_val = __pyx_t_1;
     __pyx_t_1 = 0;
 
-    /* "async_session.pyx":515
+    /* "async_session.pyx":516
  *             bin_val = self.args['security_engine_id'].decode('hex')
  *             # Need to store it somewhere, to keep reference to memory.
  *             self.args['security_engine_id_binary'] = bin_val             # <<<<<<<<<<<<<<
  *             sess_cfg.securityEngineID = <bytes?>(bin_val)
  *             sess_cfg.securityEngineIDLen = len(bin_val)
  */
-    if (unlikely(PyObject_SetItem(__pyx_v_self->args, __pyx_n_s_security_engine_id_binary, __pyx_v_bin_val) < 0)) __PYX_ERR(0, 515, __pyx_L1_error)
+    if (unlikely(PyObject_SetItem(__pyx_v_self->args, __pyx_n_s_security_engine_id_binary, __pyx_v_bin_val) < 0)) __PYX_ERR(0, 516, __pyx_L1_error)
 
-    /* "async_session.pyx":516
+    /* "async_session.pyx":517
  *             # Need to store it somewhere, to keep reference to memory.
  *             self.args['security_engine_id_binary'] = bin_val
  *             sess_cfg.securityEngineID = <bytes?>(bin_val)             # <<<<<<<<<<<<<<
  *             sess_cfg.securityEngineIDLen = len(bin_val)
  * 
  */
-    if (!(likely(PyBytes_CheckExact(__pyx_v_bin_val))||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "bytes", Py_TYPE(__pyx_v_bin_val)->tp_name), 0))) __PYX_ERR(0, 516, __pyx_L1_error)
-    __pyx_t_7 = __Pyx_PyObject_AsUString(__pyx_v_bin_val); if (unlikely((!__pyx_t_7) && PyErr_Occurred())) __PYX_ERR(0, 516, __pyx_L1_error)
+    if (!(likely(PyBytes_CheckExact(__pyx_v_bin_val))||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "bytes", Py_TYPE(__pyx_v_bin_val)->tp_name), 0))) __PYX_ERR(0, 517, __pyx_L1_error)
+    __pyx_t_7 = __Pyx_PyObject_AsUString(__pyx_v_bin_val); if (unlikely((!__pyx_t_7) && PyErr_Occurred())) __PYX_ERR(0, 517, __pyx_L1_error)
     __pyx_v_sess_cfg->securityEngineID = __pyx_t_7;
 
-    /* "async_session.pyx":517
+    /* "async_session.pyx":518
  *             self.args['security_engine_id_binary'] = bin_val
  *             sess_cfg.securityEngineID = <bytes?>(bin_val)
  *             sess_cfg.securityEngineIDLen = len(bin_val)             # <<<<<<<<<<<<<<
  * 
  *         # context_engine_id is assumed as 'hex' format, but binary is needed.
  */
-    __pyx_t_5 = PyObject_Length(__pyx_v_bin_val); if (unlikely(__pyx_t_5 == -1)) __PYX_ERR(0, 517, __pyx_L1_error)
+    __pyx_t_5 = PyObject_Length(__pyx_v_bin_val); if (unlikely(__pyx_t_5 == -1)) __PYX_ERR(0, 518, __pyx_L1_error)
     __pyx_v_sess_cfg->securityEngineIDLen = __pyx_t_5;
 
-    /* "async_session.pyx":512
+    /* "async_session.pyx":513
  * 
  *         # security_engine_id is assumed as 'hex' format, but binary is needed.
  *         if 'security_engine_id' in self.args:             # <<<<<<<<<<<<<<
@@ -4344,66 +4394,66 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__set_version_three_auth(
  */
   }
 
-  /* "async_session.pyx":520
+  /* "async_session.pyx":521
  * 
  *         # context_engine_id is assumed as 'hex' format, but binary is needed.
  *         if 'context_engine_id' in self.args:             # <<<<<<<<<<<<<<
  *             bin_val = self.args['context_engine_id'].decode('hex')
  *             self.args['context_engine_id_binary'] = bin_val
  */
-  __pyx_t_6 = (__Pyx_PySequence_ContainsTF(__pyx_n_s_context_engine_id, __pyx_v_self->args, Py_EQ)); if (unlikely(__pyx_t_6 < 0)) __PYX_ERR(0, 520, __pyx_L1_error)
+  __pyx_t_6 = (__Pyx_PySequence_ContainsTF(__pyx_n_s_context_engine_id, __pyx_v_self->args, Py_EQ)); if (unlikely(__pyx_t_6 < 0)) __PYX_ERR(0, 521, __pyx_L1_error)
   __pyx_t_2 = (__pyx_t_6 != 0);
   if (__pyx_t_2) {
 
-    /* "async_session.pyx":521
+    /* "async_session.pyx":522
  *         # context_engine_id is assumed as 'hex' format, but binary is needed.
  *         if 'context_engine_id' in self.args:
  *             bin_val = self.args['context_engine_id'].decode('hex')             # <<<<<<<<<<<<<<
  *             self.args['context_engine_id_binary'] = bin_val
  *             sess_cfg.contextEngineID = <bytes?>(bin_val)
  */
-    __pyx_t_1 = PyObject_GetItem(__pyx_v_self->args, __pyx_n_s_context_engine_id); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 521, __pyx_L1_error)
+    __pyx_t_1 = PyObject_GetItem(__pyx_v_self->args, __pyx_n_s_context_engine_id); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 522, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_decode); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 521, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_decode); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 522, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_tuple__2, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 521, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_tuple__2, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 522, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_XDECREF_SET(__pyx_v_bin_val, __pyx_t_1);
     __pyx_t_1 = 0;
 
-    /* "async_session.pyx":522
+    /* "async_session.pyx":523
  *         if 'context_engine_id' in self.args:
  *             bin_val = self.args['context_engine_id'].decode('hex')
  *             self.args['context_engine_id_binary'] = bin_val             # <<<<<<<<<<<<<<
  *             sess_cfg.contextEngineID = <bytes?>(bin_val)
  *             sess_cfg.contextEngineIDLen = len(bin_val)
  */
-    if (unlikely(PyObject_SetItem(__pyx_v_self->args, __pyx_n_s_context_engine_id_binary, __pyx_v_bin_val) < 0)) __PYX_ERR(0, 522, __pyx_L1_error)
+    if (unlikely(PyObject_SetItem(__pyx_v_self->args, __pyx_n_s_context_engine_id_binary, __pyx_v_bin_val) < 0)) __PYX_ERR(0, 523, __pyx_L1_error)
 
-    /* "async_session.pyx":523
+    /* "async_session.pyx":524
  *             bin_val = self.args['context_engine_id'].decode('hex')
  *             self.args['context_engine_id_binary'] = bin_val
  *             sess_cfg.contextEngineID = <bytes?>(bin_val)             # <<<<<<<<<<<<<<
  *             sess_cfg.contextEngineIDLen = len(bin_val)
  * 
  */
-    if (!(likely(PyBytes_CheckExact(__pyx_v_bin_val))||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "bytes", Py_TYPE(__pyx_v_bin_val)->tp_name), 0))) __PYX_ERR(0, 523, __pyx_L1_error)
-    __pyx_t_7 = __Pyx_PyObject_AsUString(__pyx_v_bin_val); if (unlikely((!__pyx_t_7) && PyErr_Occurred())) __PYX_ERR(0, 523, __pyx_L1_error)
+    if (!(likely(PyBytes_CheckExact(__pyx_v_bin_val))||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "bytes", Py_TYPE(__pyx_v_bin_val)->tp_name), 0))) __PYX_ERR(0, 524, __pyx_L1_error)
+    __pyx_t_7 = __Pyx_PyObject_AsUString(__pyx_v_bin_val); if (unlikely((!__pyx_t_7) && PyErr_Occurred())) __PYX_ERR(0, 524, __pyx_L1_error)
     __pyx_v_sess_cfg->contextEngineID = __pyx_t_7;
 
-    /* "async_session.pyx":524
+    /* "async_session.pyx":525
  *             self.args['context_engine_id_binary'] = bin_val
  *             sess_cfg.contextEngineID = <bytes?>(bin_val)
  *             sess_cfg.contextEngineIDLen = len(bin_val)             # <<<<<<<<<<<<<<
  * 
  *     cdef _do_snmpv3_engine_id_probe(self, netsnmp_session* sess_cfg):
  */
-    __pyx_t_5 = PyObject_Length(__pyx_v_bin_val); if (unlikely(__pyx_t_5 == -1)) __PYX_ERR(0, 524, __pyx_L1_error)
+    __pyx_t_5 = PyObject_Length(__pyx_v_bin_val); if (unlikely(__pyx_t_5 == -1)) __PYX_ERR(0, 525, __pyx_L1_error)
     __pyx_v_sess_cfg->contextEngineIDLen = __pyx_t_5;
 
-    /* "async_session.pyx":520
+    /* "async_session.pyx":521
  * 
  *         # context_engine_id is assumed as 'hex' format, but binary is needed.
  *         if 'context_engine_id' in self.args:             # <<<<<<<<<<<<<<
@@ -4412,7 +4462,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__set_version_three_auth(
  */
   }
 
-  /* "async_session.pyx":443
+  /* "async_session.pyx":444
  *         sess_cfg.community_len = len(self.args['community'])
  * 
  *     cdef _set_version_three_auth(self, netsnmp_session* sess_cfg):             # <<<<<<<<<<<<<<
@@ -4438,7 +4488,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__set_version_three_auth(
   return __pyx_r;
 }
 
-/* "async_session.pyx":526
+/* "async_session.pyx":527
  *             sess_cfg.contextEngineIDLen = len(bin_val)
  * 
  *     cdef _do_snmpv3_engine_id_probe(self, netsnmp_session* sess_cfg):             # <<<<<<<<<<<<<<
@@ -4455,7 +4505,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__do_snmpv3_engine_id_pro
   PyObject *__pyx_t_3 = NULL;
   __Pyx_RefNannySetupContext("_do_snmpv3_engine_id_probe", 0);
 
-  /* "async_session.pyx":527
+  /* "async_session.pyx":528
  * 
  *     cdef _do_snmpv3_engine_id_probe(self, netsnmp_session* sess_cfg):
  *         cdef int res = 0             # <<<<<<<<<<<<<<
@@ -4464,7 +4514,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__do_snmpv3_engine_id_pro
  */
   __pyx_v_res = 0;
 
-  /* "async_session.pyx":530
+  /* "async_session.pyx":531
  * 
  *         # Ensure that probe is enabled.
  *         snmp_sess_session(self.sp).flags &= (~SNMP_FLAGS_DONT_PROBE)             # <<<<<<<<<<<<<<
@@ -4474,7 +4524,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__do_snmpv3_engine_id_pro
   __pyx_t_1 = snmp_sess_session(__pyx_v_self->sp);
   __pyx_t_1->flags = (__pyx_t_1->flags & (~SNMP_FLAGS_DONT_PROBE));
 
-  /* "async_session.pyx":531
+  /* "async_session.pyx":532
  *         # Ensure that probe is enabled.
  *         snmp_sess_session(self.sp).flags &= (~SNMP_FLAGS_DONT_PROBE)
  *         res = snmpv3_engineID_probe(self.sp, sess_cfg)             # <<<<<<<<<<<<<<
@@ -4483,7 +4533,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__do_snmpv3_engine_id_pro
  */
   __pyx_v_res = snmpv3_engineID_probe(__pyx_v_self->sp, __pyx_v_sess_cfg);
 
-  /* "async_session.pyx":533
+  /* "async_session.pyx":534
  *         res = snmpv3_engineID_probe(self.sp, sess_cfg)
  * 
  *         if res == 0:             # <<<<<<<<<<<<<<
@@ -4493,20 +4543,20 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__do_snmpv3_engine_id_pro
   __pyx_t_2 = ((__pyx_v_res == 0) != 0);
   if (__pyx_t_2) {
 
-    /* "async_session.pyx":534
+    /* "async_session.pyx":535
  * 
  *         if res == 0:
  *             raise error_from_session("Cannot probe v3 engineID", sess_cfg)             # <<<<<<<<<<<<<<
  * 
  *         # Probe was successful, don't do it again.
  */
-    __pyx_t_3 = __pyx_f_13async_session_error_from_session(__pyx_kp_s_Cannot_probe_v3_engineID, __pyx_v_sess_cfg); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 534, __pyx_L1_error)
+    __pyx_t_3 = __pyx_f_13async_session_error_from_session(__pyx_kp_s_Cannot_probe_v3_engineID, __pyx_v_sess_cfg); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 535, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_Raise(__pyx_t_3, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __PYX_ERR(0, 534, __pyx_L1_error)
+    __PYX_ERR(0, 535, __pyx_L1_error)
 
-    /* "async_session.pyx":533
+    /* "async_session.pyx":534
  *         res = snmpv3_engineID_probe(self.sp, sess_cfg)
  * 
  *         if res == 0:             # <<<<<<<<<<<<<<
@@ -4515,17 +4565,17 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__do_snmpv3_engine_id_pro
  */
   }
 
-  /* "async_session.pyx":537
+  /* "async_session.pyx":538
  * 
  *         # Probe was successful, don't do it again.
  *         snmp_sess_session(self.sp).flags |= SNMP_FLAGS_DONT_PROBE             # <<<<<<<<<<<<<<
  * 
- *     ## These are 'higher level' functions.
+ *     def clone_session(self, **override_args):
  */
   __pyx_t_1 = snmp_sess_session(__pyx_v_self->sp);
   __pyx_t_1->flags = (__pyx_t_1->flags | SNMP_FLAGS_DONT_PROBE);
 
-  /* "async_session.pyx":526
+  /* "async_session.pyx":527
  *             sess_cfg.contextEngineIDLen = len(bin_val)
  * 
  *     cdef _do_snmpv3_engine_id_probe(self, netsnmp_session* sess_cfg):             # <<<<<<<<<<<<<<
@@ -4547,6 +4597,84 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__do_snmpv3_engine_id_pro
 }
 
 /* "async_session.pyx":540
+ *         snmp_sess_session(self.sp).flags |= SNMP_FLAGS_DONT_PROBE
+ * 
+ *     def clone_session(self, **override_args):             # <<<<<<<<<<<<<<
+ *         return CloneSession(self, override_args)
+ * 
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_13async_session_12AsyncSession_9clone_session(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyObject *__pyx_pw_13async_session_12AsyncSession_9clone_session(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+  PyObject *__pyx_v_override_args = 0;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("clone_session (wrapper)", 0);
+  if (unlikely(PyTuple_GET_SIZE(__pyx_args) > 0)) {
+    __Pyx_RaiseArgtupleInvalid("clone_session", 1, 0, 0, PyTuple_GET_SIZE(__pyx_args)); return NULL;}
+  if (__pyx_kwds && unlikely(!__Pyx_CheckKeywordStrings(__pyx_kwds, "clone_session", 1))) return NULL;
+  __pyx_v_override_args = (__pyx_kwds) ? PyDict_Copy(__pyx_kwds) : PyDict_New(); if (unlikely(!__pyx_v_override_args)) return NULL;
+  __Pyx_GOTREF(__pyx_v_override_args);
+  __pyx_r = __pyx_pf_13async_session_12AsyncSession_8clone_session(((struct __pyx_obj_13async_session_AsyncSession *)__pyx_v_self), __pyx_v_override_args);
+
+  /* function exit code */
+  __Pyx_XDECREF(__pyx_v_override_args);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_13async_session_12AsyncSession_8clone_session(struct __pyx_obj_13async_session_AsyncSession *__pyx_v_self, PyObject *__pyx_v_override_args) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  PyObject *__pyx_t_2 = NULL;
+  __Pyx_RefNannySetupContext("clone_session", 0);
+
+  /* "async_session.pyx":541
+ * 
+ *     def clone_session(self, **override_args):
+ *         return CloneSession(self, override_args)             # <<<<<<<<<<<<<<
+ * 
+ *     ## These are 'higher level' functions.
+ */
+  __Pyx_XDECREF(__pyx_r);
+  __pyx_t_1 = PyTuple_New(2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 541, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_INCREF(((PyObject *)__pyx_v_self));
+  __Pyx_GIVEREF(((PyObject *)__pyx_v_self));
+  PyTuple_SET_ITEM(__pyx_t_1, 0, ((PyObject *)__pyx_v_self));
+  __Pyx_INCREF(__pyx_v_override_args);
+  __Pyx_GIVEREF(__pyx_v_override_args);
+  PyTuple_SET_ITEM(__pyx_t_1, 1, __pyx_v_override_args);
+  __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)__pyx_ptype_13async_session_CloneSession), __pyx_t_1, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 541, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_r = __pyx_t_2;
+  __pyx_t_2 = 0;
+  goto __pyx_L0;
+
+  /* "async_session.pyx":540
+ *         snmp_sess_session(self.sp).flags |= SNMP_FLAGS_DONT_PROBE
+ * 
+ *     def clone_session(self, **override_args):             # <<<<<<<<<<<<<<
+ *         return CloneSession(self, override_args)
+ * 
+ */
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_XDECREF(__pyx_t_2);
+  __Pyx_AddTraceback("async_session.AsyncSession.clone_session", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "async_session.pyx":544
  * 
  *     ## These are 'higher level' functions.
  *     def walk(self, root):             # <<<<<<<<<<<<<<
@@ -4555,20 +4683,20 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__do_snmpv3_engine_id_pro
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_13async_session_12AsyncSession_9walk(PyObject *__pyx_v_self, PyObject *__pyx_v_root); /*proto*/
-static char __pyx_doc_13async_session_12AsyncSession_8walk[] = "Walks a tree by succesive calling get_next.";
-static PyObject *__pyx_pw_13async_session_12AsyncSession_9walk(PyObject *__pyx_v_self, PyObject *__pyx_v_root) {
+static PyObject *__pyx_pw_13async_session_12AsyncSession_11walk(PyObject *__pyx_v_self, PyObject *__pyx_v_root); /*proto*/
+static char __pyx_doc_13async_session_12AsyncSession_10walk[] = "Walks a tree by succesive calling get_next.";
+static PyObject *__pyx_pw_13async_session_12AsyncSession_11walk(PyObject *__pyx_v_self, PyObject *__pyx_v_root) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("walk (wrapper)", 0);
-  __pyx_r = __pyx_pf_13async_session_12AsyncSession_8walk(((struct __pyx_obj_13async_session_AsyncSession *)__pyx_v_self), ((PyObject *)__pyx_v_root));
+  __pyx_r = __pyx_pf_13async_session_12AsyncSession_10walk(((struct __pyx_obj_13async_session_AsyncSession *)__pyx_v_self), ((PyObject *)__pyx_v_root));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_13async_session_12AsyncSession_8walk(struct __pyx_obj_13async_session_AsyncSession *__pyx_v_self, PyObject *__pyx_v_root) {
+static PyObject *__pyx_pf_13async_session_12AsyncSession_10walk(struct __pyx_obj_13async_session_AsyncSession *__pyx_v_self, PyObject *__pyx_v_root) {
   PyObject *__pyx_v_final_result = NULL;
   PyObject *__pyx_v_oid = NULL;
   PyObject *__pyx_v_result = NULL;
@@ -4582,19 +4710,19 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_8walk(struct __pyx_obj_
   int __pyx_t_6;
   __Pyx_RefNannySetupContext("walk", 0);
 
-  /* "async_session.pyx":542
+  /* "async_session.pyx":546
  *     def walk(self, root):
  *         """Walks a tree by succesive calling get_next."""
  *         final_result = {}             # <<<<<<<<<<<<<<
  *         oid = root
  * 
  */
-  __pyx_t_1 = PyDict_New(); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 542, __pyx_L1_error)
+  __pyx_t_1 = PyDict_New(); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 546, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_final_result = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "async_session.pyx":543
+  /* "async_session.pyx":547
  *         """Walks a tree by succesive calling get_next."""
  *         final_result = {}
  *         oid = root             # <<<<<<<<<<<<<<
@@ -4604,7 +4732,7 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_8walk(struct __pyx_obj_
   __Pyx_INCREF(__pyx_v_root);
   __pyx_v_oid = __pyx_v_root;
 
-  /* "async_session.pyx":545
+  /* "async_session.pyx":549
  *         oid = root
  * 
  *         while True:             # <<<<<<<<<<<<<<
@@ -4613,14 +4741,14 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_8walk(struct __pyx_obj_
  */
   while (1) {
 
-    /* "async_session.pyx":546
+    /* "async_session.pyx":550
  * 
  *         while True:
  *             result = self.get_next(oid)             # <<<<<<<<<<<<<<
  *             oid = self._handle_walk_result(root, oid, result, final_result)
  *             if oid is None:
  */
-    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_get_next); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 546, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_get_next); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 550, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __pyx_t_3 = NULL;
     if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
@@ -4633,13 +4761,13 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_8walk(struct __pyx_obj_
       }
     }
     if (!__pyx_t_3) {
-      __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_v_oid); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 546, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_v_oid); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 550, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
     } else {
       #if CYTHON_FAST_PYCALL
       if (PyFunction_Check(__pyx_t_2)) {
         PyObject *__pyx_temp[2] = {__pyx_t_3, __pyx_v_oid};
-        __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 546, __pyx_L1_error)
+        __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 550, __pyx_L1_error)
         __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
         __Pyx_GOTREF(__pyx_t_1);
       } else
@@ -4647,19 +4775,19 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_8walk(struct __pyx_obj_
       #if CYTHON_FAST_PYCCALL
       if (__Pyx_PyFastCFunction_Check(__pyx_t_2)) {
         PyObject *__pyx_temp[2] = {__pyx_t_3, __pyx_v_oid};
-        __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 546, __pyx_L1_error)
+        __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 550, __pyx_L1_error)
         __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
         __Pyx_GOTREF(__pyx_t_1);
       } else
       #endif
       {
-        __pyx_t_4 = PyTuple_New(1+1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 546, __pyx_L1_error)
+        __pyx_t_4 = PyTuple_New(1+1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 550, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
         __Pyx_GIVEREF(__pyx_t_3); PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_3); __pyx_t_3 = NULL;
         __Pyx_INCREF(__pyx_v_oid);
         __Pyx_GIVEREF(__pyx_v_oid);
         PyTuple_SET_ITEM(__pyx_t_4, 0+1, __pyx_v_oid);
-        __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_4, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 546, __pyx_L1_error)
+        __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_4, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 550, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_1);
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       }
@@ -4668,19 +4796,19 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_8walk(struct __pyx_obj_
     __Pyx_XDECREF_SET(__pyx_v_result, __pyx_t_1);
     __pyx_t_1 = 0;
 
-    /* "async_session.pyx":547
+    /* "async_session.pyx":551
  *         while True:
  *             result = self.get_next(oid)
  *             oid = self._handle_walk_result(root, oid, result, final_result)             # <<<<<<<<<<<<<<
  *             if oid is None:
  *                 return final_result
  */
-    __pyx_t_1 = __pyx_f_13async_session_12AsyncSession__handle_walk_result(__pyx_v_self, __pyx_v_root, __pyx_v_oid, __pyx_v_result, __pyx_v_final_result); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 547, __pyx_L1_error)
+    __pyx_t_1 = __pyx_f_13async_session_12AsyncSession__handle_walk_result(__pyx_v_self, __pyx_v_root, __pyx_v_oid, __pyx_v_result, __pyx_v_final_result); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 551, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF_SET(__pyx_v_oid, __pyx_t_1);
     __pyx_t_1 = 0;
 
-    /* "async_session.pyx":548
+    /* "async_session.pyx":552
  *             result = self.get_next(oid)
  *             oid = self._handle_walk_result(root, oid, result, final_result)
  *             if oid is None:             # <<<<<<<<<<<<<<
@@ -4691,7 +4819,7 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_8walk(struct __pyx_obj_
     __pyx_t_6 = (__pyx_t_5 != 0);
     if (__pyx_t_6) {
 
-      /* "async_session.pyx":549
+      /* "async_session.pyx":553
  *             oid = self._handle_walk_result(root, oid, result, final_result)
  *             if oid is None:
  *                 return final_result             # <<<<<<<<<<<<<<
@@ -4703,7 +4831,7 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_8walk(struct __pyx_obj_
       __pyx_r = __pyx_v_final_result;
       goto __pyx_L0;
 
-      /* "async_session.pyx":548
+      /* "async_session.pyx":552
  *             result = self.get_next(oid)
  *             oid = self._handle_walk_result(root, oid, result, final_result)
  *             if oid is None:             # <<<<<<<<<<<<<<
@@ -4713,7 +4841,7 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_8walk(struct __pyx_obj_
     }
   }
 
-  /* "async_session.pyx":540
+  /* "async_session.pyx":544
  * 
  *     ## These are 'higher level' functions.
  *     def walk(self, root):             # <<<<<<<<<<<<<<
@@ -4740,7 +4868,7 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_8walk(struct __pyx_obj_
   return __pyx_r;
 }
 
-/* "async_session.pyx":551
+/* "async_session.pyx":555
  *                 return final_result
  * 
  *     def walk_with_get_bulk(self, root, maxrepetitions=10):             # <<<<<<<<<<<<<<
@@ -4749,9 +4877,9 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_8walk(struct __pyx_obj_
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_13async_session_12AsyncSession_11walk_with_get_bulk(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static char __pyx_doc_13async_session_12AsyncSession_10walk_with_get_bulk[] = "Walks a *single* subtree by succesive calling get_bulk.\n\n        It does not walk multiple columns at the same time, its just are more\n        effienct implementation of walk() =>\n        The API (input params and output) is nearly identical to walk()\n        ";
-static PyObject *__pyx_pw_13async_session_12AsyncSession_11walk_with_get_bulk(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_13async_session_12AsyncSession_13walk_with_get_bulk(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static char __pyx_doc_13async_session_12AsyncSession_12walk_with_get_bulk[] = "Walks a *single* subtree by succesive calling get_bulk.\n\n        It does not walk multiple columns at the same time, its just are more\n        effienct implementation of walk() =>\n        The API (input params and output) is nearly identical to walk()\n        ";
+static PyObject *__pyx_pw_13async_session_12AsyncSession_13walk_with_get_bulk(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_v_root = 0;
   PyObject *__pyx_v_maxrepetitions = 0;
   PyObject *__pyx_r = 0;
@@ -4782,7 +4910,7 @@ static PyObject *__pyx_pw_13async_session_12AsyncSession_11walk_with_get_bulk(Py
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "walk_with_get_bulk") < 0)) __PYX_ERR(0, 551, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "walk_with_get_bulk") < 0)) __PYX_ERR(0, 555, __pyx_L3_error)
       }
     } else {
       switch (PyTuple_GET_SIZE(__pyx_args)) {
@@ -4797,20 +4925,20 @@ static PyObject *__pyx_pw_13async_session_12AsyncSession_11walk_with_get_bulk(Py
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("walk_with_get_bulk", 0, 1, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 551, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("walk_with_get_bulk", 0, 1, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 555, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("async_session.AsyncSession.walk_with_get_bulk", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_13async_session_12AsyncSession_10walk_with_get_bulk(((struct __pyx_obj_13async_session_AsyncSession *)__pyx_v_self), __pyx_v_root, __pyx_v_maxrepetitions);
+  __pyx_r = __pyx_pf_13async_session_12AsyncSession_12walk_with_get_bulk(((struct __pyx_obj_13async_session_AsyncSession *)__pyx_v_self), __pyx_v_root, __pyx_v_maxrepetitions);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_13async_session_12AsyncSession_10walk_with_get_bulk(struct __pyx_obj_13async_session_AsyncSession *__pyx_v_self, PyObject *__pyx_v_root, PyObject *__pyx_v_maxrepetitions) {
+static PyObject *__pyx_pf_13async_session_12AsyncSession_12walk_with_get_bulk(struct __pyx_obj_13async_session_AsyncSession *__pyx_v_self, PyObject *__pyx_v_root, PyObject *__pyx_v_maxrepetitions) {
   PyObject *__pyx_v_final_result = NULL;
   PyObject *__pyx_v_oid = NULL;
   PyObject *__pyx_v_result = NULL;
@@ -4826,19 +4954,19 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_10walk_with_get_bulk(st
   int __pyx_t_8;
   __Pyx_RefNannySetupContext("walk_with_get_bulk", 0);
 
-  /* "async_session.pyx":558
+  /* "async_session.pyx":562
  *         The API (input params and output) is nearly identical to walk()
  *         """
  *         final_result = {}             # <<<<<<<<<<<<<<
  *         oid = root
  * 
  */
-  __pyx_t_1 = PyDict_New(); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 558, __pyx_L1_error)
+  __pyx_t_1 = PyDict_New(); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 562, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_final_result = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "async_session.pyx":559
+  /* "async_session.pyx":563
  *         """
  *         final_result = {}
  *         oid = root             # <<<<<<<<<<<<<<
@@ -4848,7 +4976,7 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_10walk_with_get_bulk(st
   __Pyx_INCREF(__pyx_v_root);
   __pyx_v_oid = __pyx_v_root;
 
-  /* "async_session.pyx":561
+  /* "async_session.pyx":565
  *         oid = root
  * 
  *         while True:             # <<<<<<<<<<<<<<
@@ -4857,16 +4985,16 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_10walk_with_get_bulk(st
  */
   while (1) {
 
-    /* "async_session.pyx":562
+    /* "async_session.pyx":566
  * 
  *         while True:
  *             result = self.get_bulk([oid], 0, maxrepetitions)             # <<<<<<<<<<<<<<
  *             oid = self._handle_walk_result(root, oid, result, final_result)
  *             if oid is None:
  */
-    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_get_bulk); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 562, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_get_bulk); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 566, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_3 = PyList_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 562, __pyx_L1_error)
+    __pyx_t_3 = PyList_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 566, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_INCREF(__pyx_v_oid);
     __Pyx_GIVEREF(__pyx_v_oid);
@@ -4886,7 +5014,7 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_10walk_with_get_bulk(st
     #if CYTHON_FAST_PYCALL
     if (PyFunction_Check(__pyx_t_2)) {
       PyObject *__pyx_temp[4] = {__pyx_t_4, __pyx_t_3, __pyx_int_0, __pyx_v_maxrepetitions};
-      __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_5, 3+__pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 562, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_5, 3+__pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 566, __pyx_L1_error)
       __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -4895,14 +5023,14 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_10walk_with_get_bulk(st
     #if CYTHON_FAST_PYCCALL
     if (__Pyx_PyFastCFunction_Check(__pyx_t_2)) {
       PyObject *__pyx_temp[4] = {__pyx_t_4, __pyx_t_3, __pyx_int_0, __pyx_v_maxrepetitions};
-      __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_5, 3+__pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 562, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_5, 3+__pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 566, __pyx_L1_error)
       __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     } else
     #endif
     {
-      __pyx_t_6 = PyTuple_New(3+__pyx_t_5); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 562, __pyx_L1_error)
+      __pyx_t_6 = PyTuple_New(3+__pyx_t_5); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 566, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
       if (__pyx_t_4) {
         __Pyx_GIVEREF(__pyx_t_4); PyTuple_SET_ITEM(__pyx_t_6, 0, __pyx_t_4); __pyx_t_4 = NULL;
@@ -4916,7 +5044,7 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_10walk_with_get_bulk(st
       __Pyx_GIVEREF(__pyx_v_maxrepetitions);
       PyTuple_SET_ITEM(__pyx_t_6, 2+__pyx_t_5, __pyx_v_maxrepetitions);
       __pyx_t_3 = 0;
-      __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_6, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 562, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_6, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 566, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     }
@@ -4924,19 +5052,19 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_10walk_with_get_bulk(st
     __Pyx_XDECREF_SET(__pyx_v_result, __pyx_t_1);
     __pyx_t_1 = 0;
 
-    /* "async_session.pyx":563
+    /* "async_session.pyx":567
  *         while True:
  *             result = self.get_bulk([oid], 0, maxrepetitions)
  *             oid = self._handle_walk_result(root, oid, result, final_result)             # <<<<<<<<<<<<<<
  *             if oid is None:
  *                 return final_result
  */
-    __pyx_t_1 = __pyx_f_13async_session_12AsyncSession__handle_walk_result(__pyx_v_self, __pyx_v_root, __pyx_v_oid, __pyx_v_result, __pyx_v_final_result); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 563, __pyx_L1_error)
+    __pyx_t_1 = __pyx_f_13async_session_12AsyncSession__handle_walk_result(__pyx_v_self, __pyx_v_root, __pyx_v_oid, __pyx_v_result, __pyx_v_final_result); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 567, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF_SET(__pyx_v_oid, __pyx_t_1);
     __pyx_t_1 = 0;
 
-    /* "async_session.pyx":564
+    /* "async_session.pyx":568
  *             result = self.get_bulk([oid], 0, maxrepetitions)
  *             oid = self._handle_walk_result(root, oid, result, final_result)
  *             if oid is None:             # <<<<<<<<<<<<<<
@@ -4947,7 +5075,7 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_10walk_with_get_bulk(st
     __pyx_t_8 = (__pyx_t_7 != 0);
     if (__pyx_t_8) {
 
-      /* "async_session.pyx":565
+      /* "async_session.pyx":569
  *             oid = self._handle_walk_result(root, oid, result, final_result)
  *             if oid is None:
  *                 return final_result             # <<<<<<<<<<<<<<
@@ -4959,7 +5087,7 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_10walk_with_get_bulk(st
       __pyx_r = __pyx_v_final_result;
       goto __pyx_L0;
 
-      /* "async_session.pyx":564
+      /* "async_session.pyx":568
  *             result = self.get_bulk([oid], 0, maxrepetitions)
  *             oid = self._handle_walk_result(root, oid, result, final_result)
  *             if oid is None:             # <<<<<<<<<<<<<<
@@ -4969,7 +5097,7 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_10walk_with_get_bulk(st
     }
   }
 
-  /* "async_session.pyx":551
+  /* "async_session.pyx":555
  *                 return final_result
  * 
  *     def walk_with_get_bulk(self, root, maxrepetitions=10):             # <<<<<<<<<<<<<<
@@ -4997,7 +5125,7 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_10walk_with_get_bulk(st
   return __pyx_r;
 }
 
-/* "async_session.pyx":568
+/* "async_session.pyx":572
  * 
  *     # This is the private API for the 'high level' calls.
  *     cdef _handle_walk_result(self, root, prev_oid, result, final_result):             # <<<<<<<<<<<<<<
@@ -5022,18 +5150,18 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__handle_walk_result(stru
   PyObject *(*__pyx_t_10)(PyObject *);
   __Pyx_RefNannySetupContext("_handle_walk_result", 0);
 
-  /* "async_session.pyx":576
+  /* "async_session.pyx":580
  *         """
  * 
  *         if not result:             # <<<<<<<<<<<<<<
  *             return None
  * 
  */
-  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_result); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 576, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_result); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 580, __pyx_L1_error)
   __pyx_t_2 = ((!__pyx_t_1) != 0);
   if (__pyx_t_2) {
 
-    /* "async_session.pyx":577
+    /* "async_session.pyx":581
  * 
  *         if not result:
  *             return None             # <<<<<<<<<<<<<<
@@ -5045,7 +5173,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__handle_walk_result(stru
     __pyx_r = Py_None;
     goto __pyx_L0;
 
-    /* "async_session.pyx":576
+    /* "async_session.pyx":580
  *         """
  * 
  *         if not result:             # <<<<<<<<<<<<<<
@@ -5054,14 +5182,14 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__handle_walk_result(stru
  */
   }
 
-  /* "async_session.pyx":579
+  /* "async_session.pyx":583
  *             return None
  * 
  *         for next_oid, value in sorted(result.items()):             # <<<<<<<<<<<<<<
  *             if next_oid == prev_oid:
  *                 return None
  */
-  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_result, __pyx_n_s_items); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 579, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_result, __pyx_n_s_items); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 583, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __pyx_t_6 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_5))) {
@@ -5074,31 +5202,31 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__handle_walk_result(stru
     }
   }
   if (__pyx_t_6) {
-    __pyx_t_4 = __Pyx_PyObject_CallOneArg(__pyx_t_5, __pyx_t_6); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 579, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_CallOneArg(__pyx_t_5, __pyx_t_6); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 583, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   } else {
-    __pyx_t_4 = __Pyx_PyObject_CallNoArg(__pyx_t_5); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 579, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_CallNoArg(__pyx_t_5); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 583, __pyx_L1_error)
   }
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_5 = PySequence_List(__pyx_t_4); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 579, __pyx_L1_error)
+  __pyx_t_5 = PySequence_List(__pyx_t_4); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 583, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_t_3 = ((PyObject*)__pyx_t_5);
   __pyx_t_5 = 0;
-  __pyx_t_7 = PyList_Sort(__pyx_t_3); if (unlikely(__pyx_t_7 == -1)) __PYX_ERR(0, 579, __pyx_L1_error)
+  __pyx_t_7 = PyList_Sort(__pyx_t_3); if (unlikely(__pyx_t_7 == -1)) __PYX_ERR(0, 583, __pyx_L1_error)
   if (unlikely(__pyx_t_3 == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not iterable");
-    __PYX_ERR(0, 579, __pyx_L1_error)
+    __PYX_ERR(0, 583, __pyx_L1_error)
   }
   __pyx_t_5 = __pyx_t_3; __Pyx_INCREF(__pyx_t_5); __pyx_t_8 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   for (;;) {
     if (__pyx_t_8 >= PyList_GET_SIZE(__pyx_t_5)) break;
     #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-    __pyx_t_3 = PyList_GET_ITEM(__pyx_t_5, __pyx_t_8); __Pyx_INCREF(__pyx_t_3); __pyx_t_8++; if (unlikely(0 < 0)) __PYX_ERR(0, 579, __pyx_L1_error)
+    __pyx_t_3 = PyList_GET_ITEM(__pyx_t_5, __pyx_t_8); __Pyx_INCREF(__pyx_t_3); __pyx_t_8++; if (unlikely(0 < 0)) __PYX_ERR(0, 583, __pyx_L1_error)
     #else
-    __pyx_t_3 = PySequence_ITEM(__pyx_t_5, __pyx_t_8); __pyx_t_8++; if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 579, __pyx_L1_error)
+    __pyx_t_3 = PySequence_ITEM(__pyx_t_5, __pyx_t_8); __pyx_t_8++; if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 583, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     #endif
     if ((likely(PyTuple_CheckExact(__pyx_t_3))) || (PyList_CheckExact(__pyx_t_3))) {
@@ -5111,7 +5239,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__handle_walk_result(stru
       if (unlikely(size != 2)) {
         if (size > 2) __Pyx_RaiseTooManyValuesError(2);
         else if (size >= 0) __Pyx_RaiseNeedMoreValuesError(size);
-        __PYX_ERR(0, 579, __pyx_L1_error)
+        __PYX_ERR(0, 583, __pyx_L1_error)
       }
       #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
       if (likely(PyTuple_CheckExact(sequence))) {
@@ -5124,15 +5252,15 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__handle_walk_result(stru
       __Pyx_INCREF(__pyx_t_4);
       __Pyx_INCREF(__pyx_t_6);
       #else
-      __pyx_t_4 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 579, __pyx_L1_error)
+      __pyx_t_4 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 583, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
-      __pyx_t_6 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 579, __pyx_L1_error)
+      __pyx_t_6 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 583, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
       #endif
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     } else {
       Py_ssize_t index = -1;
-      __pyx_t_9 = PyObject_GetIter(__pyx_t_3); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 579, __pyx_L1_error)
+      __pyx_t_9 = PyObject_GetIter(__pyx_t_3); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 583, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_9);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
       __pyx_t_10 = Py_TYPE(__pyx_t_9)->tp_iternext;
@@ -5140,7 +5268,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__handle_walk_result(stru
       __Pyx_GOTREF(__pyx_t_4);
       index = 1; __pyx_t_6 = __pyx_t_10(__pyx_t_9); if (unlikely(!__pyx_t_6)) goto __pyx_L6_unpacking_failed;
       __Pyx_GOTREF(__pyx_t_6);
-      if (__Pyx_IternextUnpackEndCheck(__pyx_t_10(__pyx_t_9), 2) < 0) __PYX_ERR(0, 579, __pyx_L1_error)
+      if (__Pyx_IternextUnpackEndCheck(__pyx_t_10(__pyx_t_9), 2) < 0) __PYX_ERR(0, 583, __pyx_L1_error)
       __pyx_t_10 = NULL;
       __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
       goto __pyx_L7_unpacking_done;
@@ -5148,7 +5276,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__handle_walk_result(stru
       __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
       __pyx_t_10 = NULL;
       if (__Pyx_IterFinish() == 0) __Pyx_RaiseNeedMoreValuesError(index);
-      __PYX_ERR(0, 579, __pyx_L1_error)
+      __PYX_ERR(0, 583, __pyx_L1_error)
       __pyx_L7_unpacking_done:;
     }
     __Pyx_XDECREF_SET(__pyx_v_next_oid, __pyx_t_4);
@@ -5156,19 +5284,19 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__handle_walk_result(stru
     __Pyx_XDECREF_SET(__pyx_v_value, __pyx_t_6);
     __pyx_t_6 = 0;
 
-    /* "async_session.pyx":580
+    /* "async_session.pyx":584
  * 
  *         for next_oid, value in sorted(result.items()):
  *             if next_oid == prev_oid:             # <<<<<<<<<<<<<<
  *                 return None
  * 
  */
-    __pyx_t_3 = PyObject_RichCompare(__pyx_v_next_oid, __pyx_v_prev_oid, Py_EQ); __Pyx_XGOTREF(__pyx_t_3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 580, __pyx_L1_error)
-    __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 580, __pyx_L1_error)
+    __pyx_t_3 = PyObject_RichCompare(__pyx_v_next_oid, __pyx_v_prev_oid, Py_EQ); __Pyx_XGOTREF(__pyx_t_3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 584, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 584, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     if (__pyx_t_2) {
 
-      /* "async_session.pyx":581
+      /* "async_session.pyx":585
  *         for next_oid, value in sorted(result.items()):
  *             if next_oid == prev_oid:
  *                 return None             # <<<<<<<<<<<<<<
@@ -5181,7 +5309,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__handle_walk_result(stru
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
       goto __pyx_L0;
 
-      /* "async_session.pyx":580
+      /* "async_session.pyx":584
  * 
  *         for next_oid, value in sorted(result.items()):
  *             if next_oid == prev_oid:             # <<<<<<<<<<<<<<
@@ -5190,21 +5318,21 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__handle_walk_result(stru
  */
     }
 
-    /* "async_session.pyx":583
+    /* "async_session.pyx":587
  *                 return None
  * 
  *             if value is END_OF_MIB:             # <<<<<<<<<<<<<<
  *                 return None
  * 
  */
-    __pyx_t_3 = __Pyx_GetModuleGlobalName(__pyx_n_s_END_OF_MIB_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 583, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_GetModuleGlobalName(__pyx_n_s_END_OF_MIB_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 587, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __pyx_t_2 = (__pyx_v_value == __pyx_t_3);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __pyx_t_1 = (__pyx_t_2 != 0);
     if (__pyx_t_1) {
 
-      /* "async_session.pyx":584
+      /* "async_session.pyx":588
  * 
  *             if value is END_OF_MIB:
  *                 return None             # <<<<<<<<<<<<<<
@@ -5217,7 +5345,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__handle_walk_result(stru
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
       goto __pyx_L0;
 
-      /* "async_session.pyx":583
+      /* "async_session.pyx":587
  *                 return None
  * 
  *             if value is END_OF_MIB:             # <<<<<<<<<<<<<<
@@ -5226,21 +5354,21 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__handle_walk_result(stru
  */
     }
 
-    /* "async_session.pyx":586
+    /* "async_session.pyx":590
  *                 return None
  * 
  *             if not self._is_in_subtree(root, next_oid):             # <<<<<<<<<<<<<<
  *                 return None
  * 
  */
-    __pyx_t_3 = __pyx_f_13async_session_12AsyncSession__is_in_subtree(__pyx_v_self, __pyx_v_root, __pyx_v_next_oid); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 586, __pyx_L1_error)
+    __pyx_t_3 = __pyx_f_13async_session_12AsyncSession__is_in_subtree(__pyx_v_self, __pyx_v_root, __pyx_v_next_oid); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 590, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 586, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 590, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __pyx_t_2 = ((!__pyx_t_1) != 0);
     if (__pyx_t_2) {
 
-      /* "async_session.pyx":587
+      /* "async_session.pyx":591
  * 
  *             if not self._is_in_subtree(root, next_oid):
  *                 return None             # <<<<<<<<<<<<<<
@@ -5253,7 +5381,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__handle_walk_result(stru
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
       goto __pyx_L0;
 
-      /* "async_session.pyx":586
+      /* "async_session.pyx":590
  *                 return None
  * 
  *             if not self._is_in_subtree(root, next_oid):             # <<<<<<<<<<<<<<
@@ -5262,16 +5390,16 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__handle_walk_result(stru
  */
     }
 
-    /* "async_session.pyx":589
+    /* "async_session.pyx":593
  *                 return None
  * 
  *             final_result[next_oid] = value             # <<<<<<<<<<<<<<
  * 
  *         return next_oid
  */
-    if (unlikely(PyObject_SetItem(__pyx_v_final_result, __pyx_v_next_oid, __pyx_v_value) < 0)) __PYX_ERR(0, 589, __pyx_L1_error)
+    if (unlikely(PyObject_SetItem(__pyx_v_final_result, __pyx_v_next_oid, __pyx_v_value) < 0)) __PYX_ERR(0, 593, __pyx_L1_error)
 
-    /* "async_session.pyx":579
+    /* "async_session.pyx":583
  *             return None
  * 
  *         for next_oid, value in sorted(result.items()):             # <<<<<<<<<<<<<<
@@ -5281,7 +5409,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__handle_walk_result(stru
   }
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
 
-  /* "async_session.pyx":591
+  /* "async_session.pyx":595
  *             final_result[next_oid] = value
  * 
  *         return next_oid             # <<<<<<<<<<<<<<
@@ -5289,12 +5417,12 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__handle_walk_result(stru
  *     ## These are the 'low level' snmp functions.
  */
   __Pyx_XDECREF(__pyx_r);
-  if (unlikely(!__pyx_v_next_oid)) { __Pyx_RaiseUnboundLocalError("next_oid"); __PYX_ERR(0, 591, __pyx_L1_error) }
+  if (unlikely(!__pyx_v_next_oid)) { __Pyx_RaiseUnboundLocalError("next_oid"); __PYX_ERR(0, 595, __pyx_L1_error) }
   __Pyx_INCREF(__pyx_v_next_oid);
   __pyx_r = __pyx_v_next_oid;
   goto __pyx_L0;
 
-  /* "async_session.pyx":568
+  /* "async_session.pyx":572
  * 
  *     # This is the private API for the 'high level' calls.
  *     cdef _handle_walk_result(self, root, prev_oid, result, final_result):             # <<<<<<<<<<<<<<
@@ -5319,7 +5447,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__handle_walk_result(stru
   return __pyx_r;
 }
 
-/* "async_session.pyx":594
+/* "async_session.pyx":598
  * 
  *     ## These are the 'low level' snmp functions.
  *     def get(self, oids):             # <<<<<<<<<<<<<<
@@ -5328,19 +5456,19 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__handle_walk_result(stru
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_13async_session_12AsyncSession_13get(PyObject *__pyx_v_self, PyObject *__pyx_v_oids); /*proto*/
-static PyObject *__pyx_pw_13async_session_12AsyncSession_13get(PyObject *__pyx_v_self, PyObject *__pyx_v_oids) {
+static PyObject *__pyx_pw_13async_session_12AsyncSession_15get(PyObject *__pyx_v_self, PyObject *__pyx_v_oids); /*proto*/
+static PyObject *__pyx_pw_13async_session_12AsyncSession_15get(PyObject *__pyx_v_self, PyObject *__pyx_v_oids) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("get (wrapper)", 0);
-  __pyx_r = __pyx_pf_13async_session_12AsyncSession_12get(((struct __pyx_obj_13async_session_AsyncSession *)__pyx_v_self), ((PyObject *)__pyx_v_oids));
+  __pyx_r = __pyx_pf_13async_session_12AsyncSession_14get(((struct __pyx_obj_13async_session_AsyncSession *)__pyx_v_self), ((PyObject *)__pyx_v_oids));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_13async_session_12AsyncSession_12get(struct __pyx_obj_13async_session_AsyncSession *__pyx_v_self, PyObject *__pyx_v_oids) {
+static PyObject *__pyx_pf_13async_session_12AsyncSession_14get(struct __pyx_obj_13async_session_AsyncSession *__pyx_v_self, PyObject *__pyx_v_oids) {
   netsnmp_pdu *__pyx_v_req;
   PyObject *__pyx_v_py_oid = NULL;
   PyObject *__pyx_r = NULL;
@@ -5351,7 +5479,7 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_12get(struct __pyx_obj_
   PyObject *__pyx_t_4 = NULL;
   __Pyx_RefNannySetupContext("get", 0);
 
-  /* "async_session.pyx":595
+  /* "async_session.pyx":599
  *     ## These are the 'low level' snmp functions.
  *     def get(self, oids):
  *         cdef netsnmp_pdu* req = snmp_pdu_create(SNMP_MSG_GET)             # <<<<<<<<<<<<<<
@@ -5360,7 +5488,7 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_12get(struct __pyx_obj_
  */
   __pyx_v_req = snmp_pdu_create(SNMP_MSG_GET);
 
-  /* "async_session.pyx":596
+  /* "async_session.pyx":600
  *     def get(self, oids):
  *         cdef netsnmp_pdu* req = snmp_pdu_create(SNMP_MSG_GET)
  *         for py_oid in oids:             # <<<<<<<<<<<<<<
@@ -5371,26 +5499,26 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_12get(struct __pyx_obj_
     __pyx_t_1 = __pyx_v_oids; __Pyx_INCREF(__pyx_t_1); __pyx_t_2 = 0;
     __pyx_t_3 = NULL;
   } else {
-    __pyx_t_2 = -1; __pyx_t_1 = PyObject_GetIter(__pyx_v_oids); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 596, __pyx_L1_error)
+    __pyx_t_2 = -1; __pyx_t_1 = PyObject_GetIter(__pyx_v_oids); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 600, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_3 = Py_TYPE(__pyx_t_1)->tp_iternext; if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 596, __pyx_L1_error)
+    __pyx_t_3 = Py_TYPE(__pyx_t_1)->tp_iternext; if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 600, __pyx_L1_error)
   }
   for (;;) {
     if (likely(!__pyx_t_3)) {
       if (likely(PyList_CheckExact(__pyx_t_1))) {
         if (__pyx_t_2 >= PyList_GET_SIZE(__pyx_t_1)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_4 = PyList_GET_ITEM(__pyx_t_1, __pyx_t_2); __Pyx_INCREF(__pyx_t_4); __pyx_t_2++; if (unlikely(0 < 0)) __PYX_ERR(0, 596, __pyx_L1_error)
+        __pyx_t_4 = PyList_GET_ITEM(__pyx_t_1, __pyx_t_2); __Pyx_INCREF(__pyx_t_4); __pyx_t_2++; if (unlikely(0 < 0)) __PYX_ERR(0, 600, __pyx_L1_error)
         #else
-        __pyx_t_4 = PySequence_ITEM(__pyx_t_1, __pyx_t_2); __pyx_t_2++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 596, __pyx_L1_error)
+        __pyx_t_4 = PySequence_ITEM(__pyx_t_1, __pyx_t_2); __pyx_t_2++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 600, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
         #endif
       } else {
         if (__pyx_t_2 >= PyTuple_GET_SIZE(__pyx_t_1)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_4 = PyTuple_GET_ITEM(__pyx_t_1, __pyx_t_2); __Pyx_INCREF(__pyx_t_4); __pyx_t_2++; if (unlikely(0 < 0)) __PYX_ERR(0, 596, __pyx_L1_error)
+        __pyx_t_4 = PyTuple_GET_ITEM(__pyx_t_1, __pyx_t_2); __Pyx_INCREF(__pyx_t_4); __pyx_t_2++; if (unlikely(0 < 0)) __PYX_ERR(0, 600, __pyx_L1_error)
         #else
-        __pyx_t_4 = PySequence_ITEM(__pyx_t_1, __pyx_t_2); __pyx_t_2++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 596, __pyx_L1_error)
+        __pyx_t_4 = PySequence_ITEM(__pyx_t_1, __pyx_t_2); __pyx_t_2++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 600, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
         #endif
       }
@@ -5400,7 +5528,7 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_12get(struct __pyx_obj_
         PyObject* exc_type = PyErr_Occurred();
         if (exc_type) {
           if (likely(exc_type == PyExc_StopIteration || PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-          else __PYX_ERR(0, 596, __pyx_L1_error)
+          else __PYX_ERR(0, 600, __pyx_L1_error)
         }
         break;
       }
@@ -5409,18 +5537,18 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_12get(struct __pyx_obj_
     __Pyx_XDECREF_SET(__pyx_v_py_oid, __pyx_t_4);
     __pyx_t_4 = 0;
 
-    /* "async_session.pyx":597
+    /* "async_session.pyx":601
  *         cdef netsnmp_pdu* req = snmp_pdu_create(SNMP_MSG_GET)
  *         for py_oid in oids:
  *             self._add_oid(req, py_oid)             # <<<<<<<<<<<<<<
  *         return self._do_snmp(req)
  * 
  */
-    __pyx_t_4 = __pyx_f_13async_session_12AsyncSession__add_oid(__pyx_v_self, __pyx_v_req, __pyx_v_py_oid); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 597, __pyx_L1_error)
+    __pyx_t_4 = __pyx_f_13async_session_12AsyncSession__add_oid(__pyx_v_self, __pyx_v_req, __pyx_v_py_oid); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 601, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-    /* "async_session.pyx":596
+    /* "async_session.pyx":600
  *     def get(self, oids):
  *         cdef netsnmp_pdu* req = snmp_pdu_create(SNMP_MSG_GET)
  *         for py_oid in oids:             # <<<<<<<<<<<<<<
@@ -5430,7 +5558,7 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_12get(struct __pyx_obj_
   }
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "async_session.pyx":598
+  /* "async_session.pyx":602
  *         for py_oid in oids:
  *             self._add_oid(req, py_oid)
  *         return self._do_snmp(req)             # <<<<<<<<<<<<<<
@@ -5438,13 +5566,13 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_12get(struct __pyx_obj_
  *     def get_next(self, py_oid):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_f_13async_session_12AsyncSession__do_snmp(__pyx_v_self, __pyx_v_req); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 598, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_13async_session_12AsyncSession__do_snmp(__pyx_v_self, __pyx_v_req); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 602, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "async_session.pyx":594
+  /* "async_session.pyx":598
  * 
  *     ## These are the 'low level' snmp functions.
  *     def get(self, oids):             # <<<<<<<<<<<<<<
@@ -5465,7 +5593,7 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_12get(struct __pyx_obj_
   return __pyx_r;
 }
 
-/* "async_session.pyx":600
+/* "async_session.pyx":604
  *         return self._do_snmp(req)
  * 
  *     def get_next(self, py_oid):             # <<<<<<<<<<<<<<
@@ -5474,26 +5602,26 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_12get(struct __pyx_obj_
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_13async_session_12AsyncSession_15get_next(PyObject *__pyx_v_self, PyObject *__pyx_v_py_oid); /*proto*/
-static PyObject *__pyx_pw_13async_session_12AsyncSession_15get_next(PyObject *__pyx_v_self, PyObject *__pyx_v_py_oid) {
+static PyObject *__pyx_pw_13async_session_12AsyncSession_17get_next(PyObject *__pyx_v_self, PyObject *__pyx_v_py_oid); /*proto*/
+static PyObject *__pyx_pw_13async_session_12AsyncSession_17get_next(PyObject *__pyx_v_self, PyObject *__pyx_v_py_oid) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("get_next (wrapper)", 0);
-  __pyx_r = __pyx_pf_13async_session_12AsyncSession_14get_next(((struct __pyx_obj_13async_session_AsyncSession *)__pyx_v_self), ((PyObject *)__pyx_v_py_oid));
+  __pyx_r = __pyx_pf_13async_session_12AsyncSession_16get_next(((struct __pyx_obj_13async_session_AsyncSession *)__pyx_v_self), ((PyObject *)__pyx_v_py_oid));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_13async_session_12AsyncSession_14get_next(struct __pyx_obj_13async_session_AsyncSession *__pyx_v_self, PyObject *__pyx_v_py_oid) {
+static PyObject *__pyx_pf_13async_session_12AsyncSession_16get_next(struct __pyx_obj_13async_session_AsyncSession *__pyx_v_self, PyObject *__pyx_v_py_oid) {
   netsnmp_pdu *__pyx_v_req;
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("get_next", 0);
 
-  /* "async_session.pyx":601
+  /* "async_session.pyx":605
  * 
  *     def get_next(self, py_oid):
  *         cdef netsnmp_pdu* req = snmp_pdu_create(SNMP_MSG_GETNEXT)             # <<<<<<<<<<<<<<
@@ -5502,18 +5630,18 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_14get_next(struct __pyx
  */
   __pyx_v_req = snmp_pdu_create(SNMP_MSG_GETNEXT);
 
-  /* "async_session.pyx":602
+  /* "async_session.pyx":606
  *     def get_next(self, py_oid):
  *         cdef netsnmp_pdu* req = snmp_pdu_create(SNMP_MSG_GETNEXT)
  *         self._add_oid(req, py_oid)             # <<<<<<<<<<<<<<
  *         return self._do_snmp(req)
  * 
  */
-  __pyx_t_1 = __pyx_f_13async_session_12AsyncSession__add_oid(__pyx_v_self, __pyx_v_req, __pyx_v_py_oid); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 602, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_13async_session_12AsyncSession__add_oid(__pyx_v_self, __pyx_v_req, __pyx_v_py_oid); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 606, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "async_session.pyx":603
+  /* "async_session.pyx":607
  *         cdef netsnmp_pdu* req = snmp_pdu_create(SNMP_MSG_GETNEXT)
  *         self._add_oid(req, py_oid)
  *         return self._do_snmp(req)             # <<<<<<<<<<<<<<
@@ -5521,13 +5649,13 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_14get_next(struct __pyx
  *     def get_bulk(self, oids, nonrepeaters=0, maxrepetitions=10):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_f_13async_session_12AsyncSession__do_snmp(__pyx_v_self, __pyx_v_req); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 603, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_13async_session_12AsyncSession__do_snmp(__pyx_v_self, __pyx_v_req); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 607, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "async_session.pyx":600
+  /* "async_session.pyx":604
  *         return self._do_snmp(req)
  * 
  *     def get_next(self, py_oid):             # <<<<<<<<<<<<<<
@@ -5546,7 +5674,7 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_14get_next(struct __pyx
   return __pyx_r;
 }
 
-/* "async_session.pyx":605
+/* "async_session.pyx":609
  *         return self._do_snmp(req)
  * 
  *     def get_bulk(self, oids, nonrepeaters=0, maxrepetitions=10):             # <<<<<<<<<<<<<<
@@ -5555,8 +5683,8 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_14get_next(struct __pyx
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_13async_session_12AsyncSession_17get_bulk(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyObject *__pyx_pw_13async_session_12AsyncSession_17get_bulk(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_13async_session_12AsyncSession_19get_bulk(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyObject *__pyx_pw_13async_session_12AsyncSession_19get_bulk(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_v_oids = 0;
   PyObject *__pyx_v_nonrepeaters = 0;
   PyObject *__pyx_v_maxrepetitions = 0;
@@ -5595,7 +5723,7 @@ static PyObject *__pyx_pw_13async_session_12AsyncSession_17get_bulk(PyObject *__
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "get_bulk") < 0)) __PYX_ERR(0, 605, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "get_bulk") < 0)) __PYX_ERR(0, 609, __pyx_L3_error)
       }
     } else {
       switch (PyTuple_GET_SIZE(__pyx_args)) {
@@ -5612,20 +5740,20 @@ static PyObject *__pyx_pw_13async_session_12AsyncSession_17get_bulk(PyObject *__
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("get_bulk", 0, 1, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 605, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("get_bulk", 0, 1, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 609, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("async_session.AsyncSession.get_bulk", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_13async_session_12AsyncSession_16get_bulk(((struct __pyx_obj_13async_session_AsyncSession *)__pyx_v_self), __pyx_v_oids, __pyx_v_nonrepeaters, __pyx_v_maxrepetitions);
+  __pyx_r = __pyx_pf_13async_session_12AsyncSession_18get_bulk(((struct __pyx_obj_13async_session_AsyncSession *)__pyx_v_self), __pyx_v_oids, __pyx_v_nonrepeaters, __pyx_v_maxrepetitions);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_13async_session_12AsyncSession_16get_bulk(struct __pyx_obj_13async_session_AsyncSession *__pyx_v_self, PyObject *__pyx_v_oids, PyObject *__pyx_v_nonrepeaters, PyObject *__pyx_v_maxrepetitions) {
+static PyObject *__pyx_pf_13async_session_12AsyncSession_18get_bulk(struct __pyx_obj_13async_session_AsyncSession *__pyx_v_self, PyObject *__pyx_v_oids, PyObject *__pyx_v_nonrepeaters, PyObject *__pyx_v_maxrepetitions) {
   netsnmp_pdu *__pyx_v_req;
   PyObject *__pyx_v_py_oid = NULL;
   PyObject *__pyx_r = NULL;
@@ -5637,7 +5765,7 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_16get_bulk(struct __pyx
   PyObject *__pyx_t_5 = NULL;
   __Pyx_RefNannySetupContext("get_bulk", 0);
 
-  /* "async_session.pyx":606
+  /* "async_session.pyx":610
  * 
  *     def get_bulk(self, oids, nonrepeaters=0, maxrepetitions=10):
  *         cdef netsnmp_pdu* req = snmp_pdu_create(SNMP_MSG_GETBULK)             # <<<<<<<<<<<<<<
@@ -5646,27 +5774,27 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_16get_bulk(struct __pyx
  */
   __pyx_v_req = snmp_pdu_create(SNMP_MSG_GETBULK);
 
-  /* "async_session.pyx":607
+  /* "async_session.pyx":611
  *     def get_bulk(self, oids, nonrepeaters=0, maxrepetitions=10):
  *         cdef netsnmp_pdu* req = snmp_pdu_create(SNMP_MSG_GETBULK)
  *         req.errstat = nonrepeaters             # <<<<<<<<<<<<<<
  *         req.errindex = maxrepetitions
  *         for py_oid in oids:
  */
-  __pyx_t_1 = __Pyx_PyInt_As_long(__pyx_v_nonrepeaters); if (unlikely((__pyx_t_1 == (long)-1) && PyErr_Occurred())) __PYX_ERR(0, 607, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_As_long(__pyx_v_nonrepeaters); if (unlikely((__pyx_t_1 == (long)-1) && PyErr_Occurred())) __PYX_ERR(0, 611, __pyx_L1_error)
   __pyx_v_req->errstat = __pyx_t_1;
 
-  /* "async_session.pyx":608
+  /* "async_session.pyx":612
  *         cdef netsnmp_pdu* req = snmp_pdu_create(SNMP_MSG_GETBULK)
  *         req.errstat = nonrepeaters
  *         req.errindex = maxrepetitions             # <<<<<<<<<<<<<<
  *         for py_oid in oids:
  *             self._add_oid(req, py_oid)
  */
-  __pyx_t_1 = __Pyx_PyInt_As_long(__pyx_v_maxrepetitions); if (unlikely((__pyx_t_1 == (long)-1) && PyErr_Occurred())) __PYX_ERR(0, 608, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_As_long(__pyx_v_maxrepetitions); if (unlikely((__pyx_t_1 == (long)-1) && PyErr_Occurred())) __PYX_ERR(0, 612, __pyx_L1_error)
   __pyx_v_req->errindex = __pyx_t_1;
 
-  /* "async_session.pyx":609
+  /* "async_session.pyx":613
  *         req.errstat = nonrepeaters
  *         req.errindex = maxrepetitions
  *         for py_oid in oids:             # <<<<<<<<<<<<<<
@@ -5677,26 +5805,26 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_16get_bulk(struct __pyx
     __pyx_t_2 = __pyx_v_oids; __Pyx_INCREF(__pyx_t_2); __pyx_t_3 = 0;
     __pyx_t_4 = NULL;
   } else {
-    __pyx_t_3 = -1; __pyx_t_2 = PyObject_GetIter(__pyx_v_oids); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 609, __pyx_L1_error)
+    __pyx_t_3 = -1; __pyx_t_2 = PyObject_GetIter(__pyx_v_oids); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 613, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_4 = Py_TYPE(__pyx_t_2)->tp_iternext; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 609, __pyx_L1_error)
+    __pyx_t_4 = Py_TYPE(__pyx_t_2)->tp_iternext; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 613, __pyx_L1_error)
   }
   for (;;) {
     if (likely(!__pyx_t_4)) {
       if (likely(PyList_CheckExact(__pyx_t_2))) {
         if (__pyx_t_3 >= PyList_GET_SIZE(__pyx_t_2)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_5 = PyList_GET_ITEM(__pyx_t_2, __pyx_t_3); __Pyx_INCREF(__pyx_t_5); __pyx_t_3++; if (unlikely(0 < 0)) __PYX_ERR(0, 609, __pyx_L1_error)
+        __pyx_t_5 = PyList_GET_ITEM(__pyx_t_2, __pyx_t_3); __Pyx_INCREF(__pyx_t_5); __pyx_t_3++; if (unlikely(0 < 0)) __PYX_ERR(0, 613, __pyx_L1_error)
         #else
-        __pyx_t_5 = PySequence_ITEM(__pyx_t_2, __pyx_t_3); __pyx_t_3++; if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 609, __pyx_L1_error)
+        __pyx_t_5 = PySequence_ITEM(__pyx_t_2, __pyx_t_3); __pyx_t_3++; if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 613, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_5);
         #endif
       } else {
         if (__pyx_t_3 >= PyTuple_GET_SIZE(__pyx_t_2)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_5 = PyTuple_GET_ITEM(__pyx_t_2, __pyx_t_3); __Pyx_INCREF(__pyx_t_5); __pyx_t_3++; if (unlikely(0 < 0)) __PYX_ERR(0, 609, __pyx_L1_error)
+        __pyx_t_5 = PyTuple_GET_ITEM(__pyx_t_2, __pyx_t_3); __Pyx_INCREF(__pyx_t_5); __pyx_t_3++; if (unlikely(0 < 0)) __PYX_ERR(0, 613, __pyx_L1_error)
         #else
-        __pyx_t_5 = PySequence_ITEM(__pyx_t_2, __pyx_t_3); __pyx_t_3++; if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 609, __pyx_L1_error)
+        __pyx_t_5 = PySequence_ITEM(__pyx_t_2, __pyx_t_3); __pyx_t_3++; if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 613, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_5);
         #endif
       }
@@ -5706,7 +5834,7 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_16get_bulk(struct __pyx
         PyObject* exc_type = PyErr_Occurred();
         if (exc_type) {
           if (likely(exc_type == PyExc_StopIteration || PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-          else __PYX_ERR(0, 609, __pyx_L1_error)
+          else __PYX_ERR(0, 613, __pyx_L1_error)
         }
         break;
       }
@@ -5715,18 +5843,18 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_16get_bulk(struct __pyx
     __Pyx_XDECREF_SET(__pyx_v_py_oid, __pyx_t_5);
     __pyx_t_5 = 0;
 
-    /* "async_session.pyx":610
+    /* "async_session.pyx":614
  *         req.errindex = maxrepetitions
  *         for py_oid in oids:
  *             self._add_oid(req, py_oid)             # <<<<<<<<<<<<<<
  *         return self._do_snmp(req)
  * 
  */
-    __pyx_t_5 = __pyx_f_13async_session_12AsyncSession__add_oid(__pyx_v_self, __pyx_v_req, __pyx_v_py_oid); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 610, __pyx_L1_error)
+    __pyx_t_5 = __pyx_f_13async_session_12AsyncSession__add_oid(__pyx_v_self, __pyx_v_req, __pyx_v_py_oid); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 614, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
 
-    /* "async_session.pyx":609
+    /* "async_session.pyx":613
  *         req.errstat = nonrepeaters
  *         req.errindex = maxrepetitions
  *         for py_oid in oids:             # <<<<<<<<<<<<<<
@@ -5736,7 +5864,7 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_16get_bulk(struct __pyx
   }
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "async_session.pyx":611
+  /* "async_session.pyx":615
  *         for py_oid in oids:
  *             self._add_oid(req, py_oid)
  *         return self._do_snmp(req)             # <<<<<<<<<<<<<<
@@ -5744,13 +5872,13 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_16get_bulk(struct __pyx
  *     def set_oids(self, oids):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_2 = __pyx_f_13async_session_12AsyncSession__do_snmp(__pyx_v_self, __pyx_v_req); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 611, __pyx_L1_error)
+  __pyx_t_2 = __pyx_f_13async_session_12AsyncSession__do_snmp(__pyx_v_self, __pyx_v_req); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 615, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_r = __pyx_t_2;
   __pyx_t_2 = 0;
   goto __pyx_L0;
 
-  /* "async_session.pyx":605
+  /* "async_session.pyx":609
  *         return self._do_snmp(req)
  * 
  *     def get_bulk(self, oids, nonrepeaters=0, maxrepetitions=10):             # <<<<<<<<<<<<<<
@@ -5771,7 +5899,7 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_16get_bulk(struct __pyx
   return __pyx_r;
 }
 
-/* "async_session.pyx":613
+/* "async_session.pyx":617
  *         return self._do_snmp(req)
  * 
  *     def set_oids(self, oids):             # <<<<<<<<<<<<<<
@@ -5780,19 +5908,19 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_16get_bulk(struct __pyx
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_13async_session_12AsyncSession_19set_oids(PyObject *__pyx_v_self, PyObject *__pyx_v_oids); /*proto*/
-static PyObject *__pyx_pw_13async_session_12AsyncSession_19set_oids(PyObject *__pyx_v_self, PyObject *__pyx_v_oids) {
+static PyObject *__pyx_pw_13async_session_12AsyncSession_21set_oids(PyObject *__pyx_v_self, PyObject *__pyx_v_oids); /*proto*/
+static PyObject *__pyx_pw_13async_session_12AsyncSession_21set_oids(PyObject *__pyx_v_self, PyObject *__pyx_v_oids) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("set_oids (wrapper)", 0);
-  __pyx_r = __pyx_pf_13async_session_12AsyncSession_18set_oids(((struct __pyx_obj_13async_session_AsyncSession *)__pyx_v_self), ((PyObject *)__pyx_v_oids));
+  __pyx_r = __pyx_pf_13async_session_12AsyncSession_20set_oids(((struct __pyx_obj_13async_session_AsyncSession *)__pyx_v_self), ((PyObject *)__pyx_v_oids));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_13async_session_12AsyncSession_18set_oids(struct __pyx_obj_13async_session_AsyncSession *__pyx_v_self, PyObject *__pyx_v_oids) {
+static PyObject *__pyx_pf_13async_session_12AsyncSession_20set_oids(struct __pyx_obj_13async_session_AsyncSession *__pyx_v_self, PyObject *__pyx_v_oids) {
   netsnmp_pdu *__pyx_v_req;
   PyObject *__pyx_v_py_oid = NULL;
   PyObject *__pyx_v_value = NULL;
@@ -5814,7 +5942,7 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_18set_oids(struct __pyx
   PyObject *(*__pyx_t_13)(PyObject *);
   __Pyx_RefNannySetupContext("set_oids", 0);
 
-  /* "async_session.pyx":614
+  /* "async_session.pyx":618
  * 
  *     def set_oids(self, oids):
  *         cdef netsnmp_pdu* req = snmp_pdu_create(SNMP_MSG_SET)             # <<<<<<<<<<<<<<
@@ -5823,7 +5951,7 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_18set_oids(struct __pyx
  */
   __pyx_v_req = snmp_pdu_create(SNMP_MSG_SET);
 
-  /* "async_session.pyx":616
+  /* "async_session.pyx":620
  *         cdef netsnmp_pdu* req = snmp_pdu_create(SNMP_MSG_SET)
  * 
  *         try:             # <<<<<<<<<<<<<<
@@ -5839,7 +5967,7 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_18set_oids(struct __pyx
     __Pyx_XGOTREF(__pyx_t_3);
     /*try:*/ {
 
-      /* "async_session.pyx":617
+      /* "async_session.pyx":621
  * 
  *         try:
  *             for py_oid, (value, value_type) in oids.iteritems():             # <<<<<<<<<<<<<<
@@ -5849,9 +5977,9 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_18set_oids(struct __pyx
       __pyx_t_5 = 0;
       if (unlikely(__pyx_v_oids == Py_None)) {
         PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%s'", "iteritems");
-        __PYX_ERR(0, 617, __pyx_L3_error)
+        __PYX_ERR(0, 621, __pyx_L3_error)
       }
-      __pyx_t_8 = __Pyx_dict_iterator(__pyx_v_oids, 0, __pyx_n_s_iteritems, (&__pyx_t_6), (&__pyx_t_7)); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 617, __pyx_L3_error)
+      __pyx_t_8 = __Pyx_dict_iterator(__pyx_v_oids, 0, __pyx_n_s_iteritems, (&__pyx_t_6), (&__pyx_t_7)); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 621, __pyx_L3_error)
       __Pyx_GOTREF(__pyx_t_8);
       __Pyx_XDECREF(__pyx_t_4);
       __pyx_t_4 = __pyx_t_8;
@@ -5859,7 +5987,7 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_18set_oids(struct __pyx
       while (1) {
         __pyx_t_10 = __Pyx_dict_iter_next(__pyx_t_4, __pyx_t_6, &__pyx_t_5, &__pyx_t_8, &__pyx_t_9, NULL, __pyx_t_7);
         if (unlikely(__pyx_t_10 == 0)) break;
-        if (unlikely(__pyx_t_10 == -1)) __PYX_ERR(0, 617, __pyx_L3_error)
+        if (unlikely(__pyx_t_10 == -1)) __PYX_ERR(0, 621, __pyx_L3_error)
         __Pyx_GOTREF(__pyx_t_8);
         __Pyx_GOTREF(__pyx_t_9);
         __Pyx_XDECREF_SET(__pyx_v_py_oid, __pyx_t_8);
@@ -5874,7 +6002,7 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_18set_oids(struct __pyx
           if (unlikely(size != 2)) {
             if (size > 2) __Pyx_RaiseTooManyValuesError(2);
             else if (size >= 0) __Pyx_RaiseNeedMoreValuesError(size);
-            __PYX_ERR(0, 617, __pyx_L3_error)
+            __PYX_ERR(0, 621, __pyx_L3_error)
           }
           #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
           if (likely(PyTuple_CheckExact(sequence))) {
@@ -5887,15 +6015,15 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_18set_oids(struct __pyx
           __Pyx_INCREF(__pyx_t_8);
           __Pyx_INCREF(__pyx_t_11);
           #else
-          __pyx_t_8 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 617, __pyx_L3_error)
+          __pyx_t_8 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 621, __pyx_L3_error)
           __Pyx_GOTREF(__pyx_t_8);
-          __pyx_t_11 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 617, __pyx_L3_error)
+          __pyx_t_11 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 621, __pyx_L3_error)
           __Pyx_GOTREF(__pyx_t_11);
           #endif
           __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
         } else {
           Py_ssize_t index = -1;
-          __pyx_t_12 = PyObject_GetIter(__pyx_t_9); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 617, __pyx_L3_error)
+          __pyx_t_12 = PyObject_GetIter(__pyx_t_9); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 621, __pyx_L3_error)
           __Pyx_GOTREF(__pyx_t_12);
           __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
           __pyx_t_13 = Py_TYPE(__pyx_t_12)->tp_iternext;
@@ -5903,7 +6031,7 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_18set_oids(struct __pyx
           __Pyx_GOTREF(__pyx_t_8);
           index = 1; __pyx_t_11 = __pyx_t_13(__pyx_t_12); if (unlikely(!__pyx_t_11)) goto __pyx_L13_unpacking_failed;
           __Pyx_GOTREF(__pyx_t_11);
-          if (__Pyx_IternextUnpackEndCheck(__pyx_t_13(__pyx_t_12), 2) < 0) __PYX_ERR(0, 617, __pyx_L3_error)
+          if (__Pyx_IternextUnpackEndCheck(__pyx_t_13(__pyx_t_12), 2) < 0) __PYX_ERR(0, 621, __pyx_L3_error)
           __pyx_t_13 = NULL;
           __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
           goto __pyx_L14_unpacking_done;
@@ -5911,7 +6039,7 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_18set_oids(struct __pyx
           __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
           __pyx_t_13 = NULL;
           if (__Pyx_IterFinish() == 0) __Pyx_RaiseNeedMoreValuesError(index);
-          __PYX_ERR(0, 617, __pyx_L3_error)
+          __PYX_ERR(0, 621, __pyx_L3_error)
           __pyx_L14_unpacking_done:;
         }
         __Pyx_XDECREF_SET(__pyx_v_value, __pyx_t_8);
@@ -5919,20 +6047,20 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_18set_oids(struct __pyx
         __Pyx_XDECREF_SET(__pyx_v_value_type, __pyx_t_11);
         __pyx_t_11 = 0;
 
-        /* "async_session.pyx":618
+        /* "async_session.pyx":622
  *         try:
  *             for py_oid, (value, value_type) in oids.iteritems():
  *                 self._add_oid_set(req, py_oid, value, value_type)             # <<<<<<<<<<<<<<
  *         except Exception:
  *             snmp_free_pdu(req)
  */
-        __pyx_t_9 = __pyx_f_13async_session_12AsyncSession__add_oid_set(__pyx_v_self, __pyx_v_req, __pyx_v_py_oid, __pyx_v_value, __pyx_v_value_type); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 618, __pyx_L3_error)
+        __pyx_t_9 = __pyx_f_13async_session_12AsyncSession__add_oid_set(__pyx_v_self, __pyx_v_req, __pyx_v_py_oid, __pyx_v_value, __pyx_v_value_type); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 622, __pyx_L3_error)
         __Pyx_GOTREF(__pyx_t_9);
         __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
       }
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-      /* "async_session.pyx":616
+      /* "async_session.pyx":620
  *         cdef netsnmp_pdu* req = snmp_pdu_create(SNMP_MSG_SET)
  * 
  *         try:             # <<<<<<<<<<<<<<
@@ -5941,7 +6069,7 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_18set_oids(struct __pyx
  */
     }
 
-    /* "async_session.pyx":623
+    /* "async_session.pyx":627
  *             raise
  *         else:
  *             return self._do_snmp(req)             # <<<<<<<<<<<<<<
@@ -5950,7 +6078,7 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_18set_oids(struct __pyx
  */
     /*else:*/ {
       __Pyx_XDECREF(__pyx_r);
-      __pyx_t_4 = __pyx_f_13async_session_12AsyncSession__do_snmp(__pyx_v_self, __pyx_v_req); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 623, __pyx_L5_except_error)
+      __pyx_t_4 = __pyx_f_13async_session_12AsyncSession__do_snmp(__pyx_v_self, __pyx_v_req); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 627, __pyx_L5_except_error)
       __Pyx_GOTREF(__pyx_t_4);
       __pyx_r = __pyx_t_4;
       __pyx_t_4 = 0;
@@ -5964,7 +6092,7 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_18set_oids(struct __pyx
     __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
     __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-    /* "async_session.pyx":619
+    /* "async_session.pyx":623
  *             for py_oid, (value, value_type) in oids.iteritems():
  *                 self._add_oid_set(req, py_oid, value, value_type)
  *         except Exception:             # <<<<<<<<<<<<<<
@@ -5974,12 +6102,12 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_18set_oids(struct __pyx
     __pyx_t_7 = __Pyx_PyErr_ExceptionMatches(((PyObject *)(&((PyTypeObject*)PyExc_Exception)[0])));
     if (__pyx_t_7) {
       __Pyx_AddTraceback("async_session.AsyncSession.set_oids", __pyx_clineno, __pyx_lineno, __pyx_filename);
-      if (__Pyx_GetException(&__pyx_t_4, &__pyx_t_9, &__pyx_t_11) < 0) __PYX_ERR(0, 619, __pyx_L5_except_error)
+      if (__Pyx_GetException(&__pyx_t_4, &__pyx_t_9, &__pyx_t_11) < 0) __PYX_ERR(0, 623, __pyx_L5_except_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_GOTREF(__pyx_t_9);
       __Pyx_GOTREF(__pyx_t_11);
 
-      /* "async_session.pyx":620
+      /* "async_session.pyx":624
  *                 self._add_oid_set(req, py_oid, value, value_type)
  *         except Exception:
  *             snmp_free_pdu(req)             # <<<<<<<<<<<<<<
@@ -5988,7 +6116,7 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_18set_oids(struct __pyx
  */
       snmp_free_pdu(__pyx_v_req);
 
-      /* "async_session.pyx":621
+      /* "async_session.pyx":625
  *         except Exception:
  *             snmp_free_pdu(req)
  *             raise             # <<<<<<<<<<<<<<
@@ -6000,12 +6128,12 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_18set_oids(struct __pyx
       __Pyx_XGIVEREF(__pyx_t_11);
       __Pyx_ErrRestoreWithState(__pyx_t_4, __pyx_t_9, __pyx_t_11);
       __pyx_t_4 = 0; __pyx_t_9 = 0; __pyx_t_11 = 0; 
-      __PYX_ERR(0, 621, __pyx_L5_except_error)
+      __PYX_ERR(0, 625, __pyx_L5_except_error)
     }
     goto __pyx_L5_except_error;
     __pyx_L5_except_error:;
 
-    /* "async_session.pyx":616
+    /* "async_session.pyx":620
  *         cdef netsnmp_pdu* req = snmp_pdu_create(SNMP_MSG_SET)
  * 
  *         try:             # <<<<<<<<<<<<<<
@@ -6027,7 +6155,7 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_18set_oids(struct __pyx
     goto __pyx_L0;
   }
 
-  /* "async_session.pyx":613
+  /* "async_session.pyx":617
  *         return self._do_snmp(req)
  * 
  *     def set_oids(self, oids):             # <<<<<<<<<<<<<<
@@ -6053,7 +6181,7 @@ static PyObject *__pyx_pf_13async_session_12AsyncSession_18set_oids(struct __pyx
   return __pyx_r;
 }
 
-/* "async_session.pyx":626
+/* "async_session.pyx":630
  * 
  *     ## This is private API for the 'low level' calls.
  *     cdef _is_in_subtree(self, root, oid):             # <<<<<<<<<<<<<<
@@ -6073,19 +6201,19 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__is_in_subtree(CYTHON_UN
   PyObject *__pyx_t_6 = NULL;
   __Pyx_RefNannySetupContext("_is_in_subtree", 0);
 
-  /* "async_session.pyx":627
+  /* "async_session.pyx":631
  *     ## This is private API for the 'low level' calls.
  *     cdef _is_in_subtree(self, root, oid):
  *         if len(oid) < len(root):             # <<<<<<<<<<<<<<
  *             return False
  * 
  */
-  __pyx_t_1 = PyObject_Length(__pyx_v_oid); if (unlikely(__pyx_t_1 == -1)) __PYX_ERR(0, 627, __pyx_L1_error)
-  __pyx_t_2 = PyObject_Length(__pyx_v_root); if (unlikely(__pyx_t_2 == -1)) __PYX_ERR(0, 627, __pyx_L1_error)
+  __pyx_t_1 = PyObject_Length(__pyx_v_oid); if (unlikely(__pyx_t_1 == -1)) __PYX_ERR(0, 631, __pyx_L1_error)
+  __pyx_t_2 = PyObject_Length(__pyx_v_root); if (unlikely(__pyx_t_2 == -1)) __PYX_ERR(0, 631, __pyx_L1_error)
   __pyx_t_3 = ((__pyx_t_1 < __pyx_t_2) != 0);
   if (__pyx_t_3) {
 
-    /* "async_session.pyx":628
+    /* "async_session.pyx":632
  *     cdef _is_in_subtree(self, root, oid):
  *         if len(oid) < len(root):
  *             return False             # <<<<<<<<<<<<<<
@@ -6097,7 +6225,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__is_in_subtree(CYTHON_UN
     __pyx_r = Py_False;
     goto __pyx_L0;
 
-    /* "async_session.pyx":627
+    /* "async_session.pyx":631
  *     ## This is private API for the 'low level' calls.
  *     cdef _is_in_subtree(self, root, oid):
  *         if len(oid) < len(root):             # <<<<<<<<<<<<<<
@@ -6106,36 +6234,36 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__is_in_subtree(CYTHON_UN
  */
   }
 
-  /* "async_session.pyx":630
+  /* "async_session.pyx":634
  *             return False
  * 
  *         for index in range(len(root)):             # <<<<<<<<<<<<<<
  *             if root[index] != oid[index]:
  *                 return False
  */
-  __pyx_t_2 = PyObject_Length(__pyx_v_root); if (unlikely(__pyx_t_2 == -1)) __PYX_ERR(0, 630, __pyx_L1_error)
+  __pyx_t_2 = PyObject_Length(__pyx_v_root); if (unlikely(__pyx_t_2 == -1)) __PYX_ERR(0, 634, __pyx_L1_error)
   for (__pyx_t_1 = 0; __pyx_t_1 < __pyx_t_2; __pyx_t_1+=1) {
     __pyx_v_index = __pyx_t_1;
 
-    /* "async_session.pyx":631
+    /* "async_session.pyx":635
  * 
  *         for index in range(len(root)):
  *             if root[index] != oid[index]:             # <<<<<<<<<<<<<<
  *                 return False
  *         return True
  */
-    __pyx_t_4 = __Pyx_GetItemInt(__pyx_v_root, __pyx_v_index, Py_ssize_t, 1, PyInt_FromSsize_t, 0, 1, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 631, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_GetItemInt(__pyx_v_root, __pyx_v_index, Py_ssize_t, 1, PyInt_FromSsize_t, 0, 1, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 635, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_5 = __Pyx_GetItemInt(__pyx_v_oid, __pyx_v_index, Py_ssize_t, 1, PyInt_FromSsize_t, 0, 1, 1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 631, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_GetItemInt(__pyx_v_oid, __pyx_v_index, Py_ssize_t, 1, PyInt_FromSsize_t, 0, 1, 1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 635, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
-    __pyx_t_6 = PyObject_RichCompare(__pyx_t_4, __pyx_t_5, Py_NE); __Pyx_XGOTREF(__pyx_t_6); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 631, __pyx_L1_error)
+    __pyx_t_6 = PyObject_RichCompare(__pyx_t_4, __pyx_t_5, Py_NE); __Pyx_XGOTREF(__pyx_t_6); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 635, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    __pyx_t_3 = __Pyx_PyObject_IsTrue(__pyx_t_6); if (unlikely(__pyx_t_3 < 0)) __PYX_ERR(0, 631, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_IsTrue(__pyx_t_6); if (unlikely(__pyx_t_3 < 0)) __PYX_ERR(0, 635, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     if (__pyx_t_3) {
 
-      /* "async_session.pyx":632
+      /* "async_session.pyx":636
  *         for index in range(len(root)):
  *             if root[index] != oid[index]:
  *                 return False             # <<<<<<<<<<<<<<
@@ -6147,7 +6275,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__is_in_subtree(CYTHON_UN
       __pyx_r = Py_False;
       goto __pyx_L0;
 
-      /* "async_session.pyx":631
+      /* "async_session.pyx":635
  * 
  *         for index in range(len(root)):
  *             if root[index] != oid[index]:             # <<<<<<<<<<<<<<
@@ -6157,7 +6285,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__is_in_subtree(CYTHON_UN
     }
   }
 
-  /* "async_session.pyx":633
+  /* "async_session.pyx":637
  *             if root[index] != oid[index]:
  *                 return False
  *         return True             # <<<<<<<<<<<<<<
@@ -6169,7 +6297,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__is_in_subtree(CYTHON_UN
   __pyx_r = Py_True;
   goto __pyx_L0;
 
-  /* "async_session.pyx":626
+  /* "async_session.pyx":630
  * 
  *     ## This is private API for the 'low level' calls.
  *     cdef _is_in_subtree(self, root, oid):             # <<<<<<<<<<<<<<
@@ -6190,7 +6318,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__is_in_subtree(CYTHON_UN
   return __pyx_r;
 }
 
-/* "async_session.pyx":635
+/* "async_session.pyx":639
  *         return True
  * 
  *     cdef _do_snmp(self, netsnmp_pdu* req):             # <<<<<<<<<<<<<<
@@ -6221,7 +6349,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__do_snmp(struct __pyx_ob
   PyObject *__pyx_t_16 = NULL;
   __Pyx_RefNannySetupContext("_do_snmp", 0);
 
-  /* "async_session.pyx":636
+  /* "async_session.pyx":640
  * 
  *     cdef _do_snmp(self, netsnmp_pdu* req):
  *         if self.sp == NULL:             # <<<<<<<<<<<<<<
@@ -6231,7 +6359,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__do_snmp(struct __pyx_ob
   __pyx_t_1 = ((__pyx_v_self->sp == NULL) != 0);
   if (__pyx_t_1) {
 
-    /* "async_session.pyx":637
+    /* "async_session.pyx":641
  *     cdef _do_snmp(self, netsnmp_pdu* req):
  *         if self.sp == NULL:
  *             snmp_free_pdu(req)             # <<<<<<<<<<<<<<
@@ -6240,23 +6368,23 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__do_snmp(struct __pyx_ob
  */
     snmp_free_pdu(__pyx_v_req);
 
-    /* "async_session.pyx":638
+    /* "async_session.pyx":642
  *         if self.sp == NULL:
  *             snmp_free_pdu(req)
  *             raise SNMPError("Session is not open")             # <<<<<<<<<<<<<<
  * 
  *         cdef netsnmp_pdu* response
  */
-    __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_SNMPError); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 638, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_SNMPError); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 642, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_tuple__3, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 638, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_tuple__3, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 642, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_Raise(__pyx_t_3, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __PYX_ERR(0, 638, __pyx_L1_error)
+    __PYX_ERR(0, 642, __pyx_L1_error)
 
-    /* "async_session.pyx":636
+    /* "async_session.pyx":640
  * 
  *     cdef _do_snmp(self, netsnmp_pdu* req):
  *         if self.sp == NULL:             # <<<<<<<<<<<<<<
@@ -6265,7 +6393,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__do_snmp(struct __pyx_ob
  */
   }
 
-  /* "async_session.pyx":641
+  /* "async_session.pyx":645
  * 
  *         cdef netsnmp_pdu* response
  *         self.error_in_my_select = None             # <<<<<<<<<<<<<<
@@ -6278,7 +6406,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__do_snmp(struct __pyx_ob
   __Pyx_DECREF(__pyx_v_self->error_in_my_select);
   __pyx_v_self->error_in_my_select = Py_None;
 
-  /* "async_session.pyx":643
+  /* "async_session.pyx":647
  *         self.error_in_my_select = None
  * 
  *         self.query_count += 1             # <<<<<<<<<<<<<<
@@ -6287,7 +6415,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__do_snmp(struct __pyx_ob
  */
   __pyx_v_self->query_count = (__pyx_v_self->query_count + 1);
 
-  /* "async_session.pyx":644
+  /* "async_session.pyx":648
  * 
  *         self.query_count += 1
  *         cdef int rc = snmp_sess_synch_response(             # <<<<<<<<<<<<<<
@@ -6296,7 +6424,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__do_snmp(struct __pyx_ob
  */
   __pyx_v_rc = snmp_sess_synch_response(__pyx_v_self->sp, __pyx_v_req, (&__pyx_v_response));
 
-  /* "async_session.pyx":649
+  /* "async_session.pyx":653
  *             cython.address(response))
  * 
  *         if rc == STAT_SUCCESS:             # <<<<<<<<<<<<<<
@@ -6306,7 +6434,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__do_snmp(struct __pyx_ob
   __pyx_t_1 = ((__pyx_v_rc == STAT_SUCCESS) != 0);
   if (__pyx_t_1) {
 
-    /* "async_session.pyx":650
+    /* "async_session.pyx":654
  * 
  *         if rc == STAT_SUCCESS:
  *             try:             # <<<<<<<<<<<<<<
@@ -6315,7 +6443,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__do_snmp(struct __pyx_ob
  */
     /*try:*/ {
 
-      /* "async_session.pyx":651
+      /* "async_session.pyx":655
  *         if rc == STAT_SUCCESS:
  *             try:
  *                 return self.parse_response(response)             # <<<<<<<<<<<<<<
@@ -6323,14 +6451,14 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__do_snmp(struct __pyx_ob
  *                 snmp_free_pdu(response)
  */
       __Pyx_XDECREF(__pyx_r);
-      __pyx_t_3 = __pyx_f_13async_session_12AsyncSession_parse_response(__pyx_v_self, __pyx_v_response); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 651, __pyx_L6_error)
+      __pyx_t_3 = __pyx_f_13async_session_12AsyncSession_parse_response(__pyx_v_self, __pyx_v_response); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 655, __pyx_L6_error)
       __Pyx_GOTREF(__pyx_t_3);
       __pyx_r = __pyx_t_3;
       __pyx_t_3 = 0;
       goto __pyx_L5_return;
     }
 
-    /* "async_session.pyx":653
+    /* "async_session.pyx":657
  *                 return self.parse_response(response)
  *             finally:
  *                 snmp_free_pdu(response)             # <<<<<<<<<<<<<<
@@ -6382,7 +6510,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__do_snmp(struct __pyx_ob
       }
     }
 
-    /* "async_session.pyx":649
+    /* "async_session.pyx":653
  *             cython.address(response))
  * 
  *         if rc == STAT_SUCCESS:             # <<<<<<<<<<<<<<
@@ -6391,7 +6519,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__do_snmp(struct __pyx_ob
  */
   }
 
-  /* "async_session.pyx":655
+  /* "async_session.pyx":659
  *                 snmp_free_pdu(response)
  * 
  *         elif self.error_in_my_select is not None:             # <<<<<<<<<<<<<<
@@ -6402,16 +6530,16 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__do_snmp(struct __pyx_ob
   __pyx_t_13 = (__pyx_t_1 != 0);
   if (__pyx_t_13) {
 
-    /* "async_session.pyx":656
+    /* "async_session.pyx":660
  * 
  *         elif self.error_in_my_select is not None:
  *             raise SNMPError("Error in query: %s" % self.error_in_my_select)             # <<<<<<<<<<<<<<
  * 
  *         else:
  */
-    __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_SNMPError); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 656, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_SNMPError); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 660, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_14 = __Pyx_PyString_Format(__pyx_kp_s_Error_in_query_s, __pyx_v_self->error_in_my_select); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 656, __pyx_L1_error)
+    __pyx_t_14 = __Pyx_PyString_Format(__pyx_kp_s_Error_in_query_s, __pyx_v_self->error_in_my_select); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 660, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_14);
     __pyx_t_15 = NULL;
     if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_2))) {
@@ -6424,14 +6552,14 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__do_snmp(struct __pyx_ob
       }
     }
     if (!__pyx_t_15) {
-      __pyx_t_3 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_14); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 656, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_14); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 660, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
       __Pyx_GOTREF(__pyx_t_3);
     } else {
       #if CYTHON_FAST_PYCALL
       if (PyFunction_Check(__pyx_t_2)) {
         PyObject *__pyx_temp[2] = {__pyx_t_15, __pyx_t_14};
-        __pyx_t_3 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 656, __pyx_L1_error)
+        __pyx_t_3 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 660, __pyx_L1_error)
         __Pyx_XDECREF(__pyx_t_15); __pyx_t_15 = 0;
         __Pyx_GOTREF(__pyx_t_3);
         __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
@@ -6440,20 +6568,20 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__do_snmp(struct __pyx_ob
       #if CYTHON_FAST_PYCCALL
       if (__Pyx_PyFastCFunction_Check(__pyx_t_2)) {
         PyObject *__pyx_temp[2] = {__pyx_t_15, __pyx_t_14};
-        __pyx_t_3 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 656, __pyx_L1_error)
+        __pyx_t_3 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 660, __pyx_L1_error)
         __Pyx_XDECREF(__pyx_t_15); __pyx_t_15 = 0;
         __Pyx_GOTREF(__pyx_t_3);
         __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
       } else
       #endif
       {
-        __pyx_t_16 = PyTuple_New(1+1); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 656, __pyx_L1_error)
+        __pyx_t_16 = PyTuple_New(1+1); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 660, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_16);
         __Pyx_GIVEREF(__pyx_t_15); PyTuple_SET_ITEM(__pyx_t_16, 0, __pyx_t_15); __pyx_t_15 = NULL;
         __Pyx_GIVEREF(__pyx_t_14);
         PyTuple_SET_ITEM(__pyx_t_16, 0+1, __pyx_t_14);
         __pyx_t_14 = 0;
-        __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_16, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 656, __pyx_L1_error)
+        __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_16, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 660, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_3);
         __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
       }
@@ -6461,9 +6589,9 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__do_snmp(struct __pyx_ob
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_Raise(__pyx_t_3, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __PYX_ERR(0, 656, __pyx_L1_error)
+    __PYX_ERR(0, 660, __pyx_L1_error)
 
-    /* "async_session.pyx":655
+    /* "async_session.pyx":659
  *                 snmp_free_pdu(response)
  * 
  *         elif self.error_in_my_select is not None:             # <<<<<<<<<<<<<<
@@ -6472,7 +6600,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__do_snmp(struct __pyx_ob
  */
   }
 
-  /* "async_session.pyx":659
+  /* "async_session.pyx":663
  * 
  *         else:
  *             raise error_from_session_ptr("Error in query", self.sp)             # <<<<<<<<<<<<<<
@@ -6480,14 +6608,14 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__do_snmp(struct __pyx_ob
  *     cdef _add_oid(self, netsnmp_pdu* req, object py_oid):
  */
   /*else*/ {
-    __pyx_t_3 = __pyx_f_13async_session_error_from_session_ptr(__pyx_kp_s_Error_in_query, __pyx_v_self->sp); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 659, __pyx_L1_error)
+    __pyx_t_3 = __pyx_f_13async_session_error_from_session_ptr(__pyx_kp_s_Error_in_query, __pyx_v_self->sp); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 663, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_Raise(__pyx_t_3, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __PYX_ERR(0, 659, __pyx_L1_error)
+    __PYX_ERR(0, 663, __pyx_L1_error)
   }
 
-  /* "async_session.pyx":635
+  /* "async_session.pyx":639
  *         return True
  * 
  *     cdef _do_snmp(self, netsnmp_pdu* req):             # <<<<<<<<<<<<<<
@@ -6510,7 +6638,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__do_snmp(struct __pyx_ob
   return __pyx_r;
 }
 
-/* "async_session.pyx":661
+/* "async_session.pyx":665
  *             raise error_from_session_ptr("Error in query", self.sp)
  * 
  *     cdef _add_oid(self, netsnmp_pdu* req, object py_oid):             # <<<<<<<<<<<<<<
@@ -6534,17 +6662,17 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__add_oid(CYTHON_UNUSED s
   Py_ssize_t __pyx_t_7;
   __Pyx_RefNannySetupContext("_add_oid", 0);
 
-  /* "async_session.pyx":663
+  /* "async_session.pyx":667
  *     cdef _add_oid(self, netsnmp_pdu* req, object py_oid):
  *         cdef oid param[MAX_OID_LEN]
  *         cdef size_t param_size = len(py_oid)             # <<<<<<<<<<<<<<
  *         for index, value in enumerate(py_oid):
  *             param[index] = value
  */
-  __pyx_t_1 = PyObject_Length(__pyx_v_py_oid); if (unlikely(__pyx_t_1 == -1)) __PYX_ERR(0, 663, __pyx_L1_error)
+  __pyx_t_1 = PyObject_Length(__pyx_v_py_oid); if (unlikely(__pyx_t_1 == -1)) __PYX_ERR(0, 667, __pyx_L1_error)
   __pyx_v_param_size = __pyx_t_1;
 
-  /* "async_session.pyx":664
+  /* "async_session.pyx":668
  *         cdef oid param[MAX_OID_LEN]
  *         cdef size_t param_size = len(py_oid)
  *         for index, value in enumerate(py_oid):             # <<<<<<<<<<<<<<
@@ -6557,26 +6685,26 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__add_oid(CYTHON_UNUSED s
     __pyx_t_3 = __pyx_v_py_oid; __Pyx_INCREF(__pyx_t_3); __pyx_t_1 = 0;
     __pyx_t_4 = NULL;
   } else {
-    __pyx_t_1 = -1; __pyx_t_3 = PyObject_GetIter(__pyx_v_py_oid); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 664, __pyx_L1_error)
+    __pyx_t_1 = -1; __pyx_t_3 = PyObject_GetIter(__pyx_v_py_oid); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 668, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_4 = Py_TYPE(__pyx_t_3)->tp_iternext; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 664, __pyx_L1_error)
+    __pyx_t_4 = Py_TYPE(__pyx_t_3)->tp_iternext; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 668, __pyx_L1_error)
   }
   for (;;) {
     if (likely(!__pyx_t_4)) {
       if (likely(PyList_CheckExact(__pyx_t_3))) {
         if (__pyx_t_1 >= PyList_GET_SIZE(__pyx_t_3)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_5 = PyList_GET_ITEM(__pyx_t_3, __pyx_t_1); __Pyx_INCREF(__pyx_t_5); __pyx_t_1++; if (unlikely(0 < 0)) __PYX_ERR(0, 664, __pyx_L1_error)
+        __pyx_t_5 = PyList_GET_ITEM(__pyx_t_3, __pyx_t_1); __Pyx_INCREF(__pyx_t_5); __pyx_t_1++; if (unlikely(0 < 0)) __PYX_ERR(0, 668, __pyx_L1_error)
         #else
-        __pyx_t_5 = PySequence_ITEM(__pyx_t_3, __pyx_t_1); __pyx_t_1++; if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 664, __pyx_L1_error)
+        __pyx_t_5 = PySequence_ITEM(__pyx_t_3, __pyx_t_1); __pyx_t_1++; if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 668, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_5);
         #endif
       } else {
         if (__pyx_t_1 >= PyTuple_GET_SIZE(__pyx_t_3)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_5 = PyTuple_GET_ITEM(__pyx_t_3, __pyx_t_1); __Pyx_INCREF(__pyx_t_5); __pyx_t_1++; if (unlikely(0 < 0)) __PYX_ERR(0, 664, __pyx_L1_error)
+        __pyx_t_5 = PyTuple_GET_ITEM(__pyx_t_3, __pyx_t_1); __Pyx_INCREF(__pyx_t_5); __pyx_t_1++; if (unlikely(0 < 0)) __PYX_ERR(0, 668, __pyx_L1_error)
         #else
-        __pyx_t_5 = PySequence_ITEM(__pyx_t_3, __pyx_t_1); __pyx_t_1++; if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 664, __pyx_L1_error)
+        __pyx_t_5 = PySequence_ITEM(__pyx_t_3, __pyx_t_1); __pyx_t_1++; if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 668, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_5);
         #endif
       }
@@ -6586,7 +6714,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__add_oid(CYTHON_UNUSED s
         PyObject* exc_type = PyErr_Occurred();
         if (exc_type) {
           if (likely(exc_type == PyExc_StopIteration || PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-          else __PYX_ERR(0, 664, __pyx_L1_error)
+          else __PYX_ERR(0, 668, __pyx_L1_error)
         }
         break;
       }
@@ -6596,24 +6724,24 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__add_oid(CYTHON_UNUSED s
     __pyx_t_5 = 0;
     __Pyx_INCREF(__pyx_t_2);
     __Pyx_XDECREF_SET(__pyx_v_index, __pyx_t_2);
-    __pyx_t_5 = __Pyx_PyInt_AddObjC(__pyx_t_2, __pyx_int_1, 1, 0); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 664, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyInt_AddObjC(__pyx_t_2, __pyx_int_1, 1, 0); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 668, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __Pyx_DECREF(__pyx_t_2);
     __pyx_t_2 = __pyx_t_5;
     __pyx_t_5 = 0;
 
-    /* "async_session.pyx":665
+    /* "async_session.pyx":669
  *         cdef size_t param_size = len(py_oid)
  *         for index, value in enumerate(py_oid):
  *             param[index] = value             # <<<<<<<<<<<<<<
  * 
  *         snmp_add_null_var(req, param, param_size)
  */
-    __pyx_t_6 = __Pyx_PyInt_As_unsigned_long(__pyx_v_value); if (unlikely((__pyx_t_6 == (unsigned long)-1) && PyErr_Occurred())) __PYX_ERR(0, 665, __pyx_L1_error)
-    __pyx_t_7 = __Pyx_PyIndex_AsSsize_t(__pyx_v_index); if (unlikely((__pyx_t_7 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 665, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyInt_As_unsigned_long(__pyx_v_value); if (unlikely((__pyx_t_6 == (unsigned long)-1) && PyErr_Occurred())) __PYX_ERR(0, 669, __pyx_L1_error)
+    __pyx_t_7 = __Pyx_PyIndex_AsSsize_t(__pyx_v_index); if (unlikely((__pyx_t_7 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 669, __pyx_L1_error)
     (__pyx_v_param[__pyx_t_7]) = __pyx_t_6;
 
-    /* "async_session.pyx":664
+    /* "async_session.pyx":668
  *         cdef oid param[MAX_OID_LEN]
  *         cdef size_t param_size = len(py_oid)
  *         for index, value in enumerate(py_oid):             # <<<<<<<<<<<<<<
@@ -6624,7 +6752,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__add_oid(CYTHON_UNUSED s
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "async_session.pyx":667
+  /* "async_session.pyx":671
  *             param[index] = value
  * 
  *         snmp_add_null_var(req, param, param_size)             # <<<<<<<<<<<<<<
@@ -6633,7 +6761,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__add_oid(CYTHON_UNUSED s
  */
   snmp_add_null_var(__pyx_v_req, __pyx_v_param, __pyx_v_param_size);
 
-  /* "async_session.pyx":661
+  /* "async_session.pyx":665
  *             raise error_from_session_ptr("Error in query", self.sp)
  * 
  *     cdef _add_oid(self, netsnmp_pdu* req, object py_oid):             # <<<<<<<<<<<<<<
@@ -6658,15 +6786,16 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__add_oid(CYTHON_UNUSED s
   return __pyx_r;
 }
 
-/* "async_session.pyx":669
+/* "async_session.pyx":673
  *         snmp_add_null_var(req, param, param_size)
  * 
  *     cdef object _add_oid_set(self, netsnmp_pdu* req, py_oid, val, val_type):             # <<<<<<<<<<<<<<
+ *         cdef int rc
  *         cdef char c_val_type
- *         cdef oid param[MAX_OID_LEN]
  */
 
 static PyObject *__pyx_f_13async_session_12AsyncSession__add_oid_set(CYTHON_UNUSED struct __pyx_obj_13async_session_AsyncSession *__pyx_v_self, netsnmp_pdu *__pyx_v_req, PyObject *__pyx_v_py_oid, PyObject *__pyx_v_val, PyObject *__pyx_v_val_type) {
+  int __pyx_v_rc;
   char __pyx_v_c_val_type;
   __pyx_t_13async_session_oid __pyx_v_param[MAX_OID_LEN];
   size_t __pyx_v_param_size;
@@ -6688,17 +6817,17 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__add_oid_set(CYTHON_UNUS
   char const *__pyx_t_11;
   __Pyx_RefNannySetupContext("_add_oid_set", 0);
 
-  /* "async_session.pyx":672
+  /* "async_session.pyx":677
  *         cdef char c_val_type
  *         cdef oid param[MAX_OID_LEN]
  *         cdef size_t param_size = len(py_oid)             # <<<<<<<<<<<<<<
  *         for index, value, in enumerate(py_oid):
  *             param[index] = value
  */
-  __pyx_t_1 = PyObject_Length(__pyx_v_py_oid); if (unlikely(__pyx_t_1 == -1)) __PYX_ERR(0, 672, __pyx_L1_error)
+  __pyx_t_1 = PyObject_Length(__pyx_v_py_oid); if (unlikely(__pyx_t_1 == -1)) __PYX_ERR(0, 677, __pyx_L1_error)
   __pyx_v_param_size = __pyx_t_1;
 
-  /* "async_session.pyx":673
+  /* "async_session.pyx":678
  *         cdef oid param[MAX_OID_LEN]
  *         cdef size_t param_size = len(py_oid)
  *         for index, value, in enumerate(py_oid):             # <<<<<<<<<<<<<<
@@ -6711,26 +6840,26 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__add_oid_set(CYTHON_UNUS
     __pyx_t_3 = __pyx_v_py_oid; __Pyx_INCREF(__pyx_t_3); __pyx_t_1 = 0;
     __pyx_t_4 = NULL;
   } else {
-    __pyx_t_1 = -1; __pyx_t_3 = PyObject_GetIter(__pyx_v_py_oid); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 673, __pyx_L1_error)
+    __pyx_t_1 = -1; __pyx_t_3 = PyObject_GetIter(__pyx_v_py_oid); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 678, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_4 = Py_TYPE(__pyx_t_3)->tp_iternext; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 673, __pyx_L1_error)
+    __pyx_t_4 = Py_TYPE(__pyx_t_3)->tp_iternext; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 678, __pyx_L1_error)
   }
   for (;;) {
     if (likely(!__pyx_t_4)) {
       if (likely(PyList_CheckExact(__pyx_t_3))) {
         if (__pyx_t_1 >= PyList_GET_SIZE(__pyx_t_3)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_5 = PyList_GET_ITEM(__pyx_t_3, __pyx_t_1); __Pyx_INCREF(__pyx_t_5); __pyx_t_1++; if (unlikely(0 < 0)) __PYX_ERR(0, 673, __pyx_L1_error)
+        __pyx_t_5 = PyList_GET_ITEM(__pyx_t_3, __pyx_t_1); __Pyx_INCREF(__pyx_t_5); __pyx_t_1++; if (unlikely(0 < 0)) __PYX_ERR(0, 678, __pyx_L1_error)
         #else
-        __pyx_t_5 = PySequence_ITEM(__pyx_t_3, __pyx_t_1); __pyx_t_1++; if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 673, __pyx_L1_error)
+        __pyx_t_5 = PySequence_ITEM(__pyx_t_3, __pyx_t_1); __pyx_t_1++; if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 678, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_5);
         #endif
       } else {
         if (__pyx_t_1 >= PyTuple_GET_SIZE(__pyx_t_3)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_5 = PyTuple_GET_ITEM(__pyx_t_3, __pyx_t_1); __Pyx_INCREF(__pyx_t_5); __pyx_t_1++; if (unlikely(0 < 0)) __PYX_ERR(0, 673, __pyx_L1_error)
+        __pyx_t_5 = PyTuple_GET_ITEM(__pyx_t_3, __pyx_t_1); __Pyx_INCREF(__pyx_t_5); __pyx_t_1++; if (unlikely(0 < 0)) __PYX_ERR(0, 678, __pyx_L1_error)
         #else
-        __pyx_t_5 = PySequence_ITEM(__pyx_t_3, __pyx_t_1); __pyx_t_1++; if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 673, __pyx_L1_error)
+        __pyx_t_5 = PySequence_ITEM(__pyx_t_3, __pyx_t_1); __pyx_t_1++; if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 678, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_5);
         #endif
       }
@@ -6740,7 +6869,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__add_oid_set(CYTHON_UNUS
         PyObject* exc_type = PyErr_Occurred();
         if (exc_type) {
           if (likely(exc_type == PyExc_StopIteration || PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-          else __PYX_ERR(0, 673, __pyx_L1_error)
+          else __PYX_ERR(0, 678, __pyx_L1_error)
         }
         break;
       }
@@ -6750,24 +6879,24 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__add_oid_set(CYTHON_UNUS
     __pyx_t_5 = 0;
     __Pyx_INCREF(__pyx_t_2);
     __Pyx_XDECREF_SET(__pyx_v_index, __pyx_t_2);
-    __pyx_t_5 = __Pyx_PyInt_AddObjC(__pyx_t_2, __pyx_int_1, 1, 0); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 673, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyInt_AddObjC(__pyx_t_2, __pyx_int_1, 1, 0); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 678, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __Pyx_DECREF(__pyx_t_2);
     __pyx_t_2 = __pyx_t_5;
     __pyx_t_5 = 0;
 
-    /* "async_session.pyx":674
+    /* "async_session.pyx":679
  *         cdef size_t param_size = len(py_oid)
  *         for index, value, in enumerate(py_oid):
  *             param[index] = value             # <<<<<<<<<<<<<<
  * 
  *         if not val_type in VALUE_TYPE_TO_INT:
  */
-    __pyx_t_6 = __Pyx_PyInt_As_unsigned_long(__pyx_v_value); if (unlikely((__pyx_t_6 == (unsigned long)-1) && PyErr_Occurred())) __PYX_ERR(0, 674, __pyx_L1_error)
-    __pyx_t_7 = __Pyx_PyIndex_AsSsize_t(__pyx_v_index); if (unlikely((__pyx_t_7 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 674, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyInt_As_unsigned_long(__pyx_v_value); if (unlikely((__pyx_t_6 == (unsigned long)-1) && PyErr_Occurred())) __PYX_ERR(0, 679, __pyx_L1_error)
+    __pyx_t_7 = __Pyx_PyIndex_AsSsize_t(__pyx_v_index); if (unlikely((__pyx_t_7 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 679, __pyx_L1_error)
     (__pyx_v_param[__pyx_t_7]) = __pyx_t_6;
 
-    /* "async_session.pyx":673
+    /* "async_session.pyx":678
  *         cdef oid param[MAX_OID_LEN]
  *         cdef size_t param_size = len(py_oid)
  *         for index, value, in enumerate(py_oid):             # <<<<<<<<<<<<<<
@@ -6778,42 +6907,42 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__add_oid_set(CYTHON_UNUS
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "async_session.pyx":676
+  /* "async_session.pyx":681
  *             param[index] = value
  * 
  *         if not val_type in VALUE_TYPE_TO_INT:             # <<<<<<<<<<<<<<
  *             raise Exception("Unknown value type '%s'" % val_type)
  * 
  */
-  __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_VALUE_TYPE_TO_INT); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 676, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_VALUE_TYPE_TO_INT); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 681, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_8 = (__Pyx_PySequence_ContainsTF(__pyx_v_val_type, __pyx_t_2, Py_NE)); if (unlikely(__pyx_t_8 < 0)) __PYX_ERR(0, 676, __pyx_L1_error)
+  __pyx_t_8 = (__Pyx_PySequence_ContainsTF(__pyx_v_val_type, __pyx_t_2, Py_NE)); if (unlikely(__pyx_t_8 < 0)) __PYX_ERR(0, 681, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_t_9 = (__pyx_t_8 != 0);
   if (__pyx_t_9) {
 
-    /* "async_session.pyx":677
+    /* "async_session.pyx":682
  * 
  *         if not val_type in VALUE_TYPE_TO_INT:
  *             raise Exception("Unknown value type '%s'" % val_type)             # <<<<<<<<<<<<<<
  * 
  *         c_val_type = VALUE_TYPE_TO_INT[val_type]
  */
-    __pyx_t_2 = __Pyx_PyString_Format(__pyx_kp_s_Unknown_value_type_s, __pyx_v_val_type); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 677, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyString_Format(__pyx_kp_s_Unknown_value_type_s, __pyx_v_val_type); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 682, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 677, __pyx_L1_error)
+    __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 682, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_GIVEREF(__pyx_t_2);
     PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_2);
     __pyx_t_2 = 0;
-    __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)(&((PyTypeObject*)PyExc_Exception)[0])), __pyx_t_3, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 677, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)(&((PyTypeObject*)PyExc_Exception)[0])), __pyx_t_3, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 682, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_Raise(__pyx_t_2, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __PYX_ERR(0, 677, __pyx_L1_error)
+    __PYX_ERR(0, 682, __pyx_L1_error)
 
-    /* "async_session.pyx":676
+    /* "async_session.pyx":681
  *             param[index] = value
  * 
  *         if not val_type in VALUE_TYPE_TO_INT:             # <<<<<<<<<<<<<<
@@ -6822,91 +6951,105 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__add_oid_set(CYTHON_UNUS
  */
   }
 
-  /* "async_session.pyx":679
+  /* "async_session.pyx":684
  *             raise Exception("Unknown value type '%s'" % val_type)
  * 
  *         c_val_type = VALUE_TYPE_TO_INT[val_type]             # <<<<<<<<<<<<<<
  * 
- *         if snmp_add_var(req, param, param_size, c_val_type, val) != 0:
+ *         rc = snmp_add_var(req, param, param_size, c_val_type, val)
  */
-  __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_VALUE_TYPE_TO_INT); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 679, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_VALUE_TYPE_TO_INT); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 684, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = PyObject_GetItem(__pyx_t_2, __pyx_v_val_type); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 679, __pyx_L1_error)
+  __pyx_t_3 = PyObject_GetItem(__pyx_t_2, __pyx_v_val_type); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 684, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_10 = __Pyx_PyInt_As_char(__pyx_t_3); if (unlikely((__pyx_t_10 == (char)-1) && PyErr_Occurred())) __PYX_ERR(0, 679, __pyx_L1_error)
+  __pyx_t_10 = __Pyx_PyInt_As_char(__pyx_t_3); if (unlikely((__pyx_t_10 == (char)-1) && PyErr_Occurred())) __PYX_ERR(0, 684, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_v_c_val_type = __pyx_t_10;
 
-  /* "async_session.pyx":681
+  /* "async_session.pyx":686
  *         c_val_type = VALUE_TYPE_TO_INT[val_type]
  * 
- *         if snmp_add_var(req, param, param_size, c_val_type, val) != 0:             # <<<<<<<<<<<<<<
- *             msg = "Cannot set oid(%s) with val(%) and type(%s)"
- *             raise Exception(msg % (py_oid, val, val_type))
+ *         rc = snmp_add_var(req, param, param_size, c_val_type, val)             # <<<<<<<<<<<<<<
+ *         if rc != 0:
+ *             msg = "Cannot set oid(%s) with val(%s) and type(%s): %s"
  */
-  __pyx_t_11 = __Pyx_PyObject_AsString(__pyx_v_val); if (unlikely((!__pyx_t_11) && PyErr_Occurred())) __PYX_ERR(0, 681, __pyx_L1_error)
-  __pyx_t_9 = ((snmp_add_var(__pyx_v_req, __pyx_v_param, __pyx_v_param_size, __pyx_v_c_val_type, __pyx_t_11) != 0) != 0);
+  __pyx_t_11 = __Pyx_PyObject_AsString(__pyx_v_val); if (unlikely((!__pyx_t_11) && PyErr_Occurred())) __PYX_ERR(0, 686, __pyx_L1_error)
+  __pyx_v_rc = snmp_add_var(__pyx_v_req, __pyx_v_param, __pyx_v_param_size, __pyx_v_c_val_type, __pyx_t_11);
+
+  /* "async_session.pyx":687
+ * 
+ *         rc = snmp_add_var(req, param, param_size, c_val_type, val)
+ *         if rc != 0:             # <<<<<<<<<<<<<<
+ *             msg = "Cannot set oid(%s) with val(%s) and type(%s): %s"
+ *             raise Exception(msg % (py_oid, val, val_type, snmp_api_errstring(rc)))
+ */
+  __pyx_t_9 = ((__pyx_v_rc != 0) != 0);
   if (__pyx_t_9) {
 
-    /* "async_session.pyx":682
- * 
- *         if snmp_add_var(req, param, param_size, c_val_type, val) != 0:
- *             msg = "Cannot set oid(%s) with val(%) and type(%s)"             # <<<<<<<<<<<<<<
- *             raise Exception(msg % (py_oid, val, val_type))
+    /* "async_session.pyx":688
+ *         rc = snmp_add_var(req, param, param_size, c_val_type, val)
+ *         if rc != 0:
+ *             msg = "Cannot set oid(%s) with val(%s) and type(%s): %s"             # <<<<<<<<<<<<<<
+ *             raise Exception(msg % (py_oid, val, val_type, snmp_api_errstring(rc)))
  * 
  */
-    __Pyx_INCREF(__pyx_kp_s_Cannot_set_oid_s_with_val_and_ty);
-    __pyx_v_msg = __pyx_kp_s_Cannot_set_oid_s_with_val_and_ty;
+    __Pyx_INCREF(__pyx_kp_s_Cannot_set_oid_s_with_val_s_and);
+    __pyx_v_msg = __pyx_kp_s_Cannot_set_oid_s_with_val_s_and;
 
-    /* "async_session.pyx":683
- *         if snmp_add_var(req, param, param_size, c_val_type, val) != 0:
- *             msg = "Cannot set oid(%s) with val(%) and type(%s)"
- *             raise Exception(msg % (py_oid, val, val_type))             # <<<<<<<<<<<<<<
+    /* "async_session.pyx":689
+ *         if rc != 0:
+ *             msg = "Cannot set oid(%s) with val(%s) and type(%s): %s"
+ *             raise Exception(msg % (py_oid, val, val_type, snmp_api_errstring(rc)))             # <<<<<<<<<<<<<<
  * 
  *     cdef object parse_response(self, netsnmp_pdu* response):
  */
-    __pyx_t_3 = PyTuple_New(3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 683, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyBytes_FromString(snmp_api_errstring(__pyx_v_rc)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 689, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
+    __pyx_t_2 = PyTuple_New(4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 689, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_2);
     __Pyx_INCREF(__pyx_v_py_oid);
     __Pyx_GIVEREF(__pyx_v_py_oid);
-    PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_v_py_oid);
+    PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_v_py_oid);
     __Pyx_INCREF(__pyx_v_val);
     __Pyx_GIVEREF(__pyx_v_val);
-    PyTuple_SET_ITEM(__pyx_t_3, 1, __pyx_v_val);
+    PyTuple_SET_ITEM(__pyx_t_2, 1, __pyx_v_val);
     __Pyx_INCREF(__pyx_v_val_type);
     __Pyx_GIVEREF(__pyx_v_val_type);
-    PyTuple_SET_ITEM(__pyx_t_3, 2, __pyx_v_val_type);
-    __pyx_t_2 = PyNumber_Remainder(__pyx_v_msg, __pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 683, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 683, __pyx_L1_error)
+    PyTuple_SET_ITEM(__pyx_t_2, 2, __pyx_v_val_type);
+    __Pyx_GIVEREF(__pyx_t_3);
+    PyTuple_SET_ITEM(__pyx_t_2, 3, __pyx_t_3);
+    __pyx_t_3 = 0;
+    __pyx_t_3 = PyNumber_Remainder(__pyx_v_msg, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 689, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    __Pyx_GIVEREF(__pyx_t_2);
-    PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_2);
-    __pyx_t_2 = 0;
-    __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)(&((PyTypeObject*)PyExc_Exception)[0])), __pyx_t_3, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 683, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __Pyx_Raise(__pyx_t_2, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __PYX_ERR(0, 683, __pyx_L1_error)
+    __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 689, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_2);
+    __Pyx_GIVEREF(__pyx_t_3);
+    PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_t_3);
+    __pyx_t_3 = 0;
+    __pyx_t_3 = __Pyx_PyObject_Call(((PyObject *)(&((PyTypeObject*)PyExc_Exception)[0])), __pyx_t_2, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 689, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
+    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+    __Pyx_Raise(__pyx_t_3, 0, 0, 0);
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+    __PYX_ERR(0, 689, __pyx_L1_error)
 
-    /* "async_session.pyx":681
- *         c_val_type = VALUE_TYPE_TO_INT[val_type]
+    /* "async_session.pyx":687
  * 
- *         if snmp_add_var(req, param, param_size, c_val_type, val) != 0:             # <<<<<<<<<<<<<<
- *             msg = "Cannot set oid(%s) with val(%) and type(%s)"
- *             raise Exception(msg % (py_oid, val, val_type))
+ *         rc = snmp_add_var(req, param, param_size, c_val_type, val)
+ *         if rc != 0:             # <<<<<<<<<<<<<<
+ *             msg = "Cannot set oid(%s) with val(%s) and type(%s): %s"
+ *             raise Exception(msg % (py_oid, val, val_type, snmp_api_errstring(rc)))
  */
   }
 
-  /* "async_session.pyx":669
+  /* "async_session.pyx":673
  *         snmp_add_null_var(req, param, param_size)
  * 
  *     cdef object _add_oid_set(self, netsnmp_pdu* req, py_oid, val, val_type):             # <<<<<<<<<<<<<<
+ *         cdef int rc
  *         cdef char c_val_type
- *         cdef oid param[MAX_OID_LEN]
  */
 
   /* function exit code */
@@ -6927,8 +7070,8 @@ static PyObject *__pyx_f_13async_session_12AsyncSession__add_oid_set(CYTHON_UNUS
   return __pyx_r;
 }
 
-/* "async_session.pyx":685
- *             raise Exception(msg % (py_oid, val, val_type))
+/* "async_session.pyx":691
+ *             raise Exception(msg % (py_oid, val, val_type, snmp_api_errstring(rc)))
  * 
  *     cdef object parse_response(self, netsnmp_pdu* response):             # <<<<<<<<<<<<<<
  *         cdef netsnmp_variable_list* entry = NULL
@@ -6955,7 +7098,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession_parse_response(struct __
   size_t __pyx_t_9;
   __Pyx_RefNannySetupContext("parse_response", 0);
 
-  /* "async_session.pyx":686
+  /* "async_session.pyx":692
  * 
  *     cdef object parse_response(self, netsnmp_pdu* response):
  *         cdef netsnmp_variable_list* entry = NULL             # <<<<<<<<<<<<<<
@@ -6964,19 +7107,19 @@ static PyObject *__pyx_f_13async_session_12AsyncSession_parse_response(struct __
  */
   __pyx_v_entry = NULL;
 
-  /* "async_session.pyx":687
+  /* "async_session.pyx":693
  *     cdef object parse_response(self, netsnmp_pdu* response):
  *         cdef netsnmp_variable_list* entry = NULL
  *         cdef dict parsed = {}             # <<<<<<<<<<<<<<
  * 
  *         if not (response.errstat == SNMP_ERR_NOERROR):
  */
-  __pyx_t_1 = PyDict_New(); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 687, __pyx_L1_error)
+  __pyx_t_1 = PyDict_New(); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 693, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_parsed = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "async_session.pyx":689
+  /* "async_session.pyx":695
  *         cdef dict parsed = {}
  * 
  *         if not (response.errstat == SNMP_ERR_NOERROR):             # <<<<<<<<<<<<<<
@@ -6986,7 +7129,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession_parse_response(struct __
   __pyx_t_2 = ((!((__pyx_v_response->errstat == SNMP_ERR_NOERROR) != 0)) != 0);
   if (__pyx_t_2) {
 
-    /* "async_session.pyx":690
+    /* "async_session.pyx":696
  * 
  *         if not (response.errstat == SNMP_ERR_NOERROR):
  *             msg = "Error in response: %s"             # <<<<<<<<<<<<<<
@@ -6996,18 +7139,18 @@ static PyObject *__pyx_f_13async_session_12AsyncSession_parse_response(struct __
     __Pyx_INCREF(__pyx_kp_s_Error_in_response_s);
     __pyx_v_msg = __pyx_kp_s_Error_in_response_s;
 
-    /* "async_session.pyx":691
+    /* "async_session.pyx":697
  *         if not (response.errstat == SNMP_ERR_NOERROR):
  *             msg = "Error in response: %s"
  *             raise SNMPError(msg % snmp_errstring(response.errstat))             # <<<<<<<<<<<<<<
  * 
  *         entry = response.variables
  */
-    __pyx_t_3 = __Pyx_GetModuleGlobalName(__pyx_n_s_SNMPError); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 691, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_GetModuleGlobalName(__pyx_n_s_SNMPError); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 697, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_4 = __Pyx_PyBytes_FromString(snmp_errstring(__pyx_v_response->errstat)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 691, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyBytes_FromString(snmp_errstring(__pyx_v_response->errstat)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 697, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_5 = PyNumber_Remainder(__pyx_v_msg, __pyx_t_4); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 691, __pyx_L1_error)
+    __pyx_t_5 = PyNumber_Remainder(__pyx_v_msg, __pyx_t_4); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 697, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __pyx_t_4 = NULL;
@@ -7021,14 +7164,14 @@ static PyObject *__pyx_f_13async_session_12AsyncSession_parse_response(struct __
       }
     }
     if (!__pyx_t_4) {
-      __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 691, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 697, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
       __Pyx_GOTREF(__pyx_t_1);
     } else {
       #if CYTHON_FAST_PYCALL
       if (PyFunction_Check(__pyx_t_3)) {
         PyObject *__pyx_temp[2] = {__pyx_t_4, __pyx_t_5};
-        __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_3, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 691, __pyx_L1_error)
+        __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_3, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 697, __pyx_L1_error)
         __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
         __Pyx_GOTREF(__pyx_t_1);
         __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
@@ -7037,20 +7180,20 @@ static PyObject *__pyx_f_13async_session_12AsyncSession_parse_response(struct __
       #if CYTHON_FAST_PYCCALL
       if (__Pyx_PyFastCFunction_Check(__pyx_t_3)) {
         PyObject *__pyx_temp[2] = {__pyx_t_4, __pyx_t_5};
-        __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_3, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 691, __pyx_L1_error)
+        __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_3, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 697, __pyx_L1_error)
         __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
         __Pyx_GOTREF(__pyx_t_1);
         __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
       } else
       #endif
       {
-        __pyx_t_6 = PyTuple_New(1+1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 691, __pyx_L1_error)
+        __pyx_t_6 = PyTuple_New(1+1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 697, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_6);
         __Pyx_GIVEREF(__pyx_t_4); PyTuple_SET_ITEM(__pyx_t_6, 0, __pyx_t_4); __pyx_t_4 = NULL;
         __Pyx_GIVEREF(__pyx_t_5);
         PyTuple_SET_ITEM(__pyx_t_6, 0+1, __pyx_t_5);
         __pyx_t_5 = 0;
-        __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_6, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 691, __pyx_L1_error)
+        __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_6, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 697, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_1);
         __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
       }
@@ -7058,9 +7201,9 @@ static PyObject *__pyx_f_13async_session_12AsyncSession_parse_response(struct __
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_Raise(__pyx_t_1, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __PYX_ERR(0, 691, __pyx_L1_error)
+    __PYX_ERR(0, 697, __pyx_L1_error)
 
-    /* "async_session.pyx":689
+    /* "async_session.pyx":695
  *         cdef dict parsed = {}
  * 
  *         if not (response.errstat == SNMP_ERR_NOERROR):             # <<<<<<<<<<<<<<
@@ -7069,7 +7212,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession_parse_response(struct __
  */
   }
 
-  /* "async_session.pyx":693
+  /* "async_session.pyx":699
  *             raise SNMPError(msg % snmp_errstring(response.errstat))
  * 
  *         entry = response.variables             # <<<<<<<<<<<<<<
@@ -7079,7 +7222,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession_parse_response(struct __
   __pyx_t_7 = __pyx_v_response->variables;
   __pyx_v_entry = __pyx_t_7;
 
-  /* "async_session.pyx":694
+  /* "async_session.pyx":700
  * 
  *         entry = response.variables
  *         while (entry != NULL):             # <<<<<<<<<<<<<<
@@ -7090,59 +7233,59 @@ static PyObject *__pyx_f_13async_session_12AsyncSession_parse_response(struct __
     __pyx_t_2 = ((__pyx_v_entry != NULL) != 0);
     if (!__pyx_t_2) break;
 
-    /* "async_session.pyx":695
+    /* "async_session.pyx":701
  *         entry = response.variables
  *         while (entry != NULL):
  *             key = tuple([int(entry.name[i]) for i in range(entry.name_length)])             # <<<<<<<<<<<<<<
  *             value = self.parse_var(entry)
  *             parsed[key] = value
  */
-    __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 695, __pyx_L1_error)
+    __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 701, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __pyx_t_8 = __pyx_v_entry->name_length;
     for (__pyx_t_9 = 0; __pyx_t_9 < __pyx_t_8; __pyx_t_9+=1) {
       __pyx_v_i = __pyx_t_9;
-      __pyx_t_3 = __Pyx_PyInt_From_unsigned_long((__pyx_v_entry->name[__pyx_v_i])); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 695, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyInt_From_unsigned_long((__pyx_v_entry->name[__pyx_v_i])); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 701, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
-      __pyx_t_6 = PyTuple_New(1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 695, __pyx_L1_error)
+      __pyx_t_6 = PyTuple_New(1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 701, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
       __Pyx_GIVEREF(__pyx_t_3);
       PyTuple_SET_ITEM(__pyx_t_6, 0, __pyx_t_3);
       __pyx_t_3 = 0;
-      __pyx_t_3 = __Pyx_PyObject_Call(((PyObject *)(&PyInt_Type)), __pyx_t_6, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 695, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyObject_Call(((PyObject *)(&PyInt_Type)), __pyx_t_6, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 701, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-      if (unlikely(__Pyx_ListComp_Append(__pyx_t_1, (PyObject*)__pyx_t_3))) __PYX_ERR(0, 695, __pyx_L1_error)
+      if (unlikely(__Pyx_ListComp_Append(__pyx_t_1, (PyObject*)__pyx_t_3))) __PYX_ERR(0, 701, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     }
-    __pyx_t_3 = PyList_AsTuple(((PyObject*)__pyx_t_1)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 695, __pyx_L1_error)
+    __pyx_t_3 = PyList_AsTuple(((PyObject*)__pyx_t_1)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 701, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     __Pyx_XDECREF_SET(__pyx_v_key, ((PyObject*)__pyx_t_3));
     __pyx_t_3 = 0;
 
-    /* "async_session.pyx":696
+    /* "async_session.pyx":702
  *         while (entry != NULL):
  *             key = tuple([int(entry.name[i]) for i in range(entry.name_length)])
  *             value = self.parse_var(entry)             # <<<<<<<<<<<<<<
  *             parsed[key] = value
  *             entry = entry.next_variable
  */
-    __pyx_t_3 = __pyx_f_13async_session_12AsyncSession_parse_var(__pyx_v_self, __pyx_v_entry); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 696, __pyx_L1_error)
+    __pyx_t_3 = __pyx_f_13async_session_12AsyncSession_parse_var(__pyx_v_self, __pyx_v_entry); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 702, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_XDECREF_SET(__pyx_v_value, __pyx_t_3);
     __pyx_t_3 = 0;
 
-    /* "async_session.pyx":697
+    /* "async_session.pyx":703
  *             key = tuple([int(entry.name[i]) for i in range(entry.name_length)])
  *             value = self.parse_var(entry)
  *             parsed[key] = value             # <<<<<<<<<<<<<<
  *             entry = entry.next_variable
  * 
  */
-    if (unlikely(PyDict_SetItem(__pyx_v_parsed, __pyx_v_key, __pyx_v_value) < 0)) __PYX_ERR(0, 697, __pyx_L1_error)
+    if (unlikely(PyDict_SetItem(__pyx_v_parsed, __pyx_v_key, __pyx_v_value) < 0)) __PYX_ERR(0, 703, __pyx_L1_error)
 
-    /* "async_session.pyx":698
+    /* "async_session.pyx":704
  *             value = self.parse_var(entry)
  *             parsed[key] = value
  *             entry = entry.next_variable             # <<<<<<<<<<<<<<
@@ -7153,7 +7296,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession_parse_response(struct __
     __pyx_v_entry = __pyx_t_7;
   }
 
-  /* "async_session.pyx":700
+  /* "async_session.pyx":706
  *             entry = entry.next_variable
  * 
  *         return parsed             # <<<<<<<<<<<<<<
@@ -7165,8 +7308,8 @@ static PyObject *__pyx_f_13async_session_12AsyncSession_parse_response(struct __
   __pyx_r = __pyx_v_parsed;
   goto __pyx_L0;
 
-  /* "async_session.pyx":685
- *             raise Exception(msg % (py_oid, val, val_type))
+  /* "async_session.pyx":691
+ *             raise Exception(msg % (py_oid, val, val_type, snmp_api_errstring(rc)))
  * 
  *     cdef object parse_response(self, netsnmp_pdu* response):             # <<<<<<<<<<<<<<
  *         cdef netsnmp_variable_list* entry = NULL
@@ -7192,7 +7335,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession_parse_response(struct __
   return __pyx_r;
 }
 
-/* "async_session.pyx":702
+/* "async_session.pyx":708
  *         return parsed
  * 
  *     cdef object parse_var(self, netsnmp_variable_list* var):             # <<<<<<<<<<<<<<
@@ -7215,7 +7358,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession_parse_var(CYTHON_UNUSED 
   PyObject *__pyx_t_8 = NULL;
   __Pyx_RefNannySetupContext("parse_var", 0);
 
-  /* "async_session.pyx":703
+  /* "async_session.pyx":709
  * 
  *     cdef object parse_var(self, netsnmp_variable_list* var):
  *         if var.var_type == ASN_OCTET_STR:             # <<<<<<<<<<<<<<
@@ -7225,7 +7368,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession_parse_var(CYTHON_UNUSED 
   switch (__pyx_v_var->type) {
     case ASN_OCTET_STR:
 
-    /* "async_session.pyx":704
+    /* "async_session.pyx":710
  *     cdef object parse_var(self, netsnmp_variable_list* var):
  *         if var.var_type == ASN_OCTET_STR:
  *             return var.val.string[:var.val_len]             # <<<<<<<<<<<<<<
@@ -7233,13 +7376,13 @@ static PyObject *__pyx_f_13async_session_12AsyncSession_parse_var(CYTHON_UNUSED 
  *         elif var.var_type == ASN_INTEGER:
  */
     __Pyx_XDECREF(__pyx_r);
-    __pyx_t_1 = __Pyx_PyBytes_FromStringAndSize(((const char*)__pyx_v_var->val.string) + 0, __pyx_v_var->val_len - 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 704, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyBytes_FromStringAndSize(((const char*)__pyx_v_var->val.string) + 0, __pyx_v_var->val_len - 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 710, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __pyx_r = __pyx_t_1;
     __pyx_t_1 = 0;
     goto __pyx_L0;
 
-    /* "async_session.pyx":703
+    /* "async_session.pyx":709
  * 
  *     cdef object parse_var(self, netsnmp_variable_list* var):
  *         if var.var_type == ASN_OCTET_STR:             # <<<<<<<<<<<<<<
@@ -7248,7 +7391,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession_parse_var(CYTHON_UNUSED 
  */
     break;
 
-    /* "async_session.pyx":706
+    /* "async_session.pyx":712
  *             return var.val.string[:var.val_len]
  * 
  *         elif var.var_type == ASN_INTEGER:             # <<<<<<<<<<<<<<
@@ -7257,7 +7400,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession_parse_var(CYTHON_UNUSED 
  */
     case ASN_INTEGER:
 
-    /* "async_session.pyx":707
+    /* "async_session.pyx":713
  * 
  *         elif var.var_type == ASN_INTEGER:
  *             return deref(var.val.integer)             # <<<<<<<<<<<<<<
@@ -7265,13 +7408,13 @@ static PyObject *__pyx_f_13async_session_12AsyncSession_parse_var(CYTHON_UNUSED 
  *         elif var.var_type == ASN_NULL:
  */
     __Pyx_XDECREF(__pyx_r);
-    __pyx_t_1 = __Pyx_PyInt_From_long((*__pyx_v_var->val.integer)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 707, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyInt_From_long((*__pyx_v_var->val.integer)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 713, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __pyx_r = __pyx_t_1;
     __pyx_t_1 = 0;
     goto __pyx_L0;
 
-    /* "async_session.pyx":706
+    /* "async_session.pyx":712
  *             return var.val.string[:var.val_len]
  * 
  *         elif var.var_type == ASN_INTEGER:             # <<<<<<<<<<<<<<
@@ -7280,7 +7423,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession_parse_var(CYTHON_UNUSED 
  */
     break;
 
-    /* "async_session.pyx":709
+    /* "async_session.pyx":715
  *             return deref(var.val.integer)
  * 
  *         elif var.var_type == ASN_NULL:             # <<<<<<<<<<<<<<
@@ -7289,7 +7432,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession_parse_var(CYTHON_UNUSED 
  */
     case ASN_NULL:
 
-    /* "async_session.pyx":710
+    /* "async_session.pyx":716
  * 
  *         elif var.var_type == ASN_NULL:
  *             return None             # <<<<<<<<<<<<<<
@@ -7301,7 +7444,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession_parse_var(CYTHON_UNUSED 
     __pyx_r = Py_None;
     goto __pyx_L0;
 
-    /* "async_session.pyx":709
+    /* "async_session.pyx":715
  *             return deref(var.val.integer)
  * 
  *         elif var.var_type == ASN_NULL:             # <<<<<<<<<<<<<<
@@ -7310,7 +7453,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession_parse_var(CYTHON_UNUSED 
  */
     break;
 
-    /* "async_session.pyx":712
+    /* "async_session.pyx":718
  *             return None
  * 
  *         elif var.var_type == ASN_OBJECT_ID:             # <<<<<<<<<<<<<<
@@ -7319,7 +7462,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession_parse_var(CYTHON_UNUSED 
  */
     case ASN_OBJECT_ID:
 
-    /* "async_session.pyx":713
+    /* "async_session.pyx":719
  * 
  *         elif var.var_type == ASN_OBJECT_ID:
  *             return [var.val.objid[i] for i in range(var.val_len / cython.sizeof(oid))]             # <<<<<<<<<<<<<<
@@ -7327,26 +7470,26 @@ static PyObject *__pyx_f_13async_session_12AsyncSession_parse_var(CYTHON_UNUSED 
  *         elif var.var_type == ASN_BIT_STR:
  */
     __Pyx_XDECREF(__pyx_r);
-    __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 713, __pyx_L1_error)
+    __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 719, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __pyx_t_2 = (sizeof(__pyx_t_13async_session_oid));
     if (unlikely(__pyx_t_2 == 0)) {
       PyErr_SetString(PyExc_ZeroDivisionError, "integer division or modulo by zero");
-      __PYX_ERR(0, 713, __pyx_L1_error)
+      __PYX_ERR(0, 719, __pyx_L1_error)
     }
     __pyx_t_3 = (__pyx_v_var->val_len / __pyx_t_2);
     for (__pyx_t_2 = 0; __pyx_t_2 < __pyx_t_3; __pyx_t_2+=1) {
       __pyx_v_i = __pyx_t_2;
-      __pyx_t_4 = __Pyx_PyInt_From_unsigned_long((__pyx_v_var->val.objid[__pyx_v_i])); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 713, __pyx_L1_error)
+      __pyx_t_4 = __Pyx_PyInt_From_unsigned_long((__pyx_v_var->val.objid[__pyx_v_i])); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 719, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
-      if (unlikely(__Pyx_ListComp_Append(__pyx_t_1, (PyObject*)__pyx_t_4))) __PYX_ERR(0, 713, __pyx_L1_error)
+      if (unlikely(__Pyx_ListComp_Append(__pyx_t_1, (PyObject*)__pyx_t_4))) __PYX_ERR(0, 719, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     }
     __pyx_r = __pyx_t_1;
     __pyx_t_1 = 0;
     goto __pyx_L0;
 
-    /* "async_session.pyx":712
+    /* "async_session.pyx":718
  *             return None
  * 
  *         elif var.var_type == ASN_OBJECT_ID:             # <<<<<<<<<<<<<<
@@ -7355,7 +7498,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession_parse_var(CYTHON_UNUSED 
  */
     break;
 
-    /* "async_session.pyx":715
+    /* "async_session.pyx":721
  *             return [var.val.objid[i] for i in range(var.val_len / cython.sizeof(oid))]
  * 
  *         elif var.var_type == ASN_BIT_STR:             # <<<<<<<<<<<<<<
@@ -7364,7 +7507,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession_parse_var(CYTHON_UNUSED 
  */
     case ASN_BIT_STR:
 
-    /* "async_session.pyx":716
+    /* "async_session.pyx":722
  * 
  *         elif var.var_type == ASN_BIT_STR:
  *             return var.val.bitstring[:var.val_len]             # <<<<<<<<<<<<<<
@@ -7372,13 +7515,13 @@ static PyObject *__pyx_f_13async_session_12AsyncSession_parse_var(CYTHON_UNUSED 
  *         elif var.var_type == ASN_IPADDRESS:
  */
     __Pyx_XDECREF(__pyx_r);
-    __pyx_t_1 = __Pyx_PyBytes_FromStringAndSize(((const char*)__pyx_v_var->val.bitstring) + 0, __pyx_v_var->val_len - 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 716, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyBytes_FromStringAndSize(((const char*)__pyx_v_var->val.bitstring) + 0, __pyx_v_var->val_len - 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 722, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __pyx_r = __pyx_t_1;
     __pyx_t_1 = 0;
     goto __pyx_L0;
 
-    /* "async_session.pyx":715
+    /* "async_session.pyx":721
  *             return [var.val.objid[i] for i in range(var.val_len / cython.sizeof(oid))]
  * 
  *         elif var.var_type == ASN_BIT_STR:             # <<<<<<<<<<<<<<
@@ -7387,7 +7530,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession_parse_var(CYTHON_UNUSED 
  */
     break;
 
-    /* "async_session.pyx":718
+    /* "async_session.pyx":724
  *             return var.val.bitstring[:var.val_len]
  * 
  *         elif var.var_type == ASN_IPADDRESS:             # <<<<<<<<<<<<<<
@@ -7396,7 +7539,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession_parse_var(CYTHON_UNUSED 
  */
     case ASN_IPADDRESS:
 
-    /* "async_session.pyx":719
+    /* "async_session.pyx":725
  * 
  *         elif var.var_type == ASN_IPADDRESS:
  *             return '.'.join([str(ord(x)) for x in var.val.bitstring[:4]])             # <<<<<<<<<<<<<<
@@ -7404,13 +7547,13 @@ static PyObject *__pyx_f_13async_session_12AsyncSession_parse_var(CYTHON_UNUSED 
  *         elif var.var_type == ASN_COUNTER:
  */
     __Pyx_XDECREF(__pyx_r);
-    __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 719, __pyx_L1_error)
+    __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 725, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_4 = __Pyx_PyBytes_FromStringAndSize(((const char*)__pyx_v_var->val.bitstring) + 0, 4 - 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 719, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyBytes_FromStringAndSize(((const char*)__pyx_v_var->val.bitstring) + 0, 4 - 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 725, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_5 = PyObject_GetIter(__pyx_t_4); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 719, __pyx_L1_error)
+    __pyx_t_5 = PyObject_GetIter(__pyx_t_4); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 725, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
-    __pyx_t_6 = Py_TYPE(__pyx_t_5)->tp_iternext; if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 719, __pyx_L1_error)
+    __pyx_t_6 = Py_TYPE(__pyx_t_5)->tp_iternext; if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 725, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     for (;;) {
       {
@@ -7419,7 +7562,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession_parse_var(CYTHON_UNUSED 
           PyObject* exc_type = PyErr_Occurred();
           if (exc_type) {
             if (likely(exc_type == PyExc_StopIteration || PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-            else __PYX_ERR(0, 719, __pyx_L1_error)
+            else __PYX_ERR(0, 725, __pyx_L1_error)
           }
           break;
         }
@@ -7427,29 +7570,29 @@ static PyObject *__pyx_f_13async_session_12AsyncSession_parse_var(CYTHON_UNUSED 
       }
       __Pyx_XDECREF_SET(__pyx_v_x, __pyx_t_4);
       __pyx_t_4 = 0;
-      __pyx_t_7 = __Pyx_PyObject_Ord(__pyx_v_x); if (unlikely(__pyx_t_7 == (long)(Py_UCS4)-1)) __PYX_ERR(0, 719, __pyx_L1_error)
-      __pyx_t_4 = __Pyx_PyInt_From_long(__pyx_t_7); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 719, __pyx_L1_error)
+      __pyx_t_7 = __Pyx_PyObject_Ord(__pyx_v_x); if (unlikely(__pyx_t_7 == (long)(Py_UCS4)-1)) __PYX_ERR(0, 725, __pyx_L1_error)
+      __pyx_t_4 = __Pyx_PyInt_From_long(__pyx_t_7); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 725, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
-      __pyx_t_8 = PyTuple_New(1); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 719, __pyx_L1_error)
+      __pyx_t_8 = PyTuple_New(1); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 725, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_8);
       __Pyx_GIVEREF(__pyx_t_4);
       PyTuple_SET_ITEM(__pyx_t_8, 0, __pyx_t_4);
       __pyx_t_4 = 0;
-      __pyx_t_4 = __Pyx_PyObject_Call(((PyObject *)(&PyString_Type)), __pyx_t_8, NULL); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 719, __pyx_L1_error)
+      __pyx_t_4 = __Pyx_PyObject_Call(((PyObject *)(&PyString_Type)), __pyx_t_8, NULL); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 725, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-      if (unlikely(__Pyx_ListComp_Append(__pyx_t_1, (PyObject*)__pyx_t_4))) __PYX_ERR(0, 719, __pyx_L1_error)
+      if (unlikely(__Pyx_ListComp_Append(__pyx_t_1, (PyObject*)__pyx_t_4))) __PYX_ERR(0, 725, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     }
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    __pyx_t_5 = __Pyx_PyString_Join(__pyx_kp_s__4, __pyx_t_1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 719, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyString_Join(__pyx_kp_s__4, __pyx_t_1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 725, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     __pyx_r = __pyx_t_5;
     __pyx_t_5 = 0;
     goto __pyx_L0;
 
-    /* "async_session.pyx":718
+    /* "async_session.pyx":724
  *             return var.val.bitstring[:var.val_len]
  * 
  *         elif var.var_type == ASN_IPADDRESS:             # <<<<<<<<<<<<<<
@@ -7458,7 +7601,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession_parse_var(CYTHON_UNUSED 
  */
     break;
 
-    /* "async_session.pyx":721
+    /* "async_session.pyx":727
  *             return '.'.join([str(ord(x)) for x in var.val.bitstring[:4]])
  * 
  *         elif var.var_type == ASN_COUNTER:             # <<<<<<<<<<<<<<
@@ -7467,76 +7610,12 @@ static PyObject *__pyx_f_13async_session_12AsyncSession_parse_var(CYTHON_UNUSED 
  */
     case ASN_COUNTER:
 
-    /* "async_session.pyx":722
+    /* "async_session.pyx":728
  * 
  *         elif var.var_type == ASN_COUNTER:
  *             return deref(var.val.integer)             # <<<<<<<<<<<<<<
  * 
  *         elif var.var_type == ASN_GAUGE:
- */
-    __Pyx_XDECREF(__pyx_r);
-    __pyx_t_5 = __Pyx_PyInt_From_long((*__pyx_v_var->val.integer)); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 722, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_5);
-    __pyx_r = __pyx_t_5;
-    __pyx_t_5 = 0;
-    goto __pyx_L0;
-
-    /* "async_session.pyx":721
- *             return '.'.join([str(ord(x)) for x in var.val.bitstring[:4]])
- * 
- *         elif var.var_type == ASN_COUNTER:             # <<<<<<<<<<<<<<
- *             return deref(var.val.integer)
- * 
- */
-    break;
-
-    /* "async_session.pyx":724
- *             return deref(var.val.integer)
- * 
- *         elif var.var_type == ASN_GAUGE:             # <<<<<<<<<<<<<<
- *             return deref(var.val.integer)
- * 
- */
-    case ASN_GAUGE:
-
-    /* "async_session.pyx":725
- * 
- *         elif var.var_type == ASN_GAUGE:
- *             return deref(var.val.integer)             # <<<<<<<<<<<<<<
- * 
- *         elif var.var_type == ASN_TIMETICKS:
- */
-    __Pyx_XDECREF(__pyx_r);
-    __pyx_t_5 = __Pyx_PyInt_From_long((*__pyx_v_var->val.integer)); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 725, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_5);
-    __pyx_r = __pyx_t_5;
-    __pyx_t_5 = 0;
-    goto __pyx_L0;
-
-    /* "async_session.pyx":724
- *             return deref(var.val.integer)
- * 
- *         elif var.var_type == ASN_GAUGE:             # <<<<<<<<<<<<<<
- *             return deref(var.val.integer)
- * 
- */
-    break;
-
-    /* "async_session.pyx":727
- *             return deref(var.val.integer)
- * 
- *         elif var.var_type == ASN_TIMETICKS:             # <<<<<<<<<<<<<<
- *             return deref(var.val.integer)
- * 
- */
-    case ASN_TIMETICKS:
-
-    /* "async_session.pyx":728
- * 
- *         elif var.var_type == ASN_TIMETICKS:
- *             return deref(var.val.integer)             # <<<<<<<<<<<<<<
- * 
- *         elif var.var_type == ASN_COUNTER64:
  */
     __Pyx_XDECREF(__pyx_r);
     __pyx_t_5 = __Pyx_PyInt_From_long((*__pyx_v_var->val.integer)); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 728, __pyx_L1_error)
@@ -7546,6 +7625,70 @@ static PyObject *__pyx_f_13async_session_12AsyncSession_parse_var(CYTHON_UNUSED 
     goto __pyx_L0;
 
     /* "async_session.pyx":727
+ *             return '.'.join([str(ord(x)) for x in var.val.bitstring[:4]])
+ * 
+ *         elif var.var_type == ASN_COUNTER:             # <<<<<<<<<<<<<<
+ *             return deref(var.val.integer)
+ * 
+ */
+    break;
+
+    /* "async_session.pyx":730
+ *             return deref(var.val.integer)
+ * 
+ *         elif var.var_type == ASN_GAUGE:             # <<<<<<<<<<<<<<
+ *             return deref(var.val.integer)
+ * 
+ */
+    case ASN_GAUGE:
+
+    /* "async_session.pyx":731
+ * 
+ *         elif var.var_type == ASN_GAUGE:
+ *             return deref(var.val.integer)             # <<<<<<<<<<<<<<
+ * 
+ *         elif var.var_type == ASN_TIMETICKS:
+ */
+    __Pyx_XDECREF(__pyx_r);
+    __pyx_t_5 = __Pyx_PyInt_From_long((*__pyx_v_var->val.integer)); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 731, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_5);
+    __pyx_r = __pyx_t_5;
+    __pyx_t_5 = 0;
+    goto __pyx_L0;
+
+    /* "async_session.pyx":730
+ *             return deref(var.val.integer)
+ * 
+ *         elif var.var_type == ASN_GAUGE:             # <<<<<<<<<<<<<<
+ *             return deref(var.val.integer)
+ * 
+ */
+    break;
+
+    /* "async_session.pyx":733
+ *             return deref(var.val.integer)
+ * 
+ *         elif var.var_type == ASN_TIMETICKS:             # <<<<<<<<<<<<<<
+ *             return deref(var.val.integer)
+ * 
+ */
+    case ASN_TIMETICKS:
+
+    /* "async_session.pyx":734
+ * 
+ *         elif var.var_type == ASN_TIMETICKS:
+ *             return deref(var.val.integer)             # <<<<<<<<<<<<<<
+ * 
+ *         elif var.var_type == ASN_COUNTER64:
+ */
+    __Pyx_XDECREF(__pyx_r);
+    __pyx_t_5 = __Pyx_PyInt_From_long((*__pyx_v_var->val.integer)); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 734, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_5);
+    __pyx_r = __pyx_t_5;
+    __pyx_t_5 = 0;
+    goto __pyx_L0;
+
+    /* "async_session.pyx":733
  *             return deref(var.val.integer)
  * 
  *         elif var.var_type == ASN_TIMETICKS:             # <<<<<<<<<<<<<<
@@ -7554,7 +7697,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession_parse_var(CYTHON_UNUSED 
  */
     break;
 
-    /* "async_session.pyx":730
+    /* "async_session.pyx":736
  *             return deref(var.val.integer)
  * 
  *         elif var.var_type == ASN_COUNTER64:             # <<<<<<<<<<<<<<
@@ -7563,7 +7706,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession_parse_var(CYTHON_UNUSED 
  */
     case ASN_COUNTER64:
 
-    /* "async_session.pyx":731
+    /* "async_session.pyx":737
  * 
  *         elif var.var_type == ASN_COUNTER64:
  *             return (long(var.val.counter64.high) << 32L) + var.val.counter64.low             # <<<<<<<<<<<<<<
@@ -7571,22 +7714,22 @@ static PyObject *__pyx_f_13async_session_12AsyncSession_parse_var(CYTHON_UNUSED 
  *         elif var.var_type == ASN_APP_FLOAT:
  */
     __Pyx_XDECREF(__pyx_r);
-    __pyx_t_5 = __Pyx_PyInt_From_unsigned_long(__pyx_v_var->val.counter64->high); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 731, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyInt_From_unsigned_long(__pyx_v_var->val.counter64->high); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 737, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
-    __pyx_t_1 = PyTuple_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 731, __pyx_L1_error)
+    __pyx_t_1 = PyTuple_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 737, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_GIVEREF(__pyx_t_5);
     PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_t_5);
     __pyx_t_5 = 0;
-    __pyx_t_5 = __Pyx_PyObject_Call(((PyObject *)(&PyLong_Type)), __pyx_t_1, NULL); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 731, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyObject_Call(((PyObject *)(&PyLong_Type)), __pyx_t_1, NULL); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 737, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __pyx_t_1 = PyNumber_Lshift(__pyx_t_5, __pyx_int_32L); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 731, __pyx_L1_error)
+    __pyx_t_1 = PyNumber_Lshift(__pyx_t_5, __pyx_int_32L); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 737, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    __pyx_t_5 = __Pyx_PyInt_From_unsigned_long(__pyx_v_var->val.counter64->low); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 731, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyInt_From_unsigned_long(__pyx_v_var->val.counter64->low); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 737, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
-    __pyx_t_4 = PyNumber_Add(__pyx_t_1, __pyx_t_5); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 731, __pyx_L1_error)
+    __pyx_t_4 = PyNumber_Add(__pyx_t_1, __pyx_t_5); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 737, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
@@ -7594,7 +7737,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession_parse_var(CYTHON_UNUSED 
     __pyx_t_4 = 0;
     goto __pyx_L0;
 
-    /* "async_session.pyx":730
+    /* "async_session.pyx":736
  *             return deref(var.val.integer)
  * 
  *         elif var.var_type == ASN_COUNTER64:             # <<<<<<<<<<<<<<
@@ -7603,7 +7746,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession_parse_var(CYTHON_UNUSED 
  */
     break;
 
-    /* "async_session.pyx":733
+    /* "async_session.pyx":739
  *             return (long(var.val.counter64.high) << 32L) + var.val.counter64.low
  * 
  *         elif var.var_type == ASN_APP_FLOAT:             # <<<<<<<<<<<<<<
@@ -7612,7 +7755,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession_parse_var(CYTHON_UNUSED 
  */
     case ASN_APP_FLOAT:
 
-    /* "async_session.pyx":734
+    /* "async_session.pyx":740
  * 
  *         elif var.var_type == ASN_APP_FLOAT:
  *             return deref(var.val.floatVal)             # <<<<<<<<<<<<<<
@@ -7620,13 +7763,13 @@ static PyObject *__pyx_f_13async_session_12AsyncSession_parse_var(CYTHON_UNUSED 
  *         elif var.var_type == ASN_APP_DOUBLE:
  */
     __Pyx_XDECREF(__pyx_r);
-    __pyx_t_4 = PyFloat_FromDouble((*__pyx_v_var->val.floatVal)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 734, __pyx_L1_error)
+    __pyx_t_4 = PyFloat_FromDouble((*__pyx_v_var->val.floatVal)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 740, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __pyx_r = __pyx_t_4;
     __pyx_t_4 = 0;
     goto __pyx_L0;
 
-    /* "async_session.pyx":733
+    /* "async_session.pyx":739
  *             return (long(var.val.counter64.high) << 32L) + var.val.counter64.low
  * 
  *         elif var.var_type == ASN_APP_FLOAT:             # <<<<<<<<<<<<<<
@@ -7635,7 +7778,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession_parse_var(CYTHON_UNUSED 
  */
     break;
 
-    /* "async_session.pyx":736
+    /* "async_session.pyx":742
  *             return deref(var.val.floatVal)
  * 
  *         elif var.var_type == ASN_APP_DOUBLE:             # <<<<<<<<<<<<<<
@@ -7644,7 +7787,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession_parse_var(CYTHON_UNUSED 
  */
     case ASN_APP_DOUBLE:
 
-    /* "async_session.pyx":737
+    /* "async_session.pyx":743
  * 
  *         elif var.var_type == ASN_APP_DOUBLE:
  *             return deref(var.val.doubleVal)             # <<<<<<<<<<<<<<
@@ -7652,13 +7795,13 @@ static PyObject *__pyx_f_13async_session_12AsyncSession_parse_var(CYTHON_UNUSED 
  *         elif var.var_type == SNMP_ENDOFMIBVIEW:
  */
     __Pyx_XDECREF(__pyx_r);
-    __pyx_t_4 = PyFloat_FromDouble((*__pyx_v_var->val.doubleVal)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 737, __pyx_L1_error)
+    __pyx_t_4 = PyFloat_FromDouble((*__pyx_v_var->val.doubleVal)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 743, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __pyx_r = __pyx_t_4;
     __pyx_t_4 = 0;
     goto __pyx_L0;
 
-    /* "async_session.pyx":736
+    /* "async_session.pyx":742
  *             return deref(var.val.floatVal)
  * 
  *         elif var.var_type == ASN_APP_DOUBLE:             # <<<<<<<<<<<<<<
@@ -7667,7 +7810,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession_parse_var(CYTHON_UNUSED 
  */
     break;
 
-    /* "async_session.pyx":739
+    /* "async_session.pyx":745
  *             return deref(var.val.doubleVal)
  * 
  *         elif var.var_type == SNMP_ENDOFMIBVIEW:             # <<<<<<<<<<<<<<
@@ -7676,7 +7819,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession_parse_var(CYTHON_UNUSED 
  */
     case SNMP_ENDOFMIBVIEW:
 
-    /* "async_session.pyx":740
+    /* "async_session.pyx":746
  * 
  *         elif var.var_type == SNMP_ENDOFMIBVIEW:
  *             return END_OF_MIB             # <<<<<<<<<<<<<<
@@ -7684,13 +7827,13 @@ static PyObject *__pyx_f_13async_session_12AsyncSession_parse_var(CYTHON_UNUSED 
  *         else:
  */
     __Pyx_XDECREF(__pyx_r);
-    __pyx_t_4 = __Pyx_GetModuleGlobalName(__pyx_n_s_END_OF_MIB_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 740, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_GetModuleGlobalName(__pyx_n_s_END_OF_MIB_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 746, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __pyx_r = __pyx_t_4;
     __pyx_t_4 = 0;
     goto __pyx_L0;
 
-    /* "async_session.pyx":739
+    /* "async_session.pyx":745
  *             return deref(var.val.doubleVal)
  * 
  *         elif var.var_type == SNMP_ENDOFMIBVIEW:             # <<<<<<<<<<<<<<
@@ -7700,7 +7843,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession_parse_var(CYTHON_UNUSED 
     break;
     default:
 
-    /* "async_session.pyx":743
+    /* "async_session.pyx":749
  * 
  *         else:
  *             return None             # <<<<<<<<<<<<<<
@@ -7714,7 +7857,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession_parse_var(CYTHON_UNUSED 
     break;
   }
 
-  /* "async_session.pyx":702
+  /* "async_session.pyx":708
  *         return parsed
  * 
  *     cdef object parse_var(self, netsnmp_variable_list* var):             # <<<<<<<<<<<<<<
@@ -7737,7 +7880,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession_parse_var(CYTHON_UNUSED 
   return __pyx_r;
 }
 
-/* "async_session.pyx":746
+/* "async_session.pyx":752
  * 
  * 
  * cdef object binary_to_hex_pystring(u_char* data, size_t data_size):             # <<<<<<<<<<<<<<
@@ -7762,7 +7905,7 @@ static PyObject *__pyx_f_13async_session_binary_to_hex_pystring(__pyx_t_13async_
   PyObject *__pyx_t_10 = NULL;
   __Pyx_RefNannySetupContext("binary_to_hex_pystring", 0);
 
-  /* "async_session.pyx":748
+  /* "async_session.pyx":754
  * cdef object binary_to_hex_pystring(u_char* data, size_t data_size):
  *     cdef char* output
  *     cdef u_int hex_len = binary_to_hex(data, data_size, cython.address(output))             # <<<<<<<<<<<<<<
@@ -7771,7 +7914,7 @@ static PyObject *__pyx_f_13async_session_binary_to_hex_pystring(__pyx_t_13async_
  */
   __pyx_v_hex_len = binary_to_hex(__pyx_v_data, __pyx_v_data_size, (&__pyx_v_output));
 
-  /* "async_session.pyx":749
+  /* "async_session.pyx":755
  *     cdef char* output
  *     cdef u_int hex_len = binary_to_hex(data, data_size, cython.address(output))
  *     try:             # <<<<<<<<<<<<<<
@@ -7780,7 +7923,7 @@ static PyObject *__pyx_f_13async_session_binary_to_hex_pystring(__pyx_t_13async_
  */
   /*try:*/ {
 
-    /* "async_session.pyx":750
+    /* "async_session.pyx":756
  *     cdef u_int hex_len = binary_to_hex(data, data_size, cython.address(output))
  *     try:
  *         return output[:hex_len]             # <<<<<<<<<<<<<<
@@ -7788,17 +7931,19 @@ static PyObject *__pyx_f_13async_session_binary_to_hex_pystring(__pyx_t_13async_
  *         libc_free(output)
  */
     __Pyx_XDECREF(__pyx_r);
-    __pyx_t_1 = __Pyx_PyBytes_FromStringAndSize(__pyx_v_output + 0, __pyx_v_hex_len - 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 750, __pyx_L4_error)
+    __pyx_t_1 = __Pyx_PyBytes_FromStringAndSize(__pyx_v_output + 0, __pyx_v_hex_len - 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 756, __pyx_L4_error)
     __Pyx_GOTREF(__pyx_t_1);
     __pyx_r = __pyx_t_1;
     __pyx_t_1 = 0;
     goto __pyx_L3_return;
   }
 
-  /* "async_session.pyx":752
+  /* "async_session.pyx":758
  *         return output[:hex_len]
  *     finally:
  *         libc_free(output)             # <<<<<<<<<<<<<<
+ * 
+ * 
  */
   /*finally:*/ {
     /*exception exit:*/{
@@ -7844,7 +7989,7 @@ static PyObject *__pyx_f_13async_session_binary_to_hex_pystring(__pyx_t_13async_
     }
   }
 
-  /* "async_session.pyx":746
+  /* "async_session.pyx":752
  * 
  * 
  * cdef object binary_to_hex_pystring(u_char* data, size_t data_size):             # <<<<<<<<<<<<<<
@@ -7858,6 +8003,439 @@ static PyObject *__pyx_f_13async_session_binary_to_hex_pystring(__pyx_t_13async_
   __Pyx_AddTraceback("async_session.binary_to_hex_pystring", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = 0;
   __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "async_session.pyx":767
+ *     cdef object session
+ * 
+ *     def __cinit__(self, AsyncSession other_session, args):             # <<<<<<<<<<<<<<
+ *         new_args = other_session.args.copy()
+ *         new_args.update(args)
+ */
+
+/* Python wrapper */
+static int __pyx_pw_13async_session_12CloneSession_1__cinit__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static int __pyx_pw_13async_session_12CloneSession_1__cinit__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+  struct __pyx_obj_13async_session_AsyncSession *__pyx_v_other_session = 0;
+  PyObject *__pyx_v_args = 0;
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__cinit__ (wrapper)", 0);
+  {
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_other_session,&__pyx_n_s_args,0};
+    PyObject* values[2] = {0,0};
+    if (unlikely(__pyx_kwds)) {
+      Py_ssize_t kw_args;
+      const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
+      switch (pos_args) {
+        case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+        case  1: values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+        case  0: break;
+        default: goto __pyx_L5_argtuple_error;
+      }
+      kw_args = PyDict_Size(__pyx_kwds);
+      switch (pos_args) {
+        case  0:
+        if (likely((values[0] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_other_session)) != 0)) kw_args--;
+        else goto __pyx_L5_argtuple_error;
+        case  1:
+        if (likely((values[1] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_args)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 2, 2, 1); __PYX_ERR(0, 767, __pyx_L3_error)
+        }
+      }
+      if (unlikely(kw_args > 0)) {
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__cinit__") < 0)) __PYX_ERR(0, 767, __pyx_L3_error)
+      }
+    } else if (PyTuple_GET_SIZE(__pyx_args) != 2) {
+      goto __pyx_L5_argtuple_error;
+    } else {
+      values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+      values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+    }
+    __pyx_v_other_session = ((struct __pyx_obj_13async_session_AsyncSession *)values[0]);
+    __pyx_v_args = values[1];
+  }
+  goto __pyx_L4_argument_unpacking_done;
+  __pyx_L5_argtuple_error:;
+  __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 767, __pyx_L3_error)
+  __pyx_L3_error:;
+  __Pyx_AddTraceback("async_session.CloneSession.__cinit__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_RefNannyFinishContext();
+  return -1;
+  __pyx_L4_argument_unpacking_done:;
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_other_session), __pyx_ptype_13async_session_AsyncSession, 1, "other_session", 0))) __PYX_ERR(0, 767, __pyx_L1_error)
+  __pyx_r = __pyx_pf_13async_session_12CloneSession___cinit__(((struct __pyx_obj_13async_session_CloneSession *)__pyx_v_self), __pyx_v_other_session, __pyx_v_args);
+
+  /* function exit code */
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __pyx_r = -1;
+  __pyx_L0:;
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_pf_13async_session_12CloneSession___cinit__(struct __pyx_obj_13async_session_CloneSession *__pyx_v_self, struct __pyx_obj_13async_session_AsyncSession *__pyx_v_other_session, PyObject *__pyx_v_args) {
+  PyObject *__pyx_v_new_args = NULL;
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  PyObject *__pyx_t_2 = NULL;
+  PyObject *__pyx_t_3 = NULL;
+  PyObject *__pyx_t_4 = NULL;
+  __Pyx_RefNannySetupContext("__cinit__", 0);
+
+  /* "async_session.pyx":768
+ * 
+ *     def __cinit__(self, AsyncSession other_session, args):
+ *         new_args = other_session.args.copy()             # <<<<<<<<<<<<<<
+ *         new_args.update(args)
+ * 
+ */
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_other_session->args, __pyx_n_s_copy); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 768, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_3 = NULL;
+  if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
+    __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_2);
+    if (likely(__pyx_t_3)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
+      __Pyx_INCREF(__pyx_t_3);
+      __Pyx_INCREF(function);
+      __Pyx_DECREF_SET(__pyx_t_2, function);
+    }
+  }
+  if (__pyx_t_3) {
+    __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 768, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  } else {
+    __pyx_t_1 = __Pyx_PyObject_CallNoArg(__pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 768, __pyx_L1_error)
+  }
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_v_new_args = __pyx_t_1;
+  __pyx_t_1 = 0;
+
+  /* "async_session.pyx":769
+ *     def __cinit__(self, AsyncSession other_session, args):
+ *         new_args = other_session.args.copy()
+ *         new_args.update(args)             # <<<<<<<<<<<<<<
+ * 
+ *         self.args = new_args
+ */
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_new_args, __pyx_n_s_update); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 769, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_3 = NULL;
+  if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
+    __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_2);
+    if (likely(__pyx_t_3)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
+      __Pyx_INCREF(__pyx_t_3);
+      __Pyx_INCREF(function);
+      __Pyx_DECREF_SET(__pyx_t_2, function);
+    }
+  }
+  if (!__pyx_t_3) {
+    __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_v_args); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 769, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+  } else {
+    #if CYTHON_FAST_PYCALL
+    if (PyFunction_Check(__pyx_t_2)) {
+      PyObject *__pyx_temp[2] = {__pyx_t_3, __pyx_v_args};
+      __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 769, __pyx_L1_error)
+      __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
+      __Pyx_GOTREF(__pyx_t_1);
+    } else
+    #endif
+    #if CYTHON_FAST_PYCCALL
+    if (__Pyx_PyFastCFunction_Check(__pyx_t_2)) {
+      PyObject *__pyx_temp[2] = {__pyx_t_3, __pyx_v_args};
+      __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 769, __pyx_L1_error)
+      __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
+      __Pyx_GOTREF(__pyx_t_1);
+    } else
+    #endif
+    {
+      __pyx_t_4 = PyTuple_New(1+1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 769, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_4);
+      __Pyx_GIVEREF(__pyx_t_3); PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_3); __pyx_t_3 = NULL;
+      __Pyx_INCREF(__pyx_v_args);
+      __Pyx_GIVEREF(__pyx_v_args);
+      PyTuple_SET_ITEM(__pyx_t_4, 0+1, __pyx_v_args);
+      __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_4, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 769, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_1);
+      __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+    }
+  }
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+
+  /* "async_session.pyx":771
+ *         new_args.update(args)
+ * 
+ *         self.args = new_args             # <<<<<<<<<<<<<<
+ *         self.session = None
+ * 
+ */
+  __Pyx_INCREF(__pyx_v_new_args);
+  __Pyx_GIVEREF(__pyx_v_new_args);
+  __Pyx_GOTREF(__pyx_v_self->args);
+  __Pyx_DECREF(__pyx_v_self->args);
+  __pyx_v_self->args = __pyx_v_new_args;
+
+  /* "async_session.pyx":772
+ * 
+ *         self.args = new_args
+ *         self.session = None             # <<<<<<<<<<<<<<
+ * 
+ *     def __enter__(self):
+ */
+  __Pyx_INCREF(Py_None);
+  __Pyx_GIVEREF(Py_None);
+  __Pyx_GOTREF(__pyx_v_self->session);
+  __Pyx_DECREF(__pyx_v_self->session);
+  __pyx_v_self->session = Py_None;
+
+  /* "async_session.pyx":767
+ *     cdef object session
+ * 
+ *     def __cinit__(self, AsyncSession other_session, args):             # <<<<<<<<<<<<<<
+ *         new_args = other_session.args.copy()
+ *         new_args.update(args)
+ */
+
+  /* function exit code */
+  __pyx_r = 0;
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_XDECREF(__pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_3);
+  __Pyx_XDECREF(__pyx_t_4);
+  __Pyx_AddTraceback("async_session.CloneSession.__cinit__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = -1;
+  __pyx_L0:;
+  __Pyx_XDECREF(__pyx_v_new_args);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "async_session.pyx":774
+ *         self.session = None
+ * 
+ *     def __enter__(self):             # <<<<<<<<<<<<<<
+ *         self.session = AsyncSession(self.args)
+ *         self.session.open_session()
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_13async_session_12CloneSession_3__enter__(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
+static PyObject *__pyx_pw_13async_session_12CloneSession_3__enter__(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__enter__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_13async_session_12CloneSession_2__enter__(((struct __pyx_obj_13async_session_CloneSession *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_13async_session_12CloneSession_2__enter__(struct __pyx_obj_13async_session_CloneSession *__pyx_v_self) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  PyObject *__pyx_t_2 = NULL;
+  PyObject *__pyx_t_3 = NULL;
+  __Pyx_RefNannySetupContext("__enter__", 0);
+
+  /* "async_session.pyx":775
+ * 
+ *     def __enter__(self):
+ *         self.session = AsyncSession(self.args)             # <<<<<<<<<<<<<<
+ *         self.session.open_session()
+ *         return self.session
+ */
+  __pyx_t_1 = PyTuple_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 775, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_INCREF(__pyx_v_self->args);
+  __Pyx_GIVEREF(__pyx_v_self->args);
+  PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_v_self->args);
+  __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)__pyx_ptype_13async_session_AsyncSession), __pyx_t_1, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 775, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __Pyx_GIVEREF(__pyx_t_2);
+  __Pyx_GOTREF(__pyx_v_self->session);
+  __Pyx_DECREF(__pyx_v_self->session);
+  __pyx_v_self->session = __pyx_t_2;
+  __pyx_t_2 = 0;
+
+  /* "async_session.pyx":776
+ *     def __enter__(self):
+ *         self.session = AsyncSession(self.args)
+ *         self.session.open_session()             # <<<<<<<<<<<<<<
+ *         return self.session
+ * 
+ */
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self->session, __pyx_n_s_open_session); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 776, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_3 = NULL;
+  if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_1))) {
+    __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_1);
+    if (likely(__pyx_t_3)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_1);
+      __Pyx_INCREF(__pyx_t_3);
+      __Pyx_INCREF(function);
+      __Pyx_DECREF_SET(__pyx_t_1, function);
+    }
+  }
+  if (__pyx_t_3) {
+    __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_1, __pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 776, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  } else {
+    __pyx_t_2 = __Pyx_PyObject_CallNoArg(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 776, __pyx_L1_error)
+  }
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "async_session.pyx":777
+ *         self.session = AsyncSession(self.args)
+ *         self.session.open_session()
+ *         return self.session             # <<<<<<<<<<<<<<
+ * 
+ *     def __exit__(self, exc_type, exc_value, traceback):
+ */
+  __Pyx_XDECREF(__pyx_r);
+  __Pyx_INCREF(__pyx_v_self->session);
+  __pyx_r = __pyx_v_self->session;
+  goto __pyx_L0;
+
+  /* "async_session.pyx":774
+ *         self.session = None
+ * 
+ *     def __enter__(self):             # <<<<<<<<<<<<<<
+ *         self.session = AsyncSession(self.args)
+ *         self.session.open_session()
+ */
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_XDECREF(__pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_3);
+  __Pyx_AddTraceback("async_session.CloneSession.__enter__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "async_session.pyx":779
+ *         return self.session
+ * 
+ *     def __exit__(self, exc_type, exc_value, traceback):             # <<<<<<<<<<<<<<
+ *         # Close is triggered via garbage collector.
+ *         self.session = None
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_13async_session_12CloneSession_5__exit__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyObject *__pyx_pw_13async_session_12CloneSession_5__exit__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+  CYTHON_UNUSED PyObject *__pyx_v_exc_type = 0;
+  CYTHON_UNUSED PyObject *__pyx_v_exc_value = 0;
+  CYTHON_UNUSED PyObject *__pyx_v_traceback = 0;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__exit__ (wrapper)", 0);
+  {
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_exc_type,&__pyx_n_s_exc_value,&__pyx_n_s_traceback,0};
+    PyObject* values[3] = {0,0,0};
+    if (unlikely(__pyx_kwds)) {
+      Py_ssize_t kw_args;
+      const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
+      switch (pos_args) {
+        case  3: values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
+        case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+        case  1: values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+        case  0: break;
+        default: goto __pyx_L5_argtuple_error;
+      }
+      kw_args = PyDict_Size(__pyx_kwds);
+      switch (pos_args) {
+        case  0:
+        if (likely((values[0] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_exc_type)) != 0)) kw_args--;
+        else goto __pyx_L5_argtuple_error;
+        case  1:
+        if (likely((values[1] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_exc_value)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("__exit__", 1, 3, 3, 1); __PYX_ERR(0, 779, __pyx_L3_error)
+        }
+        case  2:
+        if (likely((values[2] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_traceback)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("__exit__", 1, 3, 3, 2); __PYX_ERR(0, 779, __pyx_L3_error)
+        }
+      }
+      if (unlikely(kw_args > 0)) {
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__exit__") < 0)) __PYX_ERR(0, 779, __pyx_L3_error)
+      }
+    } else if (PyTuple_GET_SIZE(__pyx_args) != 3) {
+      goto __pyx_L5_argtuple_error;
+    } else {
+      values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+      values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+      values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
+    }
+    __pyx_v_exc_type = values[0];
+    __pyx_v_exc_value = values[1];
+    __pyx_v_traceback = values[2];
+  }
+  goto __pyx_L4_argument_unpacking_done;
+  __pyx_L5_argtuple_error:;
+  __Pyx_RaiseArgtupleInvalid("__exit__", 1, 3, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 779, __pyx_L3_error)
+  __pyx_L3_error:;
+  __Pyx_AddTraceback("async_session.CloneSession.__exit__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_RefNannyFinishContext();
+  return NULL;
+  __pyx_L4_argument_unpacking_done:;
+  __pyx_r = __pyx_pf_13async_session_12CloneSession_4__exit__(((struct __pyx_obj_13async_session_CloneSession *)__pyx_v_self), __pyx_v_exc_type, __pyx_v_exc_value, __pyx_v_traceback);
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_13async_session_12CloneSession_4__exit__(struct __pyx_obj_13async_session_CloneSession *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v_exc_type, CYTHON_UNUSED PyObject *__pyx_v_exc_value, CYTHON_UNUSED PyObject *__pyx_v_traceback) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__exit__", 0);
+
+  /* "async_session.pyx":781
+ *     def __exit__(self, exc_type, exc_value, traceback):
+ *         # Close is triggered via garbage collector.
+ *         self.session = None             # <<<<<<<<<<<<<<
+ */
+  __Pyx_INCREF(Py_None);
+  __Pyx_GIVEREF(Py_None);
+  __Pyx_GOTREF(__pyx_v_self->session);
+  __Pyx_DECREF(__pyx_v_self->session);
+  __pyx_v_self->session = Py_None;
+
+  /* "async_session.pyx":779
+ *         return self.session
+ * 
+ *     def __exit__(self, exc_type, exc_value, traceback):             # <<<<<<<<<<<<<<
+ *         # Close is triggered via garbage collector.
+ *         self.session = None
+ */
+
+  /* function exit code */
+  __pyx_r = Py_None; __Pyx_INCREF(Py_None);
   __Pyx_XGIVEREF(__pyx_r);
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
@@ -8016,12 +8594,13 @@ static PyObject *__pyx_getprop_13async_session_12AsyncSession_context_engine_id(
 
 static PyMethodDef __pyx_methods_13async_session_AsyncSession[] = {
   {"open_session", (PyCFunction)__pyx_pw_13async_session_12AsyncSession_7open_session, METH_NOARGS, 0},
-  {"walk", (PyCFunction)__pyx_pw_13async_session_12AsyncSession_9walk, METH_O, __pyx_doc_13async_session_12AsyncSession_8walk},
-  {"walk_with_get_bulk", (PyCFunction)__pyx_pw_13async_session_12AsyncSession_11walk_with_get_bulk, METH_VARARGS|METH_KEYWORDS, __pyx_doc_13async_session_12AsyncSession_10walk_with_get_bulk},
-  {"get", (PyCFunction)__pyx_pw_13async_session_12AsyncSession_13get, METH_O, 0},
-  {"get_next", (PyCFunction)__pyx_pw_13async_session_12AsyncSession_15get_next, METH_O, 0},
-  {"get_bulk", (PyCFunction)__pyx_pw_13async_session_12AsyncSession_17get_bulk, METH_VARARGS|METH_KEYWORDS, 0},
-  {"set_oids", (PyCFunction)__pyx_pw_13async_session_12AsyncSession_19set_oids, METH_O, 0},
+  {"clone_session", (PyCFunction)__pyx_pw_13async_session_12AsyncSession_9clone_session, METH_VARARGS|METH_KEYWORDS, 0},
+  {"walk", (PyCFunction)__pyx_pw_13async_session_12AsyncSession_11walk, METH_O, __pyx_doc_13async_session_12AsyncSession_10walk},
+  {"walk_with_get_bulk", (PyCFunction)__pyx_pw_13async_session_12AsyncSession_13walk_with_get_bulk, METH_VARARGS|METH_KEYWORDS, __pyx_doc_13async_session_12AsyncSession_12walk_with_get_bulk},
+  {"get", (PyCFunction)__pyx_pw_13async_session_12AsyncSession_15get, METH_O, 0},
+  {"get_next", (PyCFunction)__pyx_pw_13async_session_12AsyncSession_17get_next, METH_O, 0},
+  {"get_bulk", (PyCFunction)__pyx_pw_13async_session_12AsyncSession_19get_bulk, METH_VARARGS|METH_KEYWORDS, 0},
+  {"set_oids", (PyCFunction)__pyx_pw_13async_session_12AsyncSession_21set_oids, METH_O, 0},
   {0, 0, 0, 0}
 };
 
@@ -8090,6 +8669,117 @@ static PyTypeObject __pyx_type_13async_session_AsyncSession = {
   #endif
 };
 
+static PyObject *__pyx_tp_new_13async_session_CloneSession(PyTypeObject *t, PyObject *a, PyObject *k) {
+  struct __pyx_obj_13async_session_CloneSession *p;
+  PyObject *o;
+  o = (*t->tp_alloc)(t, 0);
+  if (unlikely(!o)) return 0;
+  p = ((struct __pyx_obj_13async_session_CloneSession *)o);
+  p->args = Py_None; Py_INCREF(Py_None);
+  p->session = Py_None; Py_INCREF(Py_None);
+  if (unlikely(__pyx_pw_13async_session_12CloneSession_1__cinit__(o, a, k) < 0)) goto bad;
+  return o;
+  bad:
+  Py_DECREF(o); o = 0;
+  return NULL;
+}
+
+static void __pyx_tp_dealloc_13async_session_CloneSession(PyObject *o) {
+  struct __pyx_obj_13async_session_CloneSession *p = (struct __pyx_obj_13async_session_CloneSession *)o;
+  PyObject_GC_UnTrack(o);
+  Py_CLEAR(p->args);
+  Py_CLEAR(p->session);
+  (*Py_TYPE(o)->tp_free)(o);
+}
+
+static int __pyx_tp_traverse_13async_session_CloneSession(PyObject *o, visitproc v, void *a) {
+  int e;
+  struct __pyx_obj_13async_session_CloneSession *p = (struct __pyx_obj_13async_session_CloneSession *)o;
+  if (p->args) {
+    e = (*v)(p->args, a); if (e) return e;
+  }
+  if (p->session) {
+    e = (*v)(p->session, a); if (e) return e;
+  }
+  return 0;
+}
+
+static int __pyx_tp_clear_13async_session_CloneSession(PyObject *o) {
+  PyObject* tmp;
+  struct __pyx_obj_13async_session_CloneSession *p = (struct __pyx_obj_13async_session_CloneSession *)o;
+  tmp = ((PyObject*)p->args);
+  p->args = Py_None; Py_INCREF(Py_None);
+  Py_XDECREF(tmp);
+  tmp = ((PyObject*)p->session);
+  p->session = Py_None; Py_INCREF(Py_None);
+  Py_XDECREF(tmp);
+  return 0;
+}
+
+static PyMethodDef __pyx_methods_13async_session_CloneSession[] = {
+  {"__enter__", (PyCFunction)__pyx_pw_13async_session_12CloneSession_3__enter__, METH_NOARGS, 0},
+  {"__exit__", (PyCFunction)__pyx_pw_13async_session_12CloneSession_5__exit__, METH_VARARGS|METH_KEYWORDS, 0},
+  {0, 0, 0, 0}
+};
+
+static PyTypeObject __pyx_type_13async_session_CloneSession = {
+  PyVarObject_HEAD_INIT(0, 0)
+  "async_session.CloneSession", /*tp_name*/
+  sizeof(struct __pyx_obj_13async_session_CloneSession), /*tp_basicsize*/
+  0, /*tp_itemsize*/
+  __pyx_tp_dealloc_13async_session_CloneSession, /*tp_dealloc*/
+  0, /*tp_print*/
+  0, /*tp_getattr*/
+  0, /*tp_setattr*/
+  #if PY_MAJOR_VERSION < 3
+  0, /*tp_compare*/
+  #endif
+  #if PY_MAJOR_VERSION >= 3
+  0, /*tp_as_async*/
+  #endif
+  0, /*tp_repr*/
+  0, /*tp_as_number*/
+  0, /*tp_as_sequence*/
+  0, /*tp_as_mapping*/
+  0, /*tp_hash*/
+  0, /*tp_call*/
+  0, /*tp_str*/
+  0, /*tp_getattro*/
+  0, /*tp_setattro*/
+  0, /*tp_as_buffer*/
+  Py_TPFLAGS_DEFAULT|Py_TPFLAGS_HAVE_VERSION_TAG|Py_TPFLAGS_CHECKTYPES|Py_TPFLAGS_HAVE_NEWBUFFER|Py_TPFLAGS_HAVE_GC, /*tp_flags*/
+  0, /*tp_doc*/
+  __pyx_tp_traverse_13async_session_CloneSession, /*tp_traverse*/
+  __pyx_tp_clear_13async_session_CloneSession, /*tp_clear*/
+  0, /*tp_richcompare*/
+  0, /*tp_weaklistoffset*/
+  0, /*tp_iter*/
+  0, /*tp_iternext*/
+  __pyx_methods_13async_session_CloneSession, /*tp_methods*/
+  0, /*tp_members*/
+  0, /*tp_getset*/
+  0, /*tp_base*/
+  0, /*tp_dict*/
+  0, /*tp_descr_get*/
+  0, /*tp_descr_set*/
+  0, /*tp_dictoffset*/
+  0, /*tp_init*/
+  0, /*tp_alloc*/
+  __pyx_tp_new_13async_session_CloneSession, /*tp_new*/
+  0, /*tp_free*/
+  0, /*tp_is_gc*/
+  0, /*tp_bases*/
+  0, /*tp_mro*/
+  0, /*tp_cache*/
+  0, /*tp_subclasses*/
+  0, /*tp_weaklist*/
+  0, /*tp_del*/
+  0, /*tp_version_tag*/
+  #if PY_VERSION_HEX >= 0x030400a1
+  0, /*tp_finalize*/
+  #endif
+};
+
 static PyMethodDef __pyx_methods[] = {
   {0, 0, 0, 0}
 };
@@ -8121,7 +8811,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_kp_s_Can_t_generate_KU_for_auth_key_i, __pyx_k_Can_t_generate_KU_for_auth_key_i, sizeof(__pyx_k_Can_t_generate_KU_for_auth_key_i), 0, 0, 1, 0},
   {&__pyx_kp_s_Can_t_generate_KU_for_priv_key_i, __pyx_k_Can_t_generate_KU_for_priv_key_i, sizeof(__pyx_k_Can_t_generate_KU_for_priv_key_i), 0, 0, 1, 0},
   {&__pyx_kp_s_Cannot_probe_v3_engineID, __pyx_k_Cannot_probe_v3_engineID, sizeof(__pyx_k_Cannot_probe_v3_engineID), 0, 0, 1, 0},
-  {&__pyx_kp_s_Cannot_set_oid_s_with_val_and_ty, __pyx_k_Cannot_set_oid_s_with_val_and_ty, sizeof(__pyx_k_Cannot_set_oid_s_with_val_and_ty), 0, 0, 1, 0},
+  {&__pyx_kp_s_Cannot_set_oid_s_with_val_s_and, __pyx_k_Cannot_set_oid_s_with_val_s_and, sizeof(__pyx_k_Cannot_set_oid_s_with_val_s_and), 0, 0, 1, 0},
   {&__pyx_n_s_DES, __pyx_k_DES, sizeof(__pyx_k_DES), 0, 0, 1, 1},
   {&__pyx_kp_s_END_OF_MIB, __pyx_k_END_OF_MIB, sizeof(__pyx_k_END_OF_MIB), 0, 0, 1, 0},
   {&__pyx_n_s_END_OF_MIB_2, __pyx_k_END_OF_MIB_2, sizeof(__pyx_k_END_OF_MIB_2), 0, 0, 1, 1},
@@ -8151,9 +8841,12 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_community, __pyx_k_community, sizeof(__pyx_k_community), 0, 0, 1, 1},
   {&__pyx_n_s_context_engine_id, __pyx_k_context_engine_id, sizeof(__pyx_k_context_engine_id), 0, 0, 1, 1},
   {&__pyx_n_s_context_engine_id_binary, __pyx_k_context_engine_id_binary, sizeof(__pyx_k_context_engine_id_binary), 0, 0, 1, 1},
+  {&__pyx_n_s_copy, __pyx_k_copy, sizeof(__pyx_k_copy), 0, 0, 1, 1},
   {&__pyx_n_s_decode, __pyx_k_decode, sizeof(__pyx_k_decode), 0, 0, 1, 1},
   {&__pyx_n_s_doc, __pyx_k_doc, sizeof(__pyx_k_doc), 0, 0, 1, 1},
   {&__pyx_n_s_enumerate, __pyx_k_enumerate, sizeof(__pyx_k_enumerate), 0, 0, 1, 1},
+  {&__pyx_n_s_exc_type, __pyx_k_exc_type, sizeof(__pyx_k_exc_type), 0, 0, 1, 1},
+  {&__pyx_n_s_exc_value, __pyx_k_exc_value, sizeof(__pyx_k_exc_value), 0, 0, 1, 1},
   {&__pyx_n_s_get_bulk, __pyx_k_get_bulk, sizeof(__pyx_k_get_bulk), 0, 0, 1, 1},
   {&__pyx_n_s_get_next, __pyx_k_get_next, sizeof(__pyx_k_get_next), 0, 0, 1, 1},
   {&__pyx_n_s_gevent, __pyx_k_gevent, sizeof(__pyx_k_gevent), 0, 0, 1, 1},
@@ -8173,7 +8866,9 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_noAuthNoPriv, __pyx_k_noAuthNoPriv, sizeof(__pyx_k_noAuthNoPriv), 0, 0, 1, 1},
   {&__pyx_n_s_nonrepeaters, __pyx_k_nonrepeaters, sizeof(__pyx_k_nonrepeaters), 0, 0, 1, 1},
   {&__pyx_n_s_oids, __pyx_k_oids, sizeof(__pyx_k_oids), 0, 0, 1, 1},
+  {&__pyx_n_s_open_session, __pyx_k_open_session, sizeof(__pyx_k_open_session), 0, 0, 1, 1},
   {&__pyx_kp_s_opt_axtract_ext_src_gevent_snmp, __pyx_k_opt_axtract_ext_src_gevent_snmp, sizeof(__pyx_k_opt_axtract_ext_src_gevent_snmp), 0, 0, 1, 0},
+  {&__pyx_n_s_other_session, __pyx_k_other_session, sizeof(__pyx_k_other_session), 0, 0, 1, 1},
   {&__pyx_n_s_peername, __pyx_k_peername, sizeof(__pyx_k_peername), 0, 0, 1, 1},
   {&__pyx_n_s_prepare, __pyx_k_prepare, sizeof(__pyx_k_prepare), 0, 0, 1, 1},
   {&__pyx_n_s_priv_key, __pyx_k_priv_key, sizeof(__pyx_k_priv_key), 0, 0, 1, 1},
@@ -8191,13 +8886,15 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_sleep, __pyx_k_sleep, sizeof(__pyx_k_sleep), 0, 0, 1, 1},
   {&__pyx_n_s_test, __pyx_k_test, sizeof(__pyx_k_test), 0, 0, 1, 1},
   {&__pyx_n_s_timeout, __pyx_k_timeout, sizeof(__pyx_k_timeout), 0, 0, 1, 1},
+  {&__pyx_n_s_traceback, __pyx_k_traceback, sizeof(__pyx_k_traceback), 0, 0, 1, 1},
+  {&__pyx_n_s_update, __pyx_k_update, sizeof(__pyx_k_update), 0, 0, 1, 1},
   {&__pyx_n_s_version, __pyx_k_version, sizeof(__pyx_k_version), 0, 0, 1, 1},
   {&__pyx_n_s_wait_read, __pyx_k_wait_read, sizeof(__pyx_k_wait_read), 0, 0, 1, 1},
   {0, 0, 0, 0, 0, 0, 0}
 };
 static int __Pyx_InitCachedBuiltins(void) {
-  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 630, __pyx_L1_error)
-  __pyx_builtin_enumerate = __Pyx_GetBuiltinName(__pyx_n_s_enumerate); if (!__pyx_builtin_enumerate) __PYX_ERR(0, 664, __pyx_L1_error)
+  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 634, __pyx_L1_error)
+  __pyx_builtin_enumerate = __Pyx_GetBuiltinName(__pyx_n_s_enumerate); if (!__pyx_builtin_enumerate) __PYX_ERR(0, 668, __pyx_L1_error)
   return 0;
   __pyx_L1_error:;
   return -1;
@@ -8207,47 +8904,47 @@ static int __Pyx_InitCachedConstants(void) {
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__Pyx_InitCachedConstants", 0);
 
-  /* "async_session.pyx":513
+  /* "async_session.pyx":514
  *         # security_engine_id is assumed as 'hex' format, but binary is needed.
  *         if 'security_engine_id' in self.args:
  *             bin_val = self.args['security_engine_id'].decode('hex')             # <<<<<<<<<<<<<<
  *             # Need to store it somewhere, to keep reference to memory.
  *             self.args['security_engine_id_binary'] = bin_val
  */
-  __pyx_tuple_ = PyTuple_Pack(1, __pyx_n_s_hex); if (unlikely(!__pyx_tuple_)) __PYX_ERR(0, 513, __pyx_L1_error)
+  __pyx_tuple_ = PyTuple_Pack(1, __pyx_n_s_hex); if (unlikely(!__pyx_tuple_)) __PYX_ERR(0, 514, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple_);
   __Pyx_GIVEREF(__pyx_tuple_);
 
-  /* "async_session.pyx":521
+  /* "async_session.pyx":522
  *         # context_engine_id is assumed as 'hex' format, but binary is needed.
  *         if 'context_engine_id' in self.args:
  *             bin_val = self.args['context_engine_id'].decode('hex')             # <<<<<<<<<<<<<<
  *             self.args['context_engine_id_binary'] = bin_val
  *             sess_cfg.contextEngineID = <bytes?>(bin_val)
  */
-  __pyx_tuple__2 = PyTuple_Pack(1, __pyx_n_s_hex); if (unlikely(!__pyx_tuple__2)) __PYX_ERR(0, 521, __pyx_L1_error)
+  __pyx_tuple__2 = PyTuple_Pack(1, __pyx_n_s_hex); if (unlikely(!__pyx_tuple__2)) __PYX_ERR(0, 522, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__2);
   __Pyx_GIVEREF(__pyx_tuple__2);
 
-  /* "async_session.pyx":638
+  /* "async_session.pyx":642
  *         if self.sp == NULL:
  *             snmp_free_pdu(req)
  *             raise SNMPError("Session is not open")             # <<<<<<<<<<<<<<
  * 
  *         cdef netsnmp_pdu* response
  */
-  __pyx_tuple__3 = PyTuple_Pack(1, __pyx_kp_s_Session_is_not_open); if (unlikely(!__pyx_tuple__3)) __PYX_ERR(0, 638, __pyx_L1_error)
+  __pyx_tuple__3 = PyTuple_Pack(1, __pyx_kp_s_Session_is_not_open); if (unlikely(!__pyx_tuple__3)) __PYX_ERR(0, 642, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__3);
   __Pyx_GIVEREF(__pyx_tuple__3);
 
-  /* "async_session.pyx":196
+  /* "async_session.pyx":197
  * # SNMP version 3 works only if this method is called once.
  * # Otherwise you get 'no such security service available' errors.
  * def init_snmplib():             # <<<<<<<<<<<<<<
  *     init_snmp('async_session')
  * 
  */
-  __pyx_codeobj__5 = (PyObject*)__Pyx_PyCode_New(0, 0, 0, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_opt_axtract_ext_src_gevent_snmp, __pyx_n_s_init_snmplib, 196, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__5)) __PYX_ERR(0, 196, __pyx_L1_error)
+  __pyx_codeobj__5 = (PyObject*)__Pyx_PyCode_New(0, 0, 0, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_opt_axtract_ext_src_gevent_snmp, __pyx_n_s_init_snmplib, 197, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__5)) __PYX_ERR(0, 197, __pyx_L1_error)
   __Pyx_RefNannyFinishContext();
   return 0;
   __pyx_L1_error:;
@@ -8357,7 +9054,7 @@ PyMODINIT_FUNC PyInit_async_session(void)
   /*--- Variable export code ---*/
   /*--- Function export code ---*/
   /*--- Type init code ---*/
-  if (PyType_Ready(&__pyx_type_13async_session_EndOfMib) < 0) __PYX_ERR(0, 201, __pyx_L1_error)
+  if (PyType_Ready(&__pyx_type_13async_session_EndOfMib) < 0) __PYX_ERR(0, 202, __pyx_L1_error)
   __pyx_type_13async_session_EndOfMib.tp_print = 0;
   __pyx_ptype_13async_session_EndOfMib = &__pyx_type_13async_session_EndOfMib;
   __pyx_vtabptr_13async_session_AsyncSession = &__pyx_vtable_13async_session_AsyncSession;
@@ -8371,11 +9068,14 @@ PyMODINIT_FUNC PyInit_async_session(void)
   __pyx_vtable_13async_session_AsyncSession._add_oid_set = (PyObject *(*)(struct __pyx_obj_13async_session_AsyncSession *, netsnmp_pdu *, PyObject *, PyObject *, PyObject *))__pyx_f_13async_session_12AsyncSession__add_oid_set;
   __pyx_vtable_13async_session_AsyncSession.parse_response = (PyObject *(*)(struct __pyx_obj_13async_session_AsyncSession *, netsnmp_pdu *))__pyx_f_13async_session_12AsyncSession_parse_response;
   __pyx_vtable_13async_session_AsyncSession.parse_var = (PyObject *(*)(struct __pyx_obj_13async_session_AsyncSession *, netsnmp_variable_list *))__pyx_f_13async_session_12AsyncSession_parse_var;
-  if (PyType_Ready(&__pyx_type_13async_session_AsyncSession) < 0) __PYX_ERR(0, 324, __pyx_L1_error)
+  if (PyType_Ready(&__pyx_type_13async_session_AsyncSession) < 0) __PYX_ERR(0, 325, __pyx_L1_error)
   __pyx_type_13async_session_AsyncSession.tp_print = 0;
-  if (__Pyx_SetVtable(__pyx_type_13async_session_AsyncSession.tp_dict, __pyx_vtabptr_13async_session_AsyncSession) < 0) __PYX_ERR(0, 324, __pyx_L1_error)
-  if (PyObject_SetAttrString(__pyx_m, "AsyncSession", (PyObject *)&__pyx_type_13async_session_AsyncSession) < 0) __PYX_ERR(0, 324, __pyx_L1_error)
+  if (__Pyx_SetVtable(__pyx_type_13async_session_AsyncSession.tp_dict, __pyx_vtabptr_13async_session_AsyncSession) < 0) __PYX_ERR(0, 325, __pyx_L1_error)
+  if (PyObject_SetAttrString(__pyx_m, "AsyncSession", (PyObject *)&__pyx_type_13async_session_AsyncSession) < 0) __PYX_ERR(0, 325, __pyx_L1_error)
   __pyx_ptype_13async_session_AsyncSession = &__pyx_type_13async_session_AsyncSession;
+  if (PyType_Ready(&__pyx_type_13async_session_CloneSession) < 0) __PYX_ERR(0, 763, __pyx_L1_error)
+  __pyx_type_13async_session_CloneSession.tp_print = 0;
+  __pyx_ptype_13async_session_CloneSession = &__pyx_type_13async_session_CloneSession;
   /*--- Type import code ---*/
   /*--- Variable import code ---*/
   /*--- Function import code ---*/
@@ -8438,93 +9138,93 @@ PyMODINIT_FUNC PyInit_async_session(void)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "async_session.pyx":196
+  /* "async_session.pyx":197
  * # SNMP version 3 works only if this method is called once.
  * # Otherwise you get 'no such security service available' errors.
  * def init_snmplib():             # <<<<<<<<<<<<<<
  *     init_snmp('async_session')
  * 
  */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_13async_session_1init_snmplib, NULL, __pyx_n_s_async_session); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 196, __pyx_L1_error)
+  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_13async_session_1init_snmplib, NULL, __pyx_n_s_async_session); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 197, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_init_snmplib, __pyx_t_1) < 0) __PYX_ERR(0, 196, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_init_snmplib, __pyx_t_1) < 0) __PYX_ERR(0, 197, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "async_session.pyx":209
+  /* "async_session.pyx":210
  * 
  * 
  * END_OF_MIB = EndOfMib()             # <<<<<<<<<<<<<<
  * 
  * class SNMPError(Exception):
  */
-  __pyx_t_1 = __Pyx_PyObject_Call(((PyObject *)__pyx_ptype_13async_session_EndOfMib), __pyx_empty_tuple, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 209, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_Call(((PyObject *)__pyx_ptype_13async_session_EndOfMib), __pyx_empty_tuple, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 210, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_END_OF_MIB_2, __pyx_t_1) < 0) __PYX_ERR(0, 209, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_END_OF_MIB_2, __pyx_t_1) < 0) __PYX_ERR(0, 210, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "async_session.pyx":211
+  /* "async_session.pyx":212
  * END_OF_MIB = EndOfMib()
  * 
  * class SNMPError(Exception):             # <<<<<<<<<<<<<<
  *     pass
  * 
  */
-  __pyx_t_1 = PyTuple_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 211, __pyx_L1_error)
+  __pyx_t_1 = PyTuple_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 212, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_INCREF(((PyObject *)(&((PyTypeObject*)PyExc_Exception)[0])));
   __Pyx_GIVEREF(((PyObject *)(&((PyTypeObject*)PyExc_Exception)[0])));
   PyTuple_SET_ITEM(__pyx_t_1, 0, ((PyObject *)(&((PyTypeObject*)PyExc_Exception)[0])));
-  __pyx_t_2 = __Pyx_CalculateMetaclass(NULL, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 211, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CalculateMetaclass(NULL, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 212, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = __Pyx_Py3MetaclassPrepare(__pyx_t_2, __pyx_t_1, __pyx_n_s_SNMPError, __pyx_n_s_SNMPError, (PyObject *) NULL, __pyx_n_s_async_session, (PyObject *) NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 211, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_Py3MetaclassPrepare(__pyx_t_2, __pyx_t_1, __pyx_n_s_SNMPError, __pyx_n_s_SNMPError, (PyObject *) NULL, __pyx_n_s_async_session, (PyObject *) NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 212, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = __Pyx_Py3ClassCreate(__pyx_t_2, __pyx_n_s_SNMPError, __pyx_t_1, __pyx_t_3, NULL, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 211, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_Py3ClassCreate(__pyx_t_2, __pyx_n_s_SNMPError, __pyx_t_1, __pyx_t_3, NULL, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 212, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_SNMPError, __pyx_t_4) < 0) __PYX_ERR(0, 211, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_SNMPError, __pyx_t_4) < 0) __PYX_ERR(0, 212, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "async_session.pyx":214
+  /* "async_session.pyx":215
  *     pass
  * 
  * class SNMPTimeoutError(SNMPError):             # <<<<<<<<<<<<<<
  *     pass
  * 
  */
-  __pyx_t_1 = __Pyx_GetModuleGlobalName(__pyx_n_s_SNMPError); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 214, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_GetModuleGlobalName(__pyx_n_s_SNMPError); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 215, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 214, __pyx_L1_error)
+  __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 215, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_GIVEREF(__pyx_t_1);
   PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_t_1);
   __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_CalculateMetaclass(NULL, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 214, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_CalculateMetaclass(NULL, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 215, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_3 = __Pyx_Py3MetaclassPrepare(__pyx_t_1, __pyx_t_2, __pyx_n_s_SNMPTimeoutError, __pyx_n_s_SNMPTimeoutError, (PyObject *) NULL, __pyx_n_s_async_session, (PyObject *) NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 214, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_Py3MetaclassPrepare(__pyx_t_1, __pyx_t_2, __pyx_n_s_SNMPTimeoutError, __pyx_n_s_SNMPTimeoutError, (PyObject *) NULL, __pyx_n_s_async_session, (PyObject *) NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 215, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = __Pyx_Py3ClassCreate(__pyx_t_1, __pyx_n_s_SNMPTimeoutError, __pyx_t_2, __pyx_t_3, NULL, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 214, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_Py3ClassCreate(__pyx_t_1, __pyx_n_s_SNMPTimeoutError, __pyx_t_2, __pyx_t_3, NULL, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 215, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_SNMPTimeoutError, __pyx_t_4) < 0) __PYX_ERR(0, 214, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_SNMPTimeoutError, __pyx_t_4) < 0) __PYX_ERR(0, 215, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "async_session.pyx":239
+  /* "async_session.pyx":240
  * 
  * 
  * VALID_VALUE_TYPES = set('iu3cCtaosdxnbUIFD')             # <<<<<<<<<<<<<<
  * VALUE_TYPE_TO_INT = {key: ord(key) for key in VALID_VALUE_TYPES}
  * 
  */
-  __pyx_t_2 = PySet_New(__pyx_n_s_iu3cCtaosdxnbUIFD); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 239, __pyx_L1_error)
+  __pyx_t_2 = PySet_New(__pyx_n_s_iu3cCtaosdxnbUIFD); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 240, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_VALID_VALUE_TYPES, __pyx_t_2) < 0) __PYX_ERR(0, 239, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_VALID_VALUE_TYPES, __pyx_t_2) < 0) __PYX_ERR(0, 240, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "async_session.pyx":240
+  /* "async_session.pyx":241
  * 
  * VALID_VALUE_TYPES = set('iu3cCtaosdxnbUIFD')
  * VALUE_TYPE_TO_INT = {key: ord(key) for key in VALID_VALUE_TYPES}             # <<<<<<<<<<<<<<
@@ -8533,17 +9233,17 @@ PyMODINIT_FUNC PyInit_async_session(void)
  */
   { /* enter inner scope */
     PyObject *__pyx_7genexpr__pyx_v_13async_session_key = NULL;
-    __pyx_t_2 = PyDict_New(); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 240, __pyx_L4_error)
+    __pyx_t_2 = PyDict_New(); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 241, __pyx_L4_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_1 = __Pyx_GetModuleGlobalName(__pyx_n_s_VALID_VALUE_TYPES); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 240, __pyx_L4_error)
+    __pyx_t_1 = __Pyx_GetModuleGlobalName(__pyx_n_s_VALID_VALUE_TYPES); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 241, __pyx_L4_error)
     __Pyx_GOTREF(__pyx_t_1);
     if (likely(PyList_CheckExact(__pyx_t_1)) || PyTuple_CheckExact(__pyx_t_1)) {
       __pyx_t_3 = __pyx_t_1; __Pyx_INCREF(__pyx_t_3); __pyx_t_5 = 0;
       __pyx_t_6 = NULL;
     } else {
-      __pyx_t_5 = -1; __pyx_t_3 = PyObject_GetIter(__pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 240, __pyx_L4_error)
+      __pyx_t_5 = -1; __pyx_t_3 = PyObject_GetIter(__pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 241, __pyx_L4_error)
       __Pyx_GOTREF(__pyx_t_3);
-      __pyx_t_6 = Py_TYPE(__pyx_t_3)->tp_iternext; if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 240, __pyx_L4_error)
+      __pyx_t_6 = Py_TYPE(__pyx_t_3)->tp_iternext; if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 241, __pyx_L4_error)
     }
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     for (;;) {
@@ -8551,17 +9251,17 @@ PyMODINIT_FUNC PyInit_async_session(void)
         if (likely(PyList_CheckExact(__pyx_t_3))) {
           if (__pyx_t_5 >= PyList_GET_SIZE(__pyx_t_3)) break;
           #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-          __pyx_t_1 = PyList_GET_ITEM(__pyx_t_3, __pyx_t_5); __Pyx_INCREF(__pyx_t_1); __pyx_t_5++; if (unlikely(0 < 0)) __PYX_ERR(0, 240, __pyx_L4_error)
+          __pyx_t_1 = PyList_GET_ITEM(__pyx_t_3, __pyx_t_5); __Pyx_INCREF(__pyx_t_1); __pyx_t_5++; if (unlikely(0 < 0)) __PYX_ERR(0, 241, __pyx_L4_error)
           #else
-          __pyx_t_1 = PySequence_ITEM(__pyx_t_3, __pyx_t_5); __pyx_t_5++; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 240, __pyx_L4_error)
+          __pyx_t_1 = PySequence_ITEM(__pyx_t_3, __pyx_t_5); __pyx_t_5++; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 241, __pyx_L4_error)
           __Pyx_GOTREF(__pyx_t_1);
           #endif
         } else {
           if (__pyx_t_5 >= PyTuple_GET_SIZE(__pyx_t_3)) break;
           #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-          __pyx_t_1 = PyTuple_GET_ITEM(__pyx_t_3, __pyx_t_5); __Pyx_INCREF(__pyx_t_1); __pyx_t_5++; if (unlikely(0 < 0)) __PYX_ERR(0, 240, __pyx_L4_error)
+          __pyx_t_1 = PyTuple_GET_ITEM(__pyx_t_3, __pyx_t_5); __Pyx_INCREF(__pyx_t_1); __pyx_t_5++; if (unlikely(0 < 0)) __PYX_ERR(0, 241, __pyx_L4_error)
           #else
-          __pyx_t_1 = PySequence_ITEM(__pyx_t_3, __pyx_t_5); __pyx_t_5++; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 240, __pyx_L4_error)
+          __pyx_t_1 = PySequence_ITEM(__pyx_t_3, __pyx_t_5); __pyx_t_5++; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 241, __pyx_L4_error)
           __Pyx_GOTREF(__pyx_t_1);
           #endif
         }
@@ -8571,7 +9271,7 @@ PyMODINIT_FUNC PyInit_async_session(void)
           PyObject* exc_type = PyErr_Occurred();
           if (exc_type) {
             if (likely(exc_type == PyExc_StopIteration || PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-            else __PYX_ERR(0, 240, __pyx_L4_error)
+            else __PYX_ERR(0, 241, __pyx_L4_error)
           }
           break;
         }
@@ -8579,10 +9279,10 @@ PyMODINIT_FUNC PyInit_async_session(void)
       }
       __Pyx_XDECREF_SET(__pyx_7genexpr__pyx_v_13async_session_key, __pyx_t_1);
       __pyx_t_1 = 0;
-      __pyx_t_7 = __Pyx_PyObject_Ord(__pyx_7genexpr__pyx_v_13async_session_key); if (unlikely(__pyx_t_7 == (long)(Py_UCS4)-1)) __PYX_ERR(0, 240, __pyx_L4_error)
-      __pyx_t_1 = __Pyx_PyInt_From_long(__pyx_t_7); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 240, __pyx_L4_error)
+      __pyx_t_7 = __Pyx_PyObject_Ord(__pyx_7genexpr__pyx_v_13async_session_key); if (unlikely(__pyx_t_7 == (long)(Py_UCS4)-1)) __PYX_ERR(0, 241, __pyx_L4_error)
+      __pyx_t_1 = __Pyx_PyInt_From_long(__pyx_t_7); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 241, __pyx_L4_error)
       __Pyx_GOTREF(__pyx_t_1);
-      if (unlikely(PyDict_SetItem(__pyx_t_2, (PyObject*)__pyx_7genexpr__pyx_v_13async_session_key, (PyObject*)__pyx_t_1))) __PYX_ERR(0, 240, __pyx_L4_error)
+      if (unlikely(PyDict_SetItem(__pyx_t_2, (PyObject*)__pyx_7genexpr__pyx_v_13async_session_key, (PyObject*)__pyx_t_1))) __PYX_ERR(0, 241, __pyx_L4_error)
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     }
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -8593,7 +9293,7 @@ PyMODINIT_FUNC PyInit_async_session(void)
     goto __pyx_L1_error;
     __pyx_L7_exit_scope:;
   } /* exit inner scope */
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_VALUE_TYPE_TO_INT, __pyx_t_2) < 0) __PYX_ERR(0, 240, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_VALUE_TYPE_TO_INT, __pyx_t_2) < 0) __PYX_ERR(0, 241, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
   /* "async_session.pyx":1
@@ -9516,6 +10216,46 @@ bad:
 }
 #endif
 
+/* KeywordStringCheck */
+        static CYTHON_INLINE int __Pyx_CheckKeywordStrings(
+    PyObject *kwdict,
+    const char* function_name,
+    int kw_allowed)
+{
+    PyObject* key = 0;
+    Py_ssize_t pos = 0;
+#if CYTHON_COMPILING_IN_PYPY
+    if (!kw_allowed && PyDict_Next(kwdict, &pos, &key, 0))
+        goto invalid_keyword;
+    return 1;
+#else
+    while (PyDict_Next(kwdict, &pos, &key, 0)) {
+        #if PY_MAJOR_VERSION < 3
+        if (unlikely(!PyString_CheckExact(key)) && unlikely(!PyString_Check(key)))
+        #endif
+            if (unlikely(!PyUnicode_Check(key)))
+                goto invalid_keyword_type;
+    }
+    if ((!kw_allowed) && unlikely(key))
+        goto invalid_keyword;
+    return 1;
+invalid_keyword_type:
+    PyErr_Format(PyExc_TypeError,
+        "%.200s() keywords must be strings", function_name);
+    return 0;
+#endif
+invalid_keyword:
+    PyErr_Format(PyExc_TypeError,
+    #if PY_MAJOR_VERSION < 3
+        "%.200s() got an unexpected keyword argument '%.200s'",
+        function_name, PyString_AsString(key));
+    #else
+        "%s() got an unexpected keyword argument '%U'",
+        function_name, key);
+    #endif
+    return 0;
+}
+
 /* PyObjectCallNoArg */
         #if CYTHON_COMPILING_IN_CPYTHON
 static CYTHON_INLINE PyObject* __Pyx_PyObject_CallNoArg(PyObject *func) {
@@ -10045,6 +10785,33 @@ static CYTHON_INLINE PyObject* __Pyx_PyBytes_Join(PyObject* sep, PyObject* value
     PyErr_Format(PyExc_TypeError,
         "ord() expected a character, but string of length %zd found", size);
     return (long)(Py_UCS4)-1;
+}
+
+/* ArgTypeTest */
+          static void __Pyx_RaiseArgumentTypeInvalid(const char* name, PyObject *obj, PyTypeObject *type) {
+    PyErr_Format(PyExc_TypeError,
+        "Argument '%.200s' has incorrect type (expected %.200s, got %.200s)",
+        name, type->tp_name, Py_TYPE(obj)->tp_name);
+}
+static CYTHON_INLINE int __Pyx_ArgTypeTest(PyObject *obj, PyTypeObject *type, int none_allowed,
+    const char *name, int exact)
+{
+    if (unlikely(!type)) {
+        PyErr_SetString(PyExc_SystemError, "Missing type object");
+        return 0;
+    }
+    if (none_allowed && obj == Py_None) return 1;
+    else if (exact) {
+        if (likely(Py_TYPE(obj) == type)) return 1;
+        #if PY_MAJOR_VERSION == 2
+        else if ((type == &PyBaseString_Type) && likely(__Pyx_PyBaseString_CheckExact(obj))) return 1;
+        #endif
+    }
+    else {
+        if (likely(PyObject_TypeCheck(obj, type))) return 1;
+    }
+    __Pyx_RaiseArgumentTypeInvalid(name, obj, type);
+    return 0;
 }
 
 /* SetVTable */
