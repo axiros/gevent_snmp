@@ -187,6 +187,7 @@ cdef extern from *:
     void snmp_sess_error(void*, int*, int*, char**)
     int snmp_sess_close(void*)
     const char* snmp_errstring(int)
+    const char* snmp_api_errstring(int snmp_errnumber)
 
     void init_snmp(char*)
 
@@ -675,6 +676,7 @@ cdef class AsyncSession(object):
         snmp_add_null_var(req, param, param_size)
 
     cdef object _add_oid_set(self, netsnmp_pdu* req, py_oid, val, val_type):
+        cdef int rc
         cdef char c_val_type
         cdef oid param[MAX_OID_LEN]
         cdef size_t param_size = len(py_oid)
@@ -686,9 +688,10 @@ cdef class AsyncSession(object):
 
         c_val_type = VALUE_TYPE_TO_INT[val_type]
 
-        if snmp_add_var(req, param, param_size, c_val_type, val) != 0:
-            msg = "Cannot set oid(%s) with val(%) and type(%s)"
-            raise Exception(msg % (py_oid, val, val_type))
+        rc = snmp_add_var(req, param, param_size, c_val_type, val)
+        if rc != 0:
+            msg = "Cannot set oid(%s) with val(%s) and type(%s): %s"
+            raise Exception(msg % (py_oid, val, val_type, snmp_api_errstring(rc)))
 
     cdef object parse_response(self, netsnmp_pdu* response):
         cdef netsnmp_variable_list* entry = NULL
