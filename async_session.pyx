@@ -215,6 +215,12 @@ class SNMPError(Exception):
 class SNMPTimeoutError(SNMPError):
     pass
 
+class SNMPResponseError(SNMPError):
+    def __init__(self, code, message):
+        self.code = code
+        super(SNMPResponseError, self).__init__("%s: %s" % (code, message))
+
+
 # These are the type specifications allowed by 'snmp_add_var'
 # 'snmp_add_var' reads all the values as a *string* and parses them.
 # shortcout, long name, (C type, ASN type)
@@ -693,8 +699,9 @@ cdef class AsyncSession(object):
         cdef dict parsed = {}
 
         if not (response.errstat == SNMP_ERR_NOERROR):
-            msg = "Error in response: %s"
-            raise SNMPError(msg % snmp_errstring(response.errstat))
+            raise SNMPResponseError(
+                response.errstat,
+                snmp_errstring(response.errstat))
 
         entry = response.variables
         while (entry != NULL):
