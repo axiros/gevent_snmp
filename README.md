@@ -23,6 +23,24 @@ The output is always a dictionary containing the varbind list from the response 
 This varbind list is converted to a dictionary where the keys are the oids (as
 tuples) and the values the corresponding value from the response pdu.
 
+### oid_str_to_tuple
+Converts a oid string of digits into a tuple of integers.
+
+Example:
+```python
+ret = async_session.oid_str_to_tuple("1.3.6.1.2.1.1.1.0")
+assert ret == (1, 3, 6, 1, 2, 1, 1, 1, 0)
+```
+
+### oid_tuple_to_str
+Converts a tuple of integers to a string with digits and dots.
+
+Example:
+```python
+ret = async_session.oid_tuple_to_str((1, 3, 6, 1, 2, 1, 1, 1, 0))
+assert ret == "1.3.6.1.2.1.1.1.0"
+```
+
 ### SNMP-GET
 * *Input:* List of oid tuples.
 * *Output:* Dictionary

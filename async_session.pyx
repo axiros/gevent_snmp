@@ -221,6 +221,16 @@ class SNMPResponseError(SNMPError):
         super(SNMPResponseError, self).__init__("%s: %s" % (code, message))
 
 
+def oid_str_to_tuple(oid_str):
+    """Converts a string like '1.2.3' to a tuple of integers like (1, 2, 3)"""
+    return tuple([int(idx) for idx in oid_str.split('.')])
+
+
+def oid_tuple_to_str(oid_tuple):
+    """Converts a tuple of integers like (1, 2, 3) to a sting like '1.2.3'"""
+    return '.'.join(map(str, oid_tuple))
+
+
 # These are the type specifications allowed by 'snmp_add_var'
 # 'snmp_add_var' reads all the values as a *string* and parses them.
 # shortcout, long name, (C type, ASN type)
