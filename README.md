@@ -23,6 +23,21 @@ The output is always a dictionary containing the varbind list from the response 
 This varbind list is converted to a dictionary where the keys are the oids (as
 tuples) and the values the corresponding value from the response pdu.
 
+### Create A Session
+```python
+from async_session import AsyncSession
+
+config = {
+    'peername': '127.0.0.1',
+    'version': '2c',
+    'community': 'public',
+    'retries': 5,
+    'timeout': 3
+}
+
+session = AsyncSession(config)
+```
+
 ### oid_str_to_tuple
 Converts a oid string of digits into a tuple of integers.
 
