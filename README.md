@@ -36,6 +36,7 @@ config = {
 }
 
 session = AsyncSession(config)
+session.open_session()
 ```
 
 ### oid_str_to_tuple
