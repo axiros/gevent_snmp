@@ -108,6 +108,7 @@ cdef extern from *:
 
     cdef struct netsnmp_transport_s:
         int sock
+        unsigned int flags
 
     ctypedef struct netsnmp_session:
         long version
@@ -410,9 +411,6 @@ cdef class AsyncSession(object):
         sess_cfg.retries = self.args['retries']
         sess_cfg.timeout = self.args['timeout'] * 1000000
 
-        # Ignores the fd_set within the snmp-api.
-        sess_cfg.flags |= 0x100000
-
         # Uses the 'async select' from session->myvoid.
         sess_cfg.flags |= 0x200000
 
@@ -448,6 +446,9 @@ cdef class AsyncSession(object):
             raise error_from_session("Can not open", cython.address(sess_cfg))
 
         snmp_sess_session(self.sp).myvoid = cython.address(self.ax_async_ctx)
+
+        # Ignores the fd_set within the snmp-api.
+        snmp_sess_transport(self.sp).flags |= 0x100000
 
         if sess_cfg.version == SNMP_VERSION_3 and sess_cfg.securityEngineIDLen == 0:
             # engine_id is not known, probe it.

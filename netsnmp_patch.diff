@@ -1,10 +1,22 @@
 diff --git a/src/include/net-snmp/library/snmp_api.h b/src/include/net-snmp/library/snmp_api.h
-index 6f658d5..e907512 100644
+index 6f658d5..5587715 100644
 --- a/src/include/net-snmp/library/snmp_api.h
 +++ b/src/include/net-snmp/library/snmp_api.h
-@@ -160,6 +160,35 @@ typedef struct request_list {
+@@ -160,6 +160,7 @@ typedef struct request_list {
  
  #define SNMP_DETAIL_SIZE        512
+ 
++#define SNMP_FLAGS_AX_ASYNC_SELECT 0x200000   /* Indicates that myvoid has an async select. */
+ #define SNMP_FLAGS_UDP_BROADCAST   0x800
+ #define SNMP_FLAGS_RESP_CALLBACK   0x400      /* Additional callback on response */
+ #define SNMP_FLAGS_USER_CREATED    0x200      /* USM user has been created */
+diff --git a/src/include/net-snmp/library/snmp_transport.h b/src/include/net-snmp/library/snmp_transport.h
+index 4162897..f3cdb0b 100644
+--- a/src/include/net-snmp/library/snmp_transport.h
++++ b/src/include/net-snmp/library/snmp_transport.h
+@@ -50,6 +50,34 @@ extern          "C" {
+ #define		NETSNMP_TRANSPORT_FLAG_OPENED	 0x20  /* f_open called */
+ #define		NETSNMP_TRANSPORT_FLAG_HOSTNAME	 0x80  /* for fmtaddr hook */
  
 +/* I know this is wired shit.
 + * The root cause for this: fd_set only supports 1024 sockets.
@@ -29,19 +41,36 @@ index 6f658d5..e907512 100644
 + * This is what the SNMP_FLAGS_AX_IGNORE_FDSET should trigger. Its set on the
 + * session->flags and can be tested everywhere in the code.
 + *
-+ * Note: In snmplib 5.7 they invented a 'large_fdset', which supports more than
-+ * 1024 sockets. So when we upgrade to jessi, lets have a look again.
++ * In snmplib 5.7 they invented a 'large_fdset', which leads to segfaults.
++ * So even for jessi it is needed as well.
 + */
++#define NETSNMP_TRANSPORT_FLAG_AX_IGNORE_FDSET 0x100000
 +
-+#define SNMP_FLAGS_AX_ASYNC_SELECT 0x200000   /* Indicates that myvoid has an async select. */
-+#define SNMP_FLAGS_AX_IGNORE_FDSET 0x100000   /* See the lengthy comment above. */
- #define SNMP_FLAGS_UDP_BROADCAST   0x800
- #define SNMP_FLAGS_RESP_CALLBACK   0x400      /* Additional callback on response */
- #define SNMP_FLAGS_USER_CREATED    0x200      /* USM user has been created */
+ /*  The standard SNMP domains.  */
+ 
+ NETSNMP_IMPORT oid      netsnmpUDPDomain[]; 	/*      = { 1, 3, 6, 1, 6, 1, 1 };  */
 diff --git a/src/snmplib/snmp_api.c b/src/snmplib/snmp_api.c
-index 1823e0c..32e8739 100644
+index 1823e0c..2998e39 100644
 --- a/src/snmplib/snmp_api.c
 +++ b/src/snmplib/snmp_api.c
+@@ -343,7 +343,7 @@ static int      snmp_detail_f = 0;
+ int             snmp_build(u_char ** pkt, size_t * pkt_len,
+                            size_t * offset, netsnmp_session * pss,
+                            netsnmp_pdu *pdu);
+-static int      snmp_parse(void *, netsnmp_session *, netsnmp_pdu *,
++int      snmp_parse(void *, netsnmp_session *, netsnmp_pdu *,
+                            u_char *, size_t);
+ 
+ static void     snmpv3_calc_msg_flags(int, int, u_char *);
+@@ -4321,7 +4321,7 @@ _snmp_parse(void *sessp,
+     return result;
+ }
+ 
+-static int
++int
+ snmp_parse(void *sessp,
+            netsnmp_session * pss,
+            netsnmp_pdu *pdu, u_char * data, size_t length)
 @@ -5508,12 +5508,14 @@ _sess_read(void *sessp, netsnmp_large_fd_set * fdset)
          return 0; 
      }
@@ -52,7 +81,7 @@ index 1823e0c..32e8739 100644
 -                    fdset ? NETSNMP_LARGE_FD_ISSET(transport->sock, fdset)
 -		    : -9));
 -        return 0;
-+    if (!(sp->flags & SNMP_FLAGS_AX_IGNORE_FDSET)) {
++    if (!(transport->flags & NETSNMP_TRANSPORT_FLAG_AX_IGNORE_FDSET)) {
 +        if (!fdset || !(NETSNMP_LARGE_FD_ISSET(transport->sock, fdset))) {
 +            DEBUGMSGTL(("sess_read", "not reading %d (fdset %p set %d)\n",
 +                        transport->sock, fdset,
@@ -68,7 +97,7 @@ index 1823e0c..32e8739 100644
          }
  
 -        NETSNMP_LARGE_FD_SET(slp->transport->sock, fdset);
-+        if (!((slp->session != NULL) & (slp->session->flags & SNMP_FLAGS_AX_IGNORE_FDSET))) {
++        if (!(slp->transport->flags & NETSNMP_TRANSPORT_FLAG_AX_IGNORE_FDSET)) {
 +            NETSNMP_LARGE_FD_SET(slp->transport->sock, fdset);
 +        }
 +
