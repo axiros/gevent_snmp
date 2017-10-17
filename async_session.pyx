@@ -3,9 +3,11 @@ from cython.operator cimport dereference as deref
 from libc.stdlib cimport free as libc_free
 from posix.time cimport timeval
 from libc.stdint cimport uint64_t
+from libc.errno cimport EAGAIN
 
 import gevent
 from gevent.socket import wait_read as gevent_wait_read
+from gevent.socket import wait_write as gevent_wait_write
 from gevent.socket import timeout as TimeoutError
 
 ctypedef unsigned int u_int
@@ -191,6 +193,7 @@ cdef extern from *:
         STAT_SUCCESS
         SNMP_ERR_NOERROR
         SNMPERR_TIMEOUT
+        SNMPERR_BAD_SENDTO
 
 
 # SNMP version 3 works only if this method is called once.
@@ -220,6 +223,11 @@ class SNMPResponseError(SNMPError):
     def __init__(self, code, message):
         self.code = code
         super(SNMPResponseError, self).__init__("%s: %s" % (code, message))
+
+
+@cython.internal
+cdef class WriteWouldBlock(Exception):
+    pass
 
 
 def oid_str_to_tuple(oid_str):
@@ -287,7 +295,13 @@ cdef object error_from_session_ptr(msg, void* sp):
         sp,
         cython.address(p_errno),
         cython.address(p_snmp_errno),
-        cython.address(error_str))
+        NULL)
+
+    if p_snmp_errno == SNMPERR_BAD_SENDTO and p_errno == EAGAIN:
+        return WriteWouldBlock()
+
+    # Only construct the error string if needed.
+    snmp_sess_error(sp, NULL, NULL, cython.address(error_str))
 
     try:
         if p_snmp_errno == SNMPERR_TIMEOUT:
@@ -613,17 +627,34 @@ cdef class AsyncSession(object):
 
     ## These are the 'low level' snmp functions.
     def get(self, oids):
-        return self._do_snmp(self._gen_get_pdu(oids))
+        try:
+            return self._do_snmp(self._gen_get_pdu(oids))
+        except WriteWouldBlock:
+            self._wait_for_write()
+            return self._do_snmp(self._gen_get_pdu(oids))
 
     def get_next(self, py_oid):
-        return self._do_snmp(self._gen_getnext_pdu(py_oid))
+        try:
+            return self._do_snmp(self._gen_getnext_pdu(py_oid))
+        except WriteWouldBlock:
+            self._wait_for_write()
+            return self._do_snmp(self._gen_getnext_pdu(py_oid))
 
     def get_bulk(self, oids, nonrepeaters=0, maxrepetitions=10):
-        return self._do_snmp(
-            self._gen_getbulk_pdu(oids, nonrepeaters, maxrepetitions))
+        try:
+            return self._do_snmp(
+                self._gen_getbulk_pdu(oids, nonrepeaters, maxrepetitions))
+        except WriteWouldBlock:
+            self._wait_for_write()
+            return self._do_snmp(
+                self._gen_getbulk_pdu(oids, nonrepeaters, maxrepetitions))
 
     def set_oids(self, oids):
-        return self._do_snmp(self._gen_set_pdu(oids))
+        try:
+            return self._do_snmp(self._gen_set_pdu(oids))
+        except WriteWouldBlock:
+            self._wait_for_write()
+            return self._do_snmp(self._gen_set_pdu(oids))
 
     ## This is private API for the 'low level' calls.
     cdef _is_in_subtree(self, root, oid):
@@ -676,6 +707,12 @@ cdef class AsyncSession(object):
             raise
         else:
             return req
+
+    cdef _wait_for_write(self):
+        gevent_wait_write(
+            snmp_sess_transport(self.sp).sock,
+            self.args['timeout']
+        )
 
     cdef _do_snmp(self, netsnmp_pdu* req):
         if self.sp == NULL:
