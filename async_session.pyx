@@ -613,35 +613,17 @@ cdef class AsyncSession(object):
 
     ## These are the 'low level' snmp functions.
     def get(self, oids):
-        cdef netsnmp_pdu* req = snmp_pdu_create(SNMP_MSG_GET)
-        for py_oid in oids:
-            self._add_oid(req, py_oid)
-        return self._do_snmp(req)
+        return self._do_snmp(self._gen_get_pdu(oids))
 
     def get_next(self, py_oid):
-        cdef netsnmp_pdu* req = snmp_pdu_create(SNMP_MSG_GETNEXT)
-        self._add_oid(req, py_oid)
-        return self._do_snmp(req)
+        return self._do_snmp(self._gen_getnext_pdu(py_oid))
 
     def get_bulk(self, oids, nonrepeaters=0, maxrepetitions=10):
-        cdef netsnmp_pdu* req = snmp_pdu_create(SNMP_MSG_GETBULK)
-        req.errstat = nonrepeaters
-        req.errindex = maxrepetitions
-        for py_oid in oids:
-            self._add_oid(req, py_oid)
-        return self._do_snmp(req)
+        return self._do_snmp(
+            self._gen_getbulk_pdu(oids, nonrepeaters, maxrepetitions))
 
     def set_oids(self, oids):
-        cdef netsnmp_pdu* req = snmp_pdu_create(SNMP_MSG_SET)
-
-        try:
-            for py_oid, (value, value_type) in oids.iteritems():
-                self._add_oid_set(req, py_oid, value, value_type)
-        except Exception:
-            snmp_free_pdu(req)
-            raise
-        else:
-            return self._do_snmp(req)
+        return self._do_snmp(self._gen_set_pdu(oids))
 
     ## This is private API for the 'low level' calls.
     cdef _is_in_subtree(self, root, oid):
@@ -652,6 +634,48 @@ cdef class AsyncSession(object):
             if root[index] != oid[index]:
                 return False
         return True
+
+    cdef netsnmp_pdu* _gen_get_pdu(self, oids) except NULL:
+        cdef netsnmp_pdu* req = snmp_pdu_create(SNMP_MSG_GET)
+        if req == NULL:
+            raise MemoryError()
+
+        for py_oid in oids:
+            self._add_oid(req, py_oid)
+        return req
+
+    cdef netsnmp_pdu* _gen_getnext_pdu(self, py_oid) except NULL:
+        cdef netsnmp_pdu* req = snmp_pdu_create(SNMP_MSG_GETNEXT)
+        if req == NULL:
+            raise MemoryError()
+
+        self._add_oid(req, py_oid)
+        return req
+
+    cdef netsnmp_pdu* _gen_getbulk_pdu(self, oids, nonrepeaters, maxrepetitions) except NULL:
+        cdef netsnmp_pdu* req = snmp_pdu_create(SNMP_MSG_GETBULK)
+        if req == NULL:
+            raise MemoryError()
+
+        req.errstat = nonrepeaters
+        req.errindex = maxrepetitions
+        for py_oid in oids:
+            self._add_oid(req, py_oid)
+        return req
+
+    cdef netsnmp_pdu* _gen_set_pdu(self, oids) except NULL:
+        cdef netsnmp_pdu* req = snmp_pdu_create(SNMP_MSG_SET)
+        if req == NULL:
+            raise MemoryError()
+
+        try:
+            for py_oid, (value, value_type) in oids.iteritems():
+                self._add_oid_set(req, py_oid, value, value_type)
+        except Exception:
+            snmp_free_pdu(req)
+            raise
+        else:
+            return req
 
     cdef _do_snmp(self, netsnmp_pdu* req):
         if self.sp == NULL:
