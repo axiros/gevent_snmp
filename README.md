@@ -160,6 +160,27 @@ to_set = {
 
 result = session.set_oids(to_set)
 ```
+### Error Handling
+
+The APIs mentioned above may raise the following exceptions.
+* SNMPTimeoutError
+* SNMPResponseError
+
+#### SNMPTimeoutError
+This exception is raised if there is no SNMP-Response within the configured time constraints.
+
+#### SNMPResponseError
+This exception is raised if something with the response is wrong. It has the following attributes:
+* ```code```: Which is the error status from the response PDU
+* ```message```: String representation of the error
+
+```python
+try:
+    session.set_oids(to_set)
+except SNMPResponseError as error:
+    print error.code
+    print error.message
+```
 
 ### Clone
 Use this call to clone an existing session.
