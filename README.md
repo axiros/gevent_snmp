@@ -181,6 +181,21 @@ except SNMPResponseError as error:
     print error.code
     print error.message
 ```
+### Get Original Value Type
+Each entry in the varbind list of a SNMP response contains ```type``` and ```value```.
+Per default the API takes automatically care to convert the value into the
+corresponding python object. However it is also possible to get the ```type```
+for each entry. All the methods mentioned above have an extra parameter called
+```get_var_type```. If given and set to ```True``` the value for the returned
+dictionary will be a tuple. Where the first element is the ```type``` and the second
+element the ```value``` as a python object.
+
+For example:
+```python
+
+for oid, (asn_type, asn_value) for session.walk(oid, get_var_type=True).items():
+    print oid, asn_type, asn_value
+```
 
 ### Clone
 Use this call to clone an existing session.

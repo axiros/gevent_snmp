@@ -20,6 +20,6 @@ mod1 = Extension(
 
 setup(
     name='gevent_snmp',
-    version='0.8',
+    version='0.9',
     ext_modules=cythonize([mod1])
 )

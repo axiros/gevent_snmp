@@ -265,6 +265,21 @@ def oid_tuple_to_str(oid_tuple):
 VALID_VALUE_TYPES = set('iu3cCtaosdxnbUIFD')
 VALUE_TYPE_TO_INT = {key: ord(key) for key in VALID_VALUE_TYPES}
 
+VAR_TYPE_TO_STRING = {
+    ASN_OCTET_STR: "OCTET_STR",
+    ASN_INTEGER: "INTEGER",
+    ASN_NULL: "NULL",
+    ASN_OBJECT_ID: "OBJECT_ID",
+    ASN_BIT_STR: "BIT_STR",
+    ASN_IPADDRESS: "IPADDRESS",
+    ASN_COUNTER: "COUNTER",
+    ASN_GAUGE: "GAUGE",
+    ASN_TIMETICKS: "TIMETICKS",
+    ASN_COUNTER64: "COUNTER64",
+    ASN_APP_FLOAT: "APP_FLOAT",
+    ASN_APP_DOUBLE: "APP_DOUBLE"
+}
+
 
 cdef object error_from_session(msg, netsnmp_session* session):
     cdef int p_errno
@@ -572,18 +587,18 @@ cdef class AsyncSession(object):
         return CloneSession(self, override_args)
 
     ## These are 'higher level' functions.
-    def walk(self, root):
+    def walk(self, root, get_var_type=False):
         """Walks a tree by succesive calling get_next."""
         final_result = {}
         oid = root
 
         while True:
-            result = self.get_next(oid)
+            result = self.get_next(oid, get_var_type)
             oid = self._handle_walk_result(root, oid, result, final_result)
             if oid is None:
                 return final_result
 
-    def walk_with_get_bulk(self, root, maxrepetitions=10):
+    def walk_with_get_bulk(self, root, maxrepetitions=10, get_var_type=False):
         """Walks a *single* subtree by succesive calling get_bulk.
 
         It does not walk multiple columns at the same time, its just are more
@@ -594,7 +609,7 @@ cdef class AsyncSession(object):
         oid = root
 
         while True:
-            result = self.get_bulk([oid], 0, maxrepetitions)
+            result = self.get_bulk([oid], 0, maxrepetitions, get_var_type)
             oid = self._handle_walk_result(root, oid, result, final_result)
             if oid is None:
                 return final_result
@@ -626,35 +641,41 @@ cdef class AsyncSession(object):
         return next_oid
 
     ## These are the 'low level' snmp functions.
-    def get(self, oids):
+    def get(self, oids, get_var_type=False):
         try:
-            return self._do_snmp(self._gen_get_pdu(oids))
+            return self._do_snmp(self._gen_get_pdu(oids), get_var_type)
         except WriteWouldBlock:
             self._wait_for_write()
-            return self._do_snmp(self._gen_get_pdu(oids))
+            return self._do_snmp(self._gen_get_pdu(oids), get_var_type)
 
-    def get_next(self, py_oid):
+    def get_next(self, py_oid, get_var_type=False):
         try:
-            return self._do_snmp(self._gen_getnext_pdu(py_oid))
+            return self._do_snmp(self._gen_getnext_pdu(py_oid), get_var_type)
         except WriteWouldBlock:
             self._wait_for_write()
-            return self._do_snmp(self._gen_getnext_pdu(py_oid))
+            return self._do_snmp(self._gen_getnext_pdu(py_oid), get_var_type)
 
-    def get_bulk(self, oids, nonrepeaters=0, maxrepetitions=10):
-        try:
-            return self._do_snmp(
-                self._gen_getbulk_pdu(oids, nonrepeaters, maxrepetitions))
-        except WriteWouldBlock:
-            self._wait_for_write()
-            return self._do_snmp(
-                self._gen_getbulk_pdu(oids, nonrepeaters, maxrepetitions))
+    def get_bulk(
+            self,
+            oids,
+            nonrepeaters=0,
+            maxrepetitions=10,
+            get_var_type=False):
 
-    def set_oids(self, oids):
         try:
-            return self._do_snmp(self._gen_set_pdu(oids))
+            req = self._gen_getbulk_pdu(oids, nonrepeaters, maxrepetitions)
+            return self._do_snmp(req, get_var_type)
         except WriteWouldBlock:
             self._wait_for_write()
-            return self._do_snmp(self._gen_set_pdu(oids))
+            req = self._gen_getbulk_pdu(oids, nonrepeaters, maxrepetitions)
+            return self._do_snmp(req, get_var_type)
+
+    def set_oids(self, oids, get_var_type=False):
+        try:
+            return self._do_snmp(self._gen_set_pdu(oids), get_var_type)
+        except WriteWouldBlock:
+            self._wait_for_write()
+            return self._do_snmp(self._gen_set_pdu(oids), get_var_type)
 
     ## This is private API for the 'low level' calls.
     cdef _is_in_subtree(self, root, oid):
@@ -714,7 +735,7 @@ cdef class AsyncSession(object):
             self.args['timeout']
         )
 
-    cdef _do_snmp(self, netsnmp_pdu* req):
+    cdef _do_snmp(self, netsnmp_pdu* req, bint get_var_type):
         if self.sp == NULL:
             snmp_free_pdu(req)
             raise SNMPError("Session is not open")
@@ -730,7 +751,7 @@ cdef class AsyncSession(object):
 
         if rc == STAT_SUCCESS:
             try:
-                return self.parse_response(response)
+                return self.parse_response(response, get_var_type)
             finally:
                 snmp_free_pdu(response)
 
@@ -766,7 +787,7 @@ cdef class AsyncSession(object):
             msg = "Cannot set oid(%s) with val(%s) and type(%s): %s"
             raise Exception(msg % (py_oid, val, val_type, snmp_api_errstring(rc)))
 
-    cdef object parse_response(self, netsnmp_pdu* response):
+    cdef object parse_response(self, netsnmp_pdu* response, bint get_var_type):
         cdef netsnmp_variable_list* entry = NULL
         cdef dict parsed = {}
 
@@ -778,13 +799,18 @@ cdef class AsyncSession(object):
         entry = response.variables
         while (entry != NULL):
             key = tuple([int(entry.name[i]) for i in range(entry.name_length)])
-            value = self.parse_var(entry)
-            parsed[key] = value
+            value = self.parse_var_value(entry)
+
+            if get_var_type:
+                parsed[key] = (self.parse_var_type(entry), value)
+            else:
+                parsed[key] = value
+
             entry = entry.next_variable
 
         return parsed
 
-    cdef object parse_var(self, netsnmp_variable_list* var):
+    cdef object parse_var_value(self, netsnmp_variable_list* var):
         if var.var_type == ASN_OCTET_STR:
             return var.val.string[:var.val_len]
 
@@ -826,6 +852,14 @@ cdef class AsyncSession(object):
 
         else:
             return None
+
+    cdef object parse_var_type(self, netsnmp_variable_list* var):
+        cdef object var_type = var.var_type
+
+        if var_type not in VAR_TYPE_TO_STRING:
+            return "UNKNOWN"
+
+        return VAR_TYPE_TO_STRING[var_type]
 
 
 cdef object binary_to_hex_pystring(u_char* data, size_t data_size):
