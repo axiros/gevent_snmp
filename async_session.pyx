@@ -801,7 +801,7 @@ cdef class AsyncSession(object):
 
         entry = response.variables
         while (entry != NULL):
-            key = tuple([int(entry.name[i]) for i in range(entry.name_length)])
+            key = self.parse_var_key(entry)
             value = self.parse_var_value(entry)
 
             if get_var_type:
@@ -812,6 +812,9 @@ cdef class AsyncSession(object):
             entry = entry.next_variable
 
         return parsed
+
+    cdef object parse_var_key(self, netsnmp_variable_list* var):
+        return tuple([int(var.name[i]) for i in range(var.name_length)])
 
     cdef object parse_var_value(self, netsnmp_variable_list* var):
         if var.var_type == ASN_OCTET_STR:
