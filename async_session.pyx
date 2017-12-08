@@ -220,9 +220,11 @@ class SNMPTimeoutError(SNMPError):
     pass
 
 class SNMPResponseError(SNMPError):
-    def __init__(self, code, message):
+    def __init__(self, code, index, message):
         self.code = code
-        super(SNMPResponseError, self).__init__("%s: %s" % (code, message))
+        self.index = index
+        super(SNMPResponseError, self).__init__(
+            "Error at index(%s) with code(%s): %s" % (index, code, message))
 
 
 @cython.internal
@@ -794,6 +796,7 @@ cdef class AsyncSession(object):
         if not (response.errstat == SNMP_ERR_NOERROR):
             raise SNMPResponseError(
                 response.errstat,
+                response.errindex,
                 snmp_errstring(response.errstat))
 
         entry = response.variables
