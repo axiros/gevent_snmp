@@ -242,9 +242,9 @@ def oid_tuple_to_str(oid_tuple):
 
 # These are the type specifications allowed by 'snmp_add_var'
 # 'snmp_add_var' reads all the values as a *string* and parses them.
-# shortcout, long name, (C type, ASN type)
-# 'i'  'INTEGER' (long, ASN_INTEGER)
-# 'u'  'Unsigned32' (unsigned long, ASN_UNSIGNED)
+# shortcout, long name, (C type, ASN type, alias)
+# 'i'  'INTEGER'    (long, ASN_INTEGER)
+# 'u'  'Unsigned32' (unsigned long, ASN_UNSIGNED, TYPE_GAUGE)
 # '3'  'UInteger32' (unsigned long, ASN_UINTEGER)
 # 'c'  'Counter32'  (unsigned long, ASN_COUNTER)
 # 'C'  'Counter64'  (struct, ASN_COUNTER64)
