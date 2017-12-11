@@ -185,7 +185,7 @@ except SNMPResponseError as error:
 ```
 
 ### Flags
-The following methods have an additional ```py_flags``` parameter to control how
+The following methods have an optional ```py_flags``` parameter to control how
 the response is parsed. 
 * walk
 * walk_with_get_bulk
@@ -193,7 +193,7 @@ the response is parsed.
 * get_next
 * get_bulk
 
-This parameter is a python dictionary which allows the following flags.
+This parameter is a python dictionary which may contains the following flags:
 
 #### get_var_type
 Each entry in the varbind list of a SNMP response contains ```type``` and ```value```.
