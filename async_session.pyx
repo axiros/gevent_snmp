@@ -589,18 +589,23 @@ cdef class AsyncSession(object):
         return CloneSession(self, override_args)
 
     ## These are 'higher level' functions.
-    def walk(self, root, get_var_type=False):
+    def walk(self, root, bint get_var_type=False):
         """Walks a tree by succesive calling get_next."""
         final_result = {}
         oid = root
 
         while True:
-            result = self.get_next(oid, get_var_type)
-            oid = self._handle_walk_result(root, oid, result, final_result)
+            oid = self._handle_walk_result(
+                self._send_getnext(oid),
+                root,
+                oid,
+                final_result,
+                get_var_type)
+
             if oid is None:
                 return final_result
 
-    def walk_with_get_bulk(self, root, maxrepetitions=10, get_var_type=False):
+    def walk_with_get_bulk(self, root, maxrepetitions=10, bint get_var_type=False):
         """Walks a *single* subtree by succesive calling get_bulk.
 
         It does not walk multiple columns at the same time, its just are more
@@ -611,13 +616,24 @@ cdef class AsyncSession(object):
         oid = root
 
         while True:
-            result = self.get_bulk([oid], 0, maxrepetitions, get_var_type)
-            oid = self._handle_walk_result(root, oid, result, final_result)
+            oid = self._handle_walk_result(
+                self._send_getbulk([oid], 0, maxrepetitions),
+                root,
+                oid,
+                final_result,
+                get_var_type)
+
             if oid is None:
                 return final_result
 
     # This is the private API for the 'high level' calls.
-    cdef _handle_walk_result(self, root, prev_oid, result, final_result):
+    cdef _handle_walk_result(
+            self,
+            netsnmp_pdu* response,
+            root,
+            prev_oid,
+            final_result,
+            bint get_var_type):
         """Handles the results for walks.
 
         Adds (oid, value) pairs from result to final_result
@@ -625,59 +641,62 @@ cdef class AsyncSession(object):
         It returns None if processing should stop
         """
 
-        if not result:
-            return None
+        next_oid = None
+        cdef netsnmp_variable_list* entry = NULL
 
-        for next_oid, value in sorted(result.items()):
-            if next_oid == prev_oid:
-                return None
+        try:
+            self._raise_on_response_error(response)
+            entry = response.variables
+            while (entry != NULL):
+                next_oid = self.parse_var_key(entry)
+                if next_oid == prev_oid:
+                    return None
 
-            if value is END_OF_MIB:
-                return None
+                if entry.var_type == SNMP_ENDOFMIBVIEW:
+                    return None
 
-            if not self._is_in_subtree(root, next_oid):
-                return None
+                if not self._is_in_subtree(root, next_oid):
+                    return None
 
-            final_result[next_oid] = value
+                final_result[next_oid] = self._parse_varbind(entry, get_var_type)
+                entry = entry.next_variable
 
-        return next_oid
+            return next_oid
+
+        finally:
+            snmp_free_pdu(response)
 
     ## These are the 'low level' snmp functions.
-    def get(self, oids, get_var_type=False):
+    def get(self, oids, bint get_var_type=False):
         try:
-            return self._do_snmp(self._gen_get_pdu(oids), get_var_type)
+            response = self._send_req(self._gen_get_pdu(oids))
+            return self._handle_response(response, get_var_type)
         except WriteWouldBlock:
             self._wait_for_write()
-            return self._do_snmp(self._gen_get_pdu(oids), get_var_type)
+            response = self._send_req(self._gen_get_pdu(oids))
+            return self._handle_response(response, get_var_type)
 
-    def get_next(self, py_oid, get_var_type=False):
-        try:
-            return self._do_snmp(self._gen_getnext_pdu(py_oid), get_var_type)
-        except WriteWouldBlock:
-            self._wait_for_write()
-            return self._do_snmp(self._gen_getnext_pdu(py_oid), get_var_type)
+    def get_next(self, py_oid, bint get_var_type=False):
+        response = self._send_getnext(py_oid)
+        return self._handle_response(response, get_var_type)
 
     def get_bulk(
             self,
             oids,
             nonrepeaters=0,
             maxrepetitions=10,
-            get_var_type=False):
+            bint get_var_type=False):
 
-        try:
-            req = self._gen_getbulk_pdu(oids, nonrepeaters, maxrepetitions)
-            return self._do_snmp(req, get_var_type)
-        except WriteWouldBlock:
-            self._wait_for_write()
-            req = self._gen_getbulk_pdu(oids, nonrepeaters, maxrepetitions)
-            return self._do_snmp(req, get_var_type)
+        response = self._send_getbulk(oids, nonrepeaters, maxrepetitions)
+        return self._handle_response(response, get_var_type)
 
-    def set_oids(self, oids, get_var_type=False):
+    def set_oids(self, oids, bint get_var_type=False):
         try:
-            return self._do_snmp(self._gen_set_pdu(oids), get_var_type)
+            response = self._send_req(self._gen_set_pdu(oids))
+            return self._handle_response(response, get_var_type)
         except WriteWouldBlock:
-            self._wait_for_write()
-            return self._do_snmp(self._gen_set_pdu(oids), get_var_type)
+            response = self._send_req(self._gen_set_pdu(oids))
+            return self._handle_response(response, get_var_type)
 
     ## This is private API for the 'low level' calls.
     cdef _is_in_subtree(self, root, oid):
@@ -698,6 +717,13 @@ cdef class AsyncSession(object):
             self._add_oid(req, py_oid)
         return req
 
+    cdef netsnmp_pdu* _send_getnext(self, py_oid) except NULL:
+        try:
+            return self._send_req(self._gen_getnext_pdu(py_oid))
+        except WriteWouldBlock:
+            self._wait_for_write()
+            return self._send_req(self._gen_getnext_pdu(py_oid))
+
     cdef netsnmp_pdu* _gen_getnext_pdu(self, py_oid) except NULL:
         cdef netsnmp_pdu* req = snmp_pdu_create(SNMP_MSG_GETNEXT)
         if req == NULL:
@@ -705,6 +731,15 @@ cdef class AsyncSession(object):
 
         self._add_oid(req, py_oid)
         return req
+
+    cdef netsnmp_pdu* _send_getbulk(self, oids, nonrepeaters, maxrepetitions) except NULL:
+        try:
+            req = self._gen_getbulk_pdu(oids, nonrepeaters, maxrepetitions)
+            return self._send_req(req)
+        except WriteWouldBlock:
+            self._wait_for_write()
+            req = self._gen_getbulk_pdu(oids, nonrepeaters, maxrepetitions)
+            return self._send_req(req)
 
     cdef netsnmp_pdu* _gen_getbulk_pdu(self, oids, nonrepeaters, maxrepetitions) except NULL:
         cdef netsnmp_pdu* req = snmp_pdu_create(SNMP_MSG_GETBULK)
@@ -737,7 +772,7 @@ cdef class AsyncSession(object):
             self.args['timeout']
         )
 
-    cdef _do_snmp(self, netsnmp_pdu* req, bint get_var_type):
+    cdef netsnmp_pdu* _send_req(self, netsnmp_pdu* req) except NULL:
         if self.sp == NULL:
             snmp_free_pdu(req)
             raise SNMPError("Session is not open")
@@ -752,10 +787,7 @@ cdef class AsyncSession(object):
             cython.address(response))
 
         if rc == STAT_SUCCESS:
-            try:
-                return self.parse_response(response, get_var_type)
-            finally:
-                snmp_free_pdu(response)
+            return response
 
         elif self.error_in_my_select is not None:
             raise SNMPError("Error in query: %s" % self.error_in_my_select)
@@ -789,29 +821,38 @@ cdef class AsyncSession(object):
             msg = "Cannot set oid(%s) with val(%s) and type(%s): %s"
             raise Exception(msg % (py_oid, val, val_type, snmp_api_errstring(rc)))
 
-    cdef object parse_response(self, netsnmp_pdu* response, bint get_var_type):
-        cdef netsnmp_variable_list* entry = NULL
-        cdef dict parsed = {}
+    cdef object _handle_response(self, netsnmp_pdu* response, bint get_var_type):
+        try:
+            self._raise_on_response_error(response)
+            return self._parse_varbinds(response, get_var_type)
+        finally:
+            snmp_free_pdu(response)
 
+    cdef object _raise_on_response_error(self, netsnmp_pdu* response):
         if not (response.errstat == SNMP_ERR_NOERROR):
             raise SNMPResponseError(
                 response.errstat,
                 response.errindex,
                 snmp_errstring(response.errstat))
 
+    cdef object _parse_varbinds(self, netsnmp_pdu* response, bint get_var_type):
+        cdef netsnmp_variable_list* entry = NULL
+        cdef dict result = {}
+
         entry = response.variables
         while (entry != NULL):
             key = self.parse_var_key(entry)
-            value = self.parse_var_value(entry)
-
-            if get_var_type:
-                parsed[key] = (self.parse_var_type(entry), value)
-            else:
-                parsed[key] = value
-
+            result[key] = self._parse_varbind(entry, get_var_type)
             entry = entry.next_variable
 
-        return parsed
+        return result
+
+    cdef _parse_varbind(self, netsnmp_variable_list* entry, bint get_var_type):
+        value = self.parse_var_value(entry)
+        if get_var_type:
+            return (self.parse_var_type(entry), value)
+        else:
+            return value
 
     cdef object parse_var_key(self, netsnmp_variable_list* var):
         return tuple([int(var.name[i]) for i in range(var.name_length)])
