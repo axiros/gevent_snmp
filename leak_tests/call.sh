@@ -1,0 +1,13 @@
+/opt/axtract/bin/call_with_eggs snmp_error_set.py &
+/opt/axtract/bin/call_with_eggs timeout_get.py &
+/opt/axtract/bin/call_with_eggs timeout_get_bulk.py &
+/opt/axtract/bin/call_with_eggs timeout_get_next.py &
+/opt/axtract/bin/call_with_eggs timeout_set.py &
+/opt/axtract/bin/call_with_eggs timeout_walk_get_bulk.py &
+/opt/axtract/bin/call_with_eggs timeout_walk_get_next.py &
+/opt/axtract/bin/call_with_eggs working_get.py &
+/opt/axtract/bin/call_with_eggs working_get_bulk.py &
+/opt/axtract/bin/call_with_eggs working_get_next.py &
+/opt/axtract/bin/call_with_eggs working_set.py &
+/opt/axtract/bin/call_with_eggs working_walk_get_bulk.py &
+/opt/axtract/bin/call_with_eggs working_walk_get_next.py &
