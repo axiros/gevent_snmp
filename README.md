@@ -180,6 +180,7 @@ try:
     session.set_oids(to_set)
 except SNMPResponseError as error:
     print error.code
+    print error.index
     print error.message
 ```
 
