@@ -172,6 +172,7 @@ This exception is raised if there is no SNMP-Response within the configured time
 #### SNMPResponseError
 This exception is raised if something with the response is wrong. It has the following attributes:
 * ```code```: Which is the error status from the response PDU
+* ```index```: Which is the error index from the response PDU
 * ```message```: String representation of the error
 
 ```python
@@ -181,21 +182,50 @@ except SNMPResponseError as error:
     print error.code
     print error.message
 ```
-### Get Original Value Type
+
+### Flags
+The following methods have an additional ```py_flags``` parameter to control how
+the response is parsed. 
+* walk
+* walk_with_get_bulk
+* get
+* get_next
+* get_bulk
+
+This parameter is a python dictionary which allows the following flags.
+
+#### get_var_type
 Each entry in the varbind list of a SNMP response contains ```type``` and ```value```.
 Per default the API takes automatically care to convert the value into the
 corresponding python object. However it is also possible to get the ```type```
-for each entry. All the methods mentioned above have an extra parameter called
-```get_var_type```. If given and set to ```True``` the value for the returned
+for each entry. Is ```get_var_type``` given and set to ```True``` the value for the returned
 dictionary will be a tuple. Where the first element is the ```type``` and the second
 element the ```value``` as a python object.
 
 For example:
 ```python
 
-for oid, (asn_type, asn_value) for session.walk(oid, get_var_type=True).items():
+for oid, (asn_type, asn_value) for session.walk(oid, {'get_var_type': True}).items():
     print oid, asn_type, asn_value
 ```
+
+#### get_end_of_mib
+If given and set to ```True``` each single varbind of type
+```SNMP_ENDOFMIBVIEW``` will be encode to the special object
+```async_session.END_OF_MIB```. If this flag is not set 'end of mib view'
+is converted to ```None```.
+
+#### get_no_such_object
+If given and set to ```True``` each single varbind of type
+```SNMP_NOSUCHOBJECT:``` will be encode to the special object
+```async_session.NO_SUCH_OBJECT```. If this flag is not set 'no such object'
+is converted to ```None```.
+
+#### get_no_such_instance
+If given and set to ```True``` each single varbind of type
+```SNMP_NOSUCHINSTANCE``` will be encode to the special object
+```async_session.NO_SUCH_INSTANCE```. If this flag is not set 'no such instance'
+is converted to ```None```.
 
 ### Clone
 Use this call to clone an existing session.

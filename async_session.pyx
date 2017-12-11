@@ -4,6 +4,7 @@ from libc.stdlib cimport free as libc_free
 from posix.time cimport timeval
 from libc.stdint cimport uint64_t
 from libc.errno cimport EAGAIN
+from cpython.dict cimport PyDict_Size
 
 import gevent
 from gevent.socket import wait_read as gevent_wait_read
@@ -50,6 +51,8 @@ cdef extern from *:
         ASN_APP_FLOAT
         ASN_APP_DOUBLE
         SNMP_ENDOFMIBVIEW
+        SNMP_NOSUCHOBJECT
+        SNMP_NOSUCHINSTANCE
 
     cdef struct counter64:
         unsigned long high
@@ -210,8 +213,29 @@ cdef class EndOfMib(object):
     def __repr__(self):
         return str(self)
 
+@cython.internal
+cdef class NoSuchObject(object):
+    def __str__(self):
+        return "<No Such Object>"
+
+    def __repr__(self):
+        return str(self)
+
+
+@cython.internal
+cdef class NoSuchInstance(object):
+    def __str__(self):
+        return "<No Such Instance>"
+
+    def __repr__(self):
+        return str(self)
+
+
+
 
 END_OF_MIB = EndOfMib()
+NO_SUCH_OBJECT = NoSuchObject()
+NO_SUCH_INSTANCE = NoSuchInstance()
 
 class SNMPError(Exception):
     pass
@@ -589,8 +613,9 @@ cdef class AsyncSession(object):
         return CloneSession(self, override_args)
 
     ## These are 'higher level' functions.
-    def walk(self, root, bint get_var_type=False):
+    def walk(self, root, py_flags={}):
         """Walks a tree by succesive calling get_next."""
+        cdef uint64_t flags = AsyncSession.gen_flags(py_flags)
         final_result = {}
         oid = root
 
@@ -600,18 +625,19 @@ cdef class AsyncSession(object):
                 root,
                 oid,
                 final_result,
-                get_var_type)
+                flags)
 
             if oid is None:
                 return final_result
 
-    def walk_with_get_bulk(self, root, maxrepetitions=10, bint get_var_type=False):
+    def walk_with_get_bulk(self, root, maxrepetitions=10, py_flags={}):
         """Walks a *single* subtree by succesive calling get_bulk.
 
         It does not walk multiple columns at the same time, its just are more
         effienct implementation of walk() =>
         The API (input params and output) is nearly identical to walk()
         """
+        cdef uint64_t flags = AsyncSession.gen_flags(py_flags)
         final_result = {}
         oid = root
 
@@ -621,7 +647,7 @@ cdef class AsyncSession(object):
                 root,
                 oid,
                 final_result,
-                get_var_type)
+                flags)
 
             if oid is None:
                 return final_result
@@ -633,7 +659,7 @@ cdef class AsyncSession(object):
             root,
             prev_oid,
             final_result,
-            bint get_var_type):
+            uint64_t flags):
         """Handles the results for walks.
 
         Adds (oid, value) pairs from result to final_result
@@ -658,7 +684,7 @@ cdef class AsyncSession(object):
                 if not self._is_in_subtree(root, next_oid):
                     return None
 
-                final_result[next_oid] = self._parse_varbind(entry, get_var_type)
+                final_result[next_oid] = self._parse_varbind(entry, flags)
                 entry = entry.next_variable
 
             return next_oid
@@ -667,36 +693,98 @@ cdef class AsyncSession(object):
             snmp_free_pdu(response)
 
     ## These are the 'low level' snmp functions.
-    def get(self, oids, bint get_var_type=False):
+    def get(self, oids, py_flags={}):
+        cdef uint64_t flags = AsyncSession.gen_flags(py_flags)
+
         try:
             response = self._send_req(self._gen_get_pdu(oids))
-            return self._handle_response(response, get_var_type)
+            return self._handle_response(response, flags)
         except WriteWouldBlock:
             self._wait_for_write()
             response = self._send_req(self._gen_get_pdu(oids))
-            return self._handle_response(response, get_var_type)
+            return self._handle_response(response, flags)
 
-    def get_next(self, py_oid, bint get_var_type=False):
+    def get_next(self, py_oid, py_flags={}):
+        cdef uint64_t flags = AsyncSession.gen_flags(py_flags)
         response = self._send_getnext(py_oid)
-        return self._handle_response(response, get_var_type)
+        return self._handle_response(response, flags)
 
     def get_bulk(
             self,
             oids,
             nonrepeaters=0,
             maxrepetitions=10,
-            bint get_var_type=False):
+            py_flags={}):
 
+        cdef uint64_t flags = AsyncSession.gen_flags(py_flags)
         response = self._send_getbulk(oids, nonrepeaters, maxrepetitions)
-        return self._handle_response(response, get_var_type)
+        return self._handle_response(response, flags)
 
-    def set_oids(self, oids, bint get_var_type=False):
+    def set_oids(self, oids):
         try:
             response = self._send_req(self._gen_set_pdu(oids))
-            return self._handle_response(response, get_var_type)
+            return self._handle_response(response, 0)
         except WriteWouldBlock:
             response = self._send_req(self._gen_set_pdu(oids))
-            return self._handle_response(response, get_var_type)
+            return self._handle_response(response, 0)
+
+    ## Handling the flags
+    @staticmethod
+    cdef uint64_t gen_flags(dict py_flags) except -1:
+        cdef uint64_t flags = 0
+
+        if not PyDict_Size(py_flags):
+            return flags
+
+        if py_flags.get('get_var_type'):
+            flags = AsyncSession.set_get_vartype(flags)
+
+        if py_flags.get('get_end_of_mib'):
+            flags = AsyncSession.set_get_endofmib(flags)
+
+        if py_flags.get('get_no_such_object'):
+            flags = AsyncSession.set_get_nosuchobject(flags)
+
+        if py_flags.get('get_no_such_instance'):
+            flags = AsyncSession.set_get_nosuchinstance(flags)
+
+        return flags
+
+    # If the return value should have the low level ASN type included
+    @staticmethod
+    cdef inline uint64_t set_get_vartype(uint64_t flags):
+        return flags | (1 << 0)
+
+    @staticmethod
+    cdef inline uint64_t get_get_vartype(uint64_t flags):
+        return flags & (1 << 0)
+
+    # If we return the EndOfMib object or None
+    @staticmethod
+    cdef inline uint64_t set_get_endofmib(uint64_t flags):
+        return flags | (1 << 1)
+
+    @staticmethod
+    cdef inline uint64_t get_get_endofmib(uint64_t flags):
+        return flags & (1 << 1)
+
+    # If we return the NoSuchObject object or None
+    @staticmethod
+    cdef inline uint64_t set_get_nosuchobject(uint64_t flags):
+        return flags | (1 << 2)
+
+    @staticmethod
+    cdef inline uint64_t get_get_nosuchobject(uint64_t flags):
+        return flags & (1 << 2)
+
+    # If we return the NoSuchInstance object or None
+    @staticmethod
+    cdef inline uint64_t set_get_nosuchinstance(uint64_t flags):
+        return flags | (1 << 3)
+
+    @staticmethod
+    cdef inline uint64_t get_get_nosuchinstance(uint64_t flags):
+        return flags & (1 << 3)
 
     ## This is private API for the 'low level' calls.
     cdef _is_in_subtree(self, root, oid):
@@ -821,10 +909,10 @@ cdef class AsyncSession(object):
             msg = "Cannot set oid(%s) with val(%s) and type(%s): %s"
             raise Exception(msg % (py_oid, val, val_type, snmp_api_errstring(rc)))
 
-    cdef object _handle_response(self, netsnmp_pdu* response, bint get_var_type):
+    cdef object _handle_response(self, netsnmp_pdu* response, uint64_t flags):
         try:
             self._raise_on_response_error(response)
-            return self._parse_varbinds(response, get_var_type)
+            return self._parse_varbinds(response, flags)
         finally:
             snmp_free_pdu(response)
 
@@ -835,21 +923,21 @@ cdef class AsyncSession(object):
                 response.errindex,
                 snmp_errstring(response.errstat))
 
-    cdef object _parse_varbinds(self, netsnmp_pdu* response, bint get_var_type):
+    cdef object _parse_varbinds(self, netsnmp_pdu* response, uint64_t flags):
         cdef netsnmp_variable_list* entry = NULL
         cdef dict result = {}
 
         entry = response.variables
         while (entry != NULL):
             key = self.parse_var_key(entry)
-            result[key] = self._parse_varbind(entry, get_var_type)
+            result[key] = self._parse_varbind(entry, flags)
             entry = entry.next_variable
 
         return result
 
-    cdef _parse_varbind(self, netsnmp_variable_list* entry, bint get_var_type):
-        value = self.parse_var_value(entry)
-        if get_var_type:
+    cdef _parse_varbind(self, netsnmp_variable_list* entry, uint64_t flags):
+        value = self.parse_var_value(entry, flags)
+        if AsyncSession.get_get_vartype(flags):
             return (self.parse_var_type(entry), value)
         else:
             return value
@@ -857,7 +945,7 @@ cdef class AsyncSession(object):
     cdef object parse_var_key(self, netsnmp_variable_list* var):
         return tuple([int(var.name[i]) for i in range(var.name_length)])
 
-    cdef object parse_var_value(self, netsnmp_variable_list* var):
+    cdef object parse_var_value(self, netsnmp_variable_list* var, uint64_t flags):
         if var.var_type == ASN_OCTET_STR:
             return var.val.string[:var.val_len]
 
@@ -895,7 +983,13 @@ cdef class AsyncSession(object):
             return deref(var.val.doubleVal)
 
         elif var.var_type == SNMP_ENDOFMIBVIEW:
-            return END_OF_MIB
+            return END_OF_MIB if AsyncSession.get_get_endofmib(flags) else None
+
+        elif var.var_type == SNMP_NOSUCHINSTANCE:
+            return NO_SUCH_INSTANCE if AsyncSession.get_get_nosuchinstance(flags) else None
+
+        elif var.var_type == SNMP_NOSUCHOBJECT:
+            return NO_SUCH_OBJECT if AsyncSession.get_get_nosuchobject(flags) else None
 
         else:
             return None
