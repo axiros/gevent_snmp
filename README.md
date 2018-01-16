@@ -206,7 +206,7 @@ element the ```value``` as a python object.
 For example:
 ```python
 
-for oid, (asn_type, asn_value) for session.walk(oid, {'get_var_type': True}).items():
+for oid, (asn_type, asn_value) for session.walk(oid, py_flags={'get_var_type': True}).items():
     print oid, asn_type, asn_value
 ```
 
