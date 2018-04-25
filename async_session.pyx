@@ -10,6 +10,7 @@ import gevent
 from gevent.socket import wait_read as gevent_wait_read
 from gevent.socket import wait_write as gevent_wait_write
 from gevent.socket import timeout as TimeoutError
+from collections import OrderedDict
 
 ctypedef unsigned int u_int
 ctypedef unsigned char u_char
@@ -756,6 +757,9 @@ cdef class AsyncSession(object):
         if py_flags.get('get_no_such_instance'):
             flags = AsyncSession.set_get_nosuchinstance(flags)
 
+        if py_flags.get('as_ordered_dict'):
+            flags = AsyncSession.set_as_ordered_dict(flags)
+
         return flags
 
     # If the return value should have the low level ASN type included
@@ -794,7 +798,14 @@ cdef class AsyncSession(object):
     cdef inline uint64_t get_get_nosuchinstance(uint64_t flags):
         return flags & (1 << 3)
 
+    # If the results should be ordered
+    @staticmethod
+    cdef inline uint64_t set_as_ordered_dict(uint64_t flags):
+        return flags | (1 << 4)
 
+    @staticmethod
+    cdef inline uint64_t get_as_ordered_dict(uint64_t flags):
+        return flags & (1 << 4)
 
     ## This is private API for the 'low level' calls.
     cdef netsnmp_pdu* _gen_get_pdu(self, oids) except NULL:
@@ -926,7 +937,7 @@ cdef class AsyncSession(object):
 
     cdef object _parse_varbinds(self, netsnmp_pdu* response, uint64_t flags):
         cdef netsnmp_variable_list* entry = NULL
-        cdef dict result = {}
+        result = OrderedDict() if AsyncSession.get_as_ordered_dict(flags) else {}
 
         entry = response.variables
         while (entry != NULL):

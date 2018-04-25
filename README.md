@@ -249,6 +249,10 @@ If given and set to ```True``` each single varbind of type
 ```async_session.NO_SUCH_INSTANCE```. If this flag is not set 'no such instance'
 is converted to ```None```.
 
+#### as_ordered_dict
+If given and set to ```True``` a ```collections.OrderedDict``` is returned.
+It preserves the order of the incoming varbinds.
+
 ### Clone
 Use this call to clone an existing session.
 * *Input:* Config options for the new session. Options not mentioned here are
