@@ -57,6 +57,27 @@ ret = async_session.oid_tuple_to_str((1, 3, 6, 1, 2, 1, 1, 1, 0))
 assert ret == "1.3.6.1.2.1.1.1.0"
 ```
 
+### is_in_subtree
+Checks if an oid is within another one.
+First parameter is the `root`. Second one is checked if its a subtree of the root.
+Both parameters must be tuple of integers.
+
+```python
+ret = async_session.is_in_subtree(
+    (1, 3, 6, 1, 4, 1, 4491, 2, 1, 20, 1, 4, 1, 4),
+    (1, 3, 6, 1, 4, 1, 4491, 2, 1, 20, 1, 4, 1, 4, 3165, 50798601)
+)
+
+assert ret == True
+
+ret = async_session.is_in_subtree(
+    (1, 3, 6, 1, 4, 1, 4491, 2, 1, 20, 1, 4, 1, 4),
+    (1, 3, 6, 1, 4, 1, 4491, 2, 1, 20, 1, 4, 1, 5, 1)
+)
+
+assert ret == False
+```
+
 ### SNMP-GET
 * *Input:* List of oid tuples.
 * *Output:* Dictionary

@@ -265,6 +265,14 @@ def oid_tuple_to_str(oid_tuple):
     """Converts a tuple of integers like (1, 2, 3) to a sting like '1.2.3'"""
     return '.'.join(map(str, oid_tuple))
 
+cpdef is_in_subtree(root, oid):
+    if len(oid) < len(root):
+        return False
+
+    for index in range(len(root)):
+        if root[index] != oid[index]:
+            return False
+    return True
 
 # These are the type specifications allowed by 'snmp_add_var'
 # 'snmp_add_var' reads all the values as a *string* and parses them.
@@ -681,7 +689,7 @@ cdef class AsyncSession(object):
                 if entry.var_type == SNMP_ENDOFMIBVIEW:
                     return None
 
-                if not self._is_in_subtree(root, next_oid):
+                if not is_in_subtree(root, next_oid):
                     return None
 
                 final_result[next_oid] = self._parse_varbind(entry, flags)
@@ -786,16 +794,9 @@ cdef class AsyncSession(object):
     cdef inline uint64_t get_get_nosuchinstance(uint64_t flags):
         return flags & (1 << 3)
 
+
+
     ## This is private API for the 'low level' calls.
-    cdef _is_in_subtree(self, root, oid):
-        if len(oid) < len(root):
-            return False
-
-        for index in range(len(root)):
-            if root[index] != oid[index]:
-                return False
-        return True
-
     cdef netsnmp_pdu* _gen_get_pdu(self, oids) except NULL:
         cdef netsnmp_pdu* req = snmp_pdu_create(SNMP_MSG_GET)
         if req == NULL:
