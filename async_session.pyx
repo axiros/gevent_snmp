@@ -789,8 +789,8 @@ cdef class AsyncSession(object):
         if py_flags.get('as_ordered_dict'):
             flags = AsyncSession.set_as_ordered_dict(flags)
 
-        if py_flags.get('as_netsnmp_strings'):
-            flags = AsyncSession.set_as_netsnmp_strings(flags)
+        if py_flags.get('get_netsnmp_string'):
+            flags = AsyncSession.set_get_netsnmp_string(flags)
 
         return flags
 
@@ -841,11 +841,11 @@ cdef class AsyncSession(object):
 
     # If the values should be formated by netsnmp
     @staticmethod
-    cdef inline uint64_t set_as_netsnmp_strings(uint64_t flags):
+    cdef inline uint64_t set_get_netsnmp_string(uint64_t flags):
         return flags | (1 << 5)
 
     @staticmethod
-    cdef inline uint64_t get_as_netsnmp_strings(uint64_t flags):
+    cdef inline uint64_t get_get_netsnmp_string(uint64_t flags):
         return flags & (1 << 5)
 
     ## This is private API for the 'low level' calls.
@@ -990,8 +990,15 @@ cdef class AsyncSession(object):
 
     cdef _parse_varbind(self, netsnmp_variable_list* entry, uint64_t flags):
         value = self.parse_var_value(entry, flags)
-        if AsyncSession.get_get_vartype(flags):
+        if AsyncSession.get_get_vartype(flags) and AsyncSession.get_get_netsnmp_string(flags):
+            return (self.parse_var_type(entry), value, self.format_varbind(entry))
+
+        elif AsyncSession.get_get_vartype(flags):
             return (self.parse_var_type(entry), value)
+
+        elif AsyncSession.get_get_netsnmp_string(flags):
+            return (value, self.format_varbind(entry))
+
         else:
             return value
 
@@ -1002,9 +1009,6 @@ cdef class AsyncSession(object):
             self,
             netsnmp_variable_list* var,
             uint64_t flags):
-
-        if AsyncSession.get_as_netsnmp_strings(flags):
-            return self.format_varbind(var)
 
         if var.var_type == ASN_OCTET_STR:
             return var.val.string[:var.val_len]
