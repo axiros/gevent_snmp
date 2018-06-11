@@ -5,6 +5,7 @@ from posix.time cimport timeval
 from libc.stdint cimport uint64_t
 from libc.errno cimport EAGAIN
 from cpython.dict cimport PyDict_Size
+from cpython.string cimport PyString_FromStringAndSize
 
 import gevent
 from gevent.socket import wait_read as gevent_wait_read
@@ -193,6 +194,26 @@ cdef extern from *:
 
     void init_snmp(char*)
 
+    # varbind API
+    int snprint_value(
+        char *buf,
+        size_t buf_len,
+        const oid * objid,
+        size_t objidlen,
+        const netsnmp_variable_list * variable)
+
+
+    int sprint_realloc_value(
+        u_char ** buf,
+        size_t * buf_len,
+        size_t * out_len,
+        int allow_realloc,
+        const oid * objid,
+        size_t objidlen,
+        const netsnmp_variable_list * variable)
+
+    void* snmp_out_toggle_options(char *options)
+
     cdef enum:
         STAT_SUCCESS
         SNMP_ERR_NOERROR
@@ -202,8 +223,16 @@ cdef extern from *:
 
 # SNMP version 3 works only if this method is called once.
 # Otherwise you get 'no such security service available' errors.
+# It is also needed to format values according to MIB,
+# because it loads all the MIBS.
 def init_snmplib():
     init_snmp('async_session')
+
+
+def toggle_netsnmp_format_options(options):
+    for opt in options:
+        if snmp_out_toggle_options(opt) != NULL:
+            raise Exception("Option (%s) is not a valid format option" % opt)
 
 
 @cython.internal
@@ -760,6 +789,9 @@ cdef class AsyncSession(object):
         if py_flags.get('as_ordered_dict'):
             flags = AsyncSession.set_as_ordered_dict(flags)
 
+        if py_flags.get('as_netsnmp_strings'):
+            flags = AsyncSession.set_as_netsnmp_strings(flags)
+
         return flags
 
     # If the return value should have the low level ASN type included
@@ -806,6 +838,15 @@ cdef class AsyncSession(object):
     @staticmethod
     cdef inline uint64_t get_as_ordered_dict(uint64_t flags):
         return flags & (1 << 4)
+
+    # If the values should be formated by netsnmp
+    @staticmethod
+    cdef inline uint64_t set_as_netsnmp_strings(uint64_t flags):
+        return flags | (1 << 5)
+
+    @staticmethod
+    cdef inline uint64_t get_as_netsnmp_strings(uint64_t flags):
+        return flags & (1 << 5)
 
     ## This is private API for the 'low level' calls.
     cdef netsnmp_pdu* _gen_get_pdu(self, oids) except NULL:
@@ -957,7 +998,14 @@ cdef class AsyncSession(object):
     cdef object parse_var_key(self, netsnmp_variable_list* var):
         return tuple([int(var.name[i]) for i in range(var.name_length)])
 
-    cdef object parse_var_value(self, netsnmp_variable_list* var, uint64_t flags):
+    cdef object parse_var_value(
+            self,
+            netsnmp_variable_list* var,
+            uint64_t flags):
+
+        if AsyncSession.get_as_netsnmp_strings(flags):
+            return self.format_varbind(var)
+
         if var.var_type == ASN_OCTET_STR:
             return var.val.string[:var.val_len]
 
@@ -1005,6 +1053,44 @@ cdef class AsyncSession(object):
 
         else:
             return None
+
+    cdef object format_varbind(self, netsnmp_variable_list* var):
+        cdef object result
+
+        # Variables used for sprint_realloc_value
+        cdef u_char* dyn_buff = NULL
+        cdef size_t dyn_buff_len = 0
+        cdef size_t dyn_out_len = 0
+
+        # variables used for snprint_value
+        cdef char fixed_buff[512]
+        cdef int rc
+
+        rc = snprint_value(
+            fixed_buff,
+            cython.sizeof(fixed_buff),
+            var.name,
+            var.name_length,
+            var)
+
+        if rc != -1:
+            result = PyString_FromStringAndSize(fixed_buff, rc)
+
+        else:
+            # 512 bytes was not enough. Now let netsnmp allocate dynamically.
+            sprint_realloc_value(
+                cython.address(dyn_buff),
+                cython.address(dyn_buff_len),
+                cython.address(dyn_out_len),
+                1,
+                var.name,
+                var.name_length,
+                var)
+
+            result = PyString_FromStringAndSize(<char*>dyn_buff, dyn_out_len)
+            libc_free(dyn_buff)
+
+        return result
 
     cdef object parse_var_type(self, netsnmp_variable_list* var):
         cdef object var_type = var.var_type
