@@ -260,6 +260,10 @@ These functions take the definition of an OID from its corresponding MIB to
 format the value accordingly. NET-SNMP offers some options to control the
 format behaviour. See ```toggle_netsnmp_format_options```.
 
+**Note**: The MIB's must be loaded, otherwise the format does not work.
+To do so call the following at process startup:
+
+    async_session.init_snmplib()
 
 
 ### Clone
@@ -277,7 +281,7 @@ with sess.clone_session(community='private') as priv_sess:
 ```
 
 ### toggle_netsnmp_format_options
-Control the format of the values if the flag ```as_netsnmp_string=True``` is
+Control the format of the values if the flag ```as_netsnmp_strings=True``` is
 used. Since the NET-SNMP functions for formatting are used, the corresponding
 format options are also supported.
 To get a list of all supported options see:
