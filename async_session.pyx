@@ -758,13 +758,15 @@ cdef class AsyncSession(object):
         response = self._send_getbulk(oids, nonrepeaters, maxrepetitions)
         return self._handle_response(response, flags)
 
-    def set_oids(self, oids):
+    def set_oids(self, oids, py_flags={}):
+        cdef uint64_t flags = AsyncSession.gen_flags(py_flags)
+
         try:
             response = self._send_req(self._gen_set_pdu(oids))
-            return self._handle_response(response, 0)
+            return self._handle_response(response, flags)
         except WriteWouldBlock:
             response = self._send_req(self._gen_set_pdu(oids))
-            return self._handle_response(response, 0)
+            return self._handle_response(response, flags)
 
     ## Handling the flags
     @staticmethod

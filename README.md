@@ -213,6 +213,7 @@ the response is parsed.
 * get
 * get_next
 * get_bulk
+* set
 
 This parameter is a python dictionary which may contains the following flags:
 
