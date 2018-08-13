@@ -5,7 +5,7 @@ from posix.time cimport timeval
 from libc.stdint cimport uint64_t
 from libc.errno cimport EAGAIN
 from cpython.dict cimport PyDict_Size
-from cpython.string cimport PyString_FromStringAndSize
+from cpython.bytes cimport PyBytes_FromStringAndSize
 
 import gevent
 from gevent.socket import wait_read as gevent_wait_read
@@ -1080,7 +1080,7 @@ cdef class AsyncSession(object):
             var)
 
         if rc != -1:
-            result = PyString_FromStringAndSize(fixed_buff, rc)
+            result = PyBytes_FromStringAndSize(fixed_buff, rc)
 
         else:
             # 512 bytes was not enough. Now let netsnmp allocate dynamically.
@@ -1093,7 +1093,7 @@ cdef class AsyncSession(object):
                 var.name_length,
                 var)
 
-            result = PyString_FromStringAndSize(<char*>dyn_buff, dyn_out_len)
+            result = PyBytes_FromStringAndSize(<char*>dyn_buff, dyn_out_len)
             libc_free(dyn_buff)
 
         return result
