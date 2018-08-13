@@ -1676,7 +1676,7 @@ static PyTypeObject *__pyx_ptype_7cpython_4type_type = 0;
 
 /* Module declarations from 'cpython.dict' */
 
-/* Module declarations from 'cpython.string' */
+/* Module declarations from 'cpython.bytes' */
 
 /* Module declarations from 'async_session' */
 static PyTypeObject *__pyx_ptype_13async_session_EndOfMib = 0;
@@ -13083,7 +13083,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession_format_varbind(CYTHON_UN
  *             var)
  * 
  *         if rc != -1:             # <<<<<<<<<<<<<<
- *             result = PyString_FromStringAndSize(fixed_buff, rc)
+ *             result = PyBytes_FromStringAndSize(fixed_buff, rc)
  * 
  */
   __pyx_t_1 = ((__pyx_v_rc != -1L) != 0);
@@ -13092,11 +13092,11 @@ static PyObject *__pyx_f_13async_session_12AsyncSession_format_varbind(CYTHON_UN
     /* "async_session.pyx":1083
  * 
  *         if rc != -1:
- *             result = PyString_FromStringAndSize(fixed_buff, rc)             # <<<<<<<<<<<<<<
+ *             result = PyBytes_FromStringAndSize(fixed_buff, rc)             # <<<<<<<<<<<<<<
  * 
  *         else:
  */
-    __pyx_t_2 = PyString_FromStringAndSize(__pyx_v_fixed_buff, __pyx_v_rc); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1083, __pyx_L1_error)
+    __pyx_t_2 = PyBytes_FromStringAndSize(__pyx_v_fixed_buff, __pyx_v_rc); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1083, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __pyx_v_result = __pyx_t_2;
     __pyx_t_2 = 0;
@@ -13105,7 +13105,7 @@ static PyObject *__pyx_f_13async_session_12AsyncSession_format_varbind(CYTHON_UN
  *             var)
  * 
  *         if rc != -1:             # <<<<<<<<<<<<<<
- *             result = PyString_FromStringAndSize(fixed_buff, rc)
+ *             result = PyBytes_FromStringAndSize(fixed_buff, rc)
  * 
  */
     goto __pyx_L3;
@@ -13125,25 +13125,25 @@ static PyObject *__pyx_f_13async_session_12AsyncSession_format_varbind(CYTHON_UN
  *                 var.name_length,
  *                 var)             # <<<<<<<<<<<<<<
  * 
- *             result = PyString_FromStringAndSize(<char*>dyn_buff, dyn_out_len)
+ *             result = PyBytes_FromStringAndSize(<char*>dyn_buff, dyn_out_len)
  */
     (void)(sprint_realloc_value((&__pyx_v_dyn_buff), (&__pyx_v_dyn_buff_len), (&__pyx_v_dyn_out_len), 1, __pyx_v_var->name, __pyx_v_var->name_length, __pyx_v_var));
 
     /* "async_session.pyx":1096
  *                 var)
  * 
- *             result = PyString_FromStringAndSize(<char*>dyn_buff, dyn_out_len)             # <<<<<<<<<<<<<<
+ *             result = PyBytes_FromStringAndSize(<char*>dyn_buff, dyn_out_len)             # <<<<<<<<<<<<<<
  *             libc_free(dyn_buff)
  * 
  */
-    __pyx_t_2 = PyString_FromStringAndSize(((char *)__pyx_v_dyn_buff), __pyx_v_dyn_out_len); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1096, __pyx_L1_error)
+    __pyx_t_2 = PyBytes_FromStringAndSize(((char *)__pyx_v_dyn_buff), __pyx_v_dyn_out_len); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1096, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __pyx_v_result = __pyx_t_2;
     __pyx_t_2 = 0;
 
     /* "async_session.pyx":1097
  * 
- *             result = PyString_FromStringAndSize(<char*>dyn_buff, dyn_out_len)
+ *             result = PyBytes_FromStringAndSize(<char*>dyn_buff, dyn_out_len)
  *             libc_free(dyn_buff)             # <<<<<<<<<<<<<<
  * 
  *         return result
@@ -17241,7 +17241,7 @@ if (!__Pyx_RefNanny) {
   #endif
 
   /* "async_session.pyx":10
- * from cpython.string cimport PyString_FromStringAndSize
+ * from cpython.bytes cimport PyBytes_FromStringAndSize
  * 
  * import gevent             # <<<<<<<<<<<<<<
  * from gevent.socket import wait_read as gevent_wait_read
