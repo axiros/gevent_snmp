@@ -1,6 +1,8 @@
+import os
 from setuptools import setup
 from distutils.extension import Extension
 
+libname = os.getenv('NETSNMP_LIBNAME', 'netsnmp')
 
 try:
     from Cython.Build import cythonize
@@ -14,7 +16,7 @@ else:
 mod1 = Extension(
     'async_session',
     sources,
-    libraries=['netsnmp'],
+    libraries=[libname],
     extra_compile_args=['-O3']
 )
 
