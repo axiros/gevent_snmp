@@ -6,6 +6,7 @@ from libc.stdint cimport uint64_t
 from libc.errno cimport EAGAIN
 from cpython.dict cimport PyDict_Size
 from cpython.bytes cimport PyBytes_FromStringAndSize
+from cpython.version cimport PY_MAJOR_VERSION
 
 import gevent
 from gevent.socket import wait_read as gevent_wait_read
@@ -1028,7 +1029,10 @@ cdef class AsyncSession(object):
             return var.val.bitstring[:var.val_len]
 
         elif var.var_type == ASN_IPADDRESS:
-            return '.'.join([str(ord(x)) for x in var.val.bitstring[:4]])
+            if PY_MAJOR_VERSION >= 3:
+                return '.'.join([str(x) for x in var.val.bitstring[:4]])
+            else:
+                return '.'.join([str(ord(x)) for x in var.val.bitstring[:4]])
 
         elif var.var_type == ASN_COUNTER:
             return deref(var.val.integer)
