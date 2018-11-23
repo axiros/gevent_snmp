@@ -174,9 +174,13 @@ for oid in sorted(result):
 
 Example:
 ```python
-# Set a new location.
 to_set = {
-    (1, 3, 6, 1, 2, 1, 1, 1, 0): ('new location', 's')
+    # Set a new location.
+    (1, 3, 6, 1, 2, 1, 1, 1, 0): ('new location', 's'),
+    
+    # Also integers have to be given as strings.
+    # The following disable IP forwarding on the first interface.
+    (1, 3, 6, 1, 2, 1, 4, 1, 0): ("2", "i")
 }
 
 result = session.set_oids(to_set)
