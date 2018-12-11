@@ -100,7 +100,6 @@ cdef extern from *:
         SNMP_SEC_LEVEL_AUTHNOPRIV
         SNMP_SEC_LEVEL_AUTHPRIV
         SNMP_SEC_MODEL_USM
-        SNMP_FLAGS_DONT_PROBE
 
     # V3 related constats.
     cdef oid* usmHMACMD5AuthProtocol
@@ -181,10 +180,6 @@ cdef extern from *:
 
     # Works on the session pointer returned by snmp_sess_open
     int snmp_sess_synch_response(void*, netsnmp_pdu*, netsnmp_pdu**)
-
-    # 0: error
-    # 1: ok
-    int snmpv3_engineID_probe(void*, netsnmp_session*)
 
     netsnmp_transport_s* snmp_sess_transport(void*)
     netsnmp_session* snmp_sess_session(void*)
@@ -393,7 +388,6 @@ cdef object error_from_session_ptr(msg, void* sp):
 
 
 cdef int my_select(void* ctx, timeval* timeout):
-
     # Error handling:
     # If there is an exception in gevent_wait_read I CAN NOT just 'return -1'.
     # It looks like netsnmp has a memory leak if 'select()' fails.
@@ -523,18 +517,6 @@ cdef class AsyncSession(object):
         else:
             raise Exception("Unkown snmp version: %s" % self.args['version'])
 
-        # snmpV3 needs an engineID to work.
-        # Typically this engineID is not known => seperate 'probe' query needed
-        # Per default the netsnmp library does this 'probe' on its own.
-        # Unfortunately this implicit probe by the netsnmp library happens
-        # *synchronous*, => A single probe in one session could block the WHOLE
-        # gevent event-loop.
-        # The following code avoids the implicit synchronous probe, instead we
-        # do a ASYNChronous probe ourself.
-
-        # Forbid probing in snmp_sess_open (has no effect on v1 or v2c).
-        sess_cfg.flags |= SNMP_FLAGS_DONT_PROBE
-
         self.sp = snmp_sess_open(cython.address(sess_cfg))
         if self.sp == NULL:
             raise error_from_session("Can not open", cython.address(sess_cfg))
@@ -543,10 +525,6 @@ cdef class AsyncSession(object):
 
         # Ignores the fd_set within the snmp-api.
         snmp_sess_transport(self.sp).flags |= 0x100000
-
-        if sess_cfg.version == SNMP_VERSION_3 and sess_cfg.securityEngineIDLen == 0:
-            # engine_id is not known, probe it.
-            self._do_snmpv3_engine_id_probe(cython.address(sess_cfg))
 
     cdef _set_community(self, netsnmp_session* sess_cfg):
         sess_cfg.community = <bytes?>(self.args['community'])
@@ -634,19 +612,6 @@ cdef class AsyncSession(object):
             self.args['context_engine_id_binary'] = bin_val
             sess_cfg.contextEngineID = <bytes?>(bin_val)
             sess_cfg.contextEngineIDLen = len(bin_val)
-
-    cdef _do_snmpv3_engine_id_probe(self, netsnmp_session* sess_cfg):
-        cdef int res = 0
-
-        # Ensure that probe is enabled.
-        snmp_sess_session(self.sp).flags &= (~SNMP_FLAGS_DONT_PROBE)
-        res = snmpv3_engineID_probe(self.sp, sess_cfg)
-
-        if res == 0:
-            raise error_from_session("Cannot probe v3 engineID", sess_cfg)
-
-        # Probe was successful, don't do it again.
-        snmp_sess_session(self.sp).flags |= SNMP_FLAGS_DONT_PROBE
 
     def clone_session(self, **override_args):
         return CloneSession(self, override_args)
