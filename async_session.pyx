@@ -760,6 +760,9 @@ cdef class AsyncSession(object):
         if py_flags.get('get_netsnmp_string'):
             flags = AsyncSession.set_get_netsnmp_string(flags)
 
+        if py_flags.get('as_list'):
+            flags = AsyncSession.set_as_list(flags)
+
         return flags
 
     # If the return value should have the low level ASN type included
@@ -815,6 +818,15 @@ cdef class AsyncSession(object):
     @staticmethod
     cdef inline uint64_t get_get_netsnmp_string(uint64_t flags):
         return flags & (1 << 5)
+
+    # If result should be list of (oid, value) instead of dict
+    @staticmethod
+    cdef inline uint64_t set_as_list(uint64_t flags):
+        return flags | (1 << 6)
+
+    @staticmethod
+    cdef inline uint64_t get_as_list(uint64_t flags):
+        return flags & (1 << 6)
 
     ## This is private API for the 'low level' calls.
     cdef netsnmp_pdu* _gen_get_pdu(self, oids) except NULL:
@@ -946,15 +958,20 @@ cdef class AsyncSession(object):
 
     cdef object _parse_varbinds(self, netsnmp_pdu* response, uint64_t flags):
         cdef netsnmp_variable_list* entry = NULL
-        result = OrderedDict() if AsyncSession.get_as_ordered_dict(flags) else {}
+        cdef list result = []
 
         entry = response.variables
         while (entry != NULL):
             key = self.parse_var_key(entry)
-            result[key] = self._parse_varbind(entry, flags)
+            result.append((key, self._parse_varbind(entry, flags)))
             entry = entry.next_variable
 
-        return result
+        if AsyncSession.get_as_list(flags):
+            return result
+        elif AsyncSession.get_as_ordered_dict(flags):
+            return OrderedDict(result)
+        else:
+            return dict(result)
 
     cdef _parse_varbind(self, netsnmp_variable_list* entry, uint64_t flags):
         value = self.parse_var_value(entry, flags)
