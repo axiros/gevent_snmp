@@ -678,7 +678,7 @@ cdef class AsyncSession(object):
             self._raise_on_response_error(response)
             entry = response.variables
             while (entry != NULL):
-                next_oid = self.parse_var_key(entry)
+                next_oid = AsyncSession.parse_var_key(entry)
                 if next_oid == prev_oid:
                     return None
 
@@ -688,7 +688,7 @@ cdef class AsyncSession(object):
                 if not is_in_subtree(root, next_oid):
                     return None
 
-                final_result[next_oid] = self._parse_varbind(entry, flags)
+                final_result[next_oid] = AsyncSession._parse_varbind(entry, flags)
                 entry = entry.next_variable
 
             return next_oid
@@ -945,7 +945,7 @@ cdef class AsyncSession(object):
     cdef object _handle_response(self, netsnmp_pdu* response, uint64_t flags):
         try:
             self._raise_on_response_error(response)
-            return self._parse_varbinds(response, flags)
+            return AsyncSession._parse_varbinds(response, flags)
         finally:
             snmp_free_pdu(response)
 
@@ -956,14 +956,15 @@ cdef class AsyncSession(object):
                 response.errindex,
                 snmp_errstring(response.errstat))
 
-    cdef object _parse_varbinds(self, netsnmp_pdu* response, uint64_t flags):
+    @staticmethod
+    cdef object _parse_varbinds(netsnmp_pdu* response, uint64_t flags):
         cdef netsnmp_variable_list* entry = NULL
         cdef list result = []
 
         entry = response.variables
         while (entry != NULL):
-            key = self.parse_var_key(entry)
-            result.append((key, self._parse_varbind(entry, flags)))
+            key = AsyncSession.parse_var_key(entry)
+            result.append((key, AsyncSession._parse_varbind(entry, flags)))
             entry = entry.next_variable
 
         if AsyncSession.get_as_list(flags):
@@ -973,28 +974,31 @@ cdef class AsyncSession(object):
         else:
             return dict(result)
 
-    cdef _parse_varbind(self, netsnmp_variable_list* entry, uint64_t flags):
-        value = self.parse_var_value(entry, flags)
+    @staticmethod
+    cdef _parse_varbind(netsnmp_variable_list* entry, uint64_t flags):
+        value = AsyncSession.parse_var_value(entry, flags)
         if AsyncSession.get_get_vartype(flags) and AsyncSession.get_get_netsnmp_string(flags):
-            return (self.parse_var_type(entry), value, self.format_varbind(entry))
+            return (
+                AsyncSession.parse_var_type(entry),
+                value,
+                AsyncSession.format_varbind(entry)
+            )
 
         elif AsyncSession.get_get_vartype(flags):
-            return (self.parse_var_type(entry), value)
+            return (AsyncSession.parse_var_type(entry), value)
 
         elif AsyncSession.get_get_netsnmp_string(flags):
-            return (value, self.format_varbind(entry))
+            return (value, AsyncSession.format_varbind(entry))
 
         else:
             return value
 
-    cdef object parse_var_key(self, netsnmp_variable_list* var):
+    @staticmethod
+    cdef object parse_var_key(netsnmp_variable_list* var):
         return tuple([int(var.name[i]) for i in range(var.name_length)])
 
-    cdef object parse_var_value(
-            self,
-            netsnmp_variable_list* var,
-            uint64_t flags):
-
+    @staticmethod
+    cdef object parse_var_value(netsnmp_variable_list* var, uint64_t flags):
         if var.var_type == ASN_OCTET_STR:
             return var.val.string[:var.val_len]
 
@@ -1046,7 +1050,8 @@ cdef class AsyncSession(object):
         else:
             return None
 
-    cdef object format_varbind(self, netsnmp_variable_list* var):
+    @staticmethod
+    cdef object format_varbind(netsnmp_variable_list* var):
         cdef object result
 
         # Variables used for sprint_realloc_value
@@ -1084,7 +1089,8 @@ cdef class AsyncSession(object):
 
         return result
 
-    cdef object parse_var_type(self, netsnmp_variable_list* var):
+    @staticmethod
+    cdef object parse_var_type(netsnmp_variable_list* var):
         cdef object var_type = var.var_type
 
         if var_type not in VAR_TYPE_TO_STRING:
