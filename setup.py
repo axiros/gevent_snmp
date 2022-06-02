@@ -16,7 +16,7 @@ else:
 mod1 = Extension(
     'async_session',
     sources,
-    libraries=[libname],
+    libraries=[libname, 'dl'],
     extra_compile_args=['-O3']
 )
 

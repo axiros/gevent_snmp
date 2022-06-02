@@ -216,6 +216,17 @@ cdef extern from *:
         SNMPERR_TIMEOUT
         SNMPERR_BAD_SENDTO
 
+cdef extern from "<dlfcn.h>" nogil:
+    void *dlsym(void*, const char*)
+    void* RTLD_DEFAULT
+
+ctypedef int (*snmp_parse_func)(
+    void*,
+    netsnmp_session*,
+    netsnmp_pdu*,
+    unsigned char*,
+    size_t
+)
 
 # SNMP version 3 works only if this method is called once.
 # Otherwise you get 'no such security service available' errors.
@@ -615,6 +626,37 @@ cdef class AsyncSession(object):
 
     def clone_session(self, **override_args):
         return CloneSession(self, override_args)
+
+    @staticmethod
+    def decode_trap(bytes data, py_flags={}):
+        """Decodes a SNMP-Trap received from a UDP socket."""
+        # All this dlsym can go away with net-snmp 5.8.
+        # net-snmp 5.8 exposes snmp_parse as a public symbol.
+        # Why this dslym ?? To avoid import errors if linked againts wrong
+        # net-snmp. This function gets only used in very rare situations.
+        # Thus most people can life with snmp_parse not exposed.
+        # -> Dont fail at import time with:
+        #   ImportError: async_session.so: undefined symbol: snmp_parse
+        # Instead fail at runtime only when this function gets called.
+        cdef snmp_parse_func snmp_parse
+        snmp_parse = <snmp_parse_func> dlsym(RTLD_DEFAULT, "snmp_parse")
+        if snmp_parse == NULL:
+            raise Exception("snmp_parse not exposed by linked netsnmp library")
+
+        cdef netsnmp_session session
+        cdef netsnmp_pdu* pdu = snmp_pdu_create(0)
+        cdef uint64_t flags = AsyncSession.gen_flags(py_flags)
+
+        snmp_sess_init(cython.address(session))
+
+        try:
+            res = snmp_parse(NULL, cython.address(session), pdu, data, len(data))
+            if res == 0:
+                # A dict leaves future room for more information from the trap.
+                return {'varbinds': AsyncSession._parse_varbinds(pdu, flags)}
+            raise error_from_session("Error in snmp_parse", cython.address(session))
+        finally:
+            snmp_free_pdu(pdu)
 
     ## These are 'higher level' functions.
     def walk(self, root, py_flags={}):
