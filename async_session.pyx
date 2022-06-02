@@ -79,6 +79,7 @@ cdef extern from *:
         size_t val_len
 
     ctypedef struct netsnmp_pdu:
+        long reqid
         long errstat
         long errindex
         netsnmp_variable_list* variables
@@ -651,10 +652,14 @@ cdef class AsyncSession(object):
 
         try:
             res = snmp_parse(NULL, cython.address(session), pdu, data, len(data))
-            if res == 0:
-                # A dict leaves future room for more information from the trap.
-                return {'varbinds': AsyncSession._parse_varbinds(pdu, flags)}
-            raise error_from_session("Error in snmp_parse", cython.address(session))
+            if res != 0:
+                raise error_from_session("snmp_parse error", cython.address(session))
+
+            return {
+                'varbinds': AsyncSession._parse_varbinds(pdu, flags),
+                'request_id': pdu.reqid
+            }
+
         finally:
             snmp_free_pdu(pdu)
 
