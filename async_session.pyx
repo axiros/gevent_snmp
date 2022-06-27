@@ -37,6 +37,8 @@ cdef extern from *:
         SNMP_MSG_GETNEXT
         SNMP_MSG_GETBULK
         SNMP_MSG_SET
+        SNMP_MSG_TRAP
+        SNMP_MSG_TRAP2
 
         MAX_OID_LEN
 
@@ -79,9 +81,23 @@ cdef extern from *:
         size_t val_len
 
     ctypedef struct netsnmp_pdu:
+        int command
         long reqid
+
+        # SNMPv2 Packet
         long errstat
         long errindex
+
+        # SNMPv1 Trap information
+        oid* enterprise
+        size_t enterprise_length
+
+        long trap_type
+        long specific_type
+        unsigned char* agent_addr
+        unsigned long time
+
+        # Generic Information
         netsnmp_variable_list* variables
 
     netsnmp_pdu* snmp_pdu_create(int)
@@ -217,9 +233,18 @@ cdef extern from *:
         SNMPERR_TIMEOUT
         SNMPERR_BAD_SENDTO
 
+
 cdef extern from "<dlfcn.h>" nogil:
     void *dlsym(void*, const char*)
     void* RTLD_DEFAULT
+
+
+cdef extern from "<arpa/inet.h>" nogil:
+    enum:
+        AF_INET
+        INET_ADDRSTRLEN
+    const char *inet_ntop(int af, const void *src, char *dst, unsigned int size)
+
 
 ctypedef int (*snmp_parse_func)(
     void*,
@@ -655,10 +680,26 @@ cdef class AsyncSession(object):
             if res != 0:
                 raise error_from_session("snmp_parse error", cython.address(session))
 
-            return {
-                'varbinds': AsyncSession._parse_varbinds(pdu, flags),
-                'request_id': pdu.reqid
-            }
+            py_result = {}
+            py_result['varbinds'] = AsyncSession._parse_varbinds(pdu, flags)
+            py_result['request_id'] = pdu.reqid
+            py_result['msg_type_raw'] = pdu.command
+
+            if pdu.command == SNMP_MSG_TRAP2:
+                py_result['msg_type'] = 'v2_trap'
+
+            elif pdu.command == SNMP_MSG_TRAP:
+                py_result['msg_type'] = 'v1_trap'
+
+                py_result['trap_type'] = pdu.trap_type
+                py_result['specific_type'] = pdu.specific_type
+                py_result['agent_addr'] = convert_agent_addres(pdu.agent_addr)
+                py_result['uptime'] = pdu.time
+
+            else:
+                py_result['msg_type'] = 'unknown'
+
+            return py_result
 
         finally:
             snmp_free_pdu(pdu)
@@ -1153,6 +1194,14 @@ cdef object binary_to_hex_pystring(u_char* data, size_t data_size):
         return output[:hex_len]
     finally:
         libc_free(output)
+
+
+cdef unicode convert_agent_addres(unsigned char* src):
+    cdef char dst[INET_ADDRSTRLEN]
+    if inet_ntop(AF_INET, src, <char*>cython.address(dst), INET_ADDRSTRLEN) == NULL:
+        return u''
+
+    return dst.decode('utf-8')
 
 
 @cython.final
