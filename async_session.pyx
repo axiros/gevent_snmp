@@ -695,6 +695,10 @@ cdef class AsyncSession(object):
                 py_result['specific_type'] = pdu.specific_type
                 py_result['agent_addr'] = convert_agent_addres(pdu.agent_addr)
                 py_result['uptime'] = pdu.time
+                py_result['enterprise'] = oid_ptr_as_tuple(
+                    pdu.enterprise,
+                    pdu.enterprise_length
+                )
 
             else:
                 py_result['msg_type'] = 'unknown'
@@ -1202,6 +1206,10 @@ cdef unicode convert_agent_addres(unsigned char* src):
         return u''
 
     return dst.decode('utf-8')
+
+
+cdef tuple oid_ptr_as_tuple(oid* ptr, size_t length):
+    return tuple([ptr[idx] for idx in range(length)])
 
 
 @cython.final
