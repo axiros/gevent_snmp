@@ -10,7 +10,11 @@ except ImportError:
     def cythonize(extensions): return extensions
     sources = ['async_session.c']
 else:
-    sources = ['async_session.pyx']
+    if os.path.exists('async_session.pyx'):
+        sources = ['async_session.pyx']
+    else:
+        def cythonize(extensions): return extensions
+        sources = ['async_session.c']
 
 
 mod1 = Extension(
@@ -22,6 +26,6 @@ mod1 = Extension(
 
 setup(
     name='gevent_snmp',
-    version='0.17.1',
+    version='0.17.2',
     ext_modules=cythonize([mod1])
 )
