@@ -1101,7 +1101,7 @@ cdef class AsyncSession(object):
             return None
 
         elif var.var_type == ASN_OBJECT_ID:
-            return [var.val.objid[i] for i in range(var.val_len / cython.sizeof(oid))]
+            return [var.val.objid[i] for i in range(var.val_len // cython.sizeof(oid))]
 
         elif var.var_type == ASN_BIT_STR:
             return var.val.bitstring[:var.val_len]
