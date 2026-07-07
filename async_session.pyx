@@ -640,14 +640,15 @@ cdef class AsyncSession(object):
             bin_val = self.args['security_engine_id'].decode('hex')
             # Need to store it somewhere, to keep reference to memory.
             self.args['security_engine_id_binary'] = bin_val
-            sess_cfg.securityEngineID = <bytes?>(bin_val)
+            sess_cfg.securityEngineID = bin_val
             sess_cfg.securityEngineIDLen = len(bin_val)
 
         # context_engine_id is assumed as 'hex' format, but binary is needed.
         if 'context_engine_id' in self.args:
             bin_val = self.args['context_engine_id'].decode('hex')
+            # Need to store it somewhere, to keep reference to memory.
             self.args['context_engine_id_binary'] = bin_val
-            sess_cfg.contextEngineID = <bytes?>(bin_val)
+            sess_cfg.contextEngineID = bin_val
             sess_cfg.contextEngineIDLen = len(bin_val)
 
     def clone_session(self, **override_args):
@@ -1122,7 +1123,7 @@ cdef class AsyncSession(object):
             return deref(var.val.integer)
 
         elif var.var_type == ASN_COUNTER64:
-            return (long(var.val.counter64.high) << 32L) + var.val.counter64.low
+            return (int(var.val.counter64.high) << 32L) + var.val.counter64.low
 
         elif var.var_type == ASN_APP_FLOAT:
             return deref(var.val.floatVal)
